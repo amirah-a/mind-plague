@@ -212,13 +212,13 @@ public class GameWindow extends JFrame
 
         if(keyCode == KeyEvent.VK_LEFT){
             Player.isWalking = true;
-            Player.playerWalkLeft.start();
+            //Player.playerWalkLeft.start();
             gamePanel.updatePlayer(3);
         }
 
         if(keyCode == KeyEvent.VK_RIGHT){
             Player.isWalking = true;
-            Player.playerWalkRight.start();
+            //Player.playerWalkRight.start();
             gamePanel.updatePlayer(4);
         }
 

@@ -41,7 +41,7 @@ public class Animation {
         this.width = width;
         this.height = height;
         this.playOnce = playOnce;
-        active = false;
+        active = true;
         //start();
 
 	    // x = 5;
