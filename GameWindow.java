@@ -226,6 +226,14 @@ public class GameWindow extends JFrame
         if(keyCode == KeyEvent.VK_SPACE){
             Player.isShooting = true;
             Player.playerShoot.start();
+            try {
+                Thread.sleep(600);
+            } catch (InterruptedException e1) {
+                e1.printStackTrace();
+            }
+            int x = gamePanel.getPlayer().getX() + gamePanel.getPlayer().getPWidth();
+            int y = gamePanel.getPlayer().getY() + gamePanel.getPlayer().getPHeight() - 35;
+            gamePanel.getBulletHandler().addBullet(new Bullet(gamePanel,x, y));
         }
 	}
 

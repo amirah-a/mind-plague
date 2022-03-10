@@ -5,6 +5,7 @@ import java.awt.geom.Rectangle2D;
 import javax.swing.JPanel;
 import java.awt.Image;
 import java.awt.image.BufferedImage;
+import java.util.ArrayList;
 
 public class Player {
     private GamePanel panel;
@@ -24,7 +25,6 @@ public class Player {
 
     public Player(GamePanel p){
         panel = p;
-
         x = 50;
         y = 500;
         playerIdle = ImageManager.loadImage("images/Cyborg_idle.png");
@@ -46,6 +46,30 @@ public class Player {
         dy = 20;
     }
 
+    public int getX(){
+        return x;
+    }
+
+    public int getY(){
+        return y;
+    }
+
+    public int getPWidth(){
+        return width;
+    }
+
+    public int getPHeight(){
+        return height;
+    }
+
+    public void setIsShooting(boolean value){
+        isShooting = value;
+    }
+
+    public void setIsWalking(boolean value){
+        isWalking = value;
+    }
+
     //load frames from stripFiles
     public void loadAnimationFrames(Animation animation,String path, int amt, boolean loadReverse){  //loading images from strip file
         //load attack animation
@@ -60,7 +84,7 @@ public class Player {
 
             g.drawImage(stripImage, 0, 0, imageWidth, imageHeight, i*imageWidth, 0, (i*imageWidth)+imageWidth, imageHeight, null);
         
-            animation.addFrame(frameImage, 150);
+            animation.addFrame(frameImage, 100);
             } 
         }else{
             for(int i=amt-1; i >= 0; i--){
@@ -93,9 +117,9 @@ public class Player {
             playerShoot.draw((Graphics2D) g2, x, y);
             //g2.drawImage(playerIdle, x+50, y, width, height, null);
         }else if(isWalking && dx > 0){
-            playerWalkRight.draw((Graphics2D) g2,x,y);
+            playerWalkRight.draw((Graphics2D) g2, x, y);
         }else if(isWalking && dx < 0){
-            playerWalkLeft.draw((Graphics2D) g2,x,y);
+            playerWalkLeft.draw((Graphics2D) g2, x, y);
         }
         else{
            g2.drawImage(playerIdle, x, y, width, height, null); 

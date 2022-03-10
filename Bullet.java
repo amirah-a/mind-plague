@@ -11,9 +11,35 @@ public class Bullet {
 
     private int x, y;
     private int width, height;
-    private int dx, dy;
+    private int dx;
     private Image bulletImg;
 
-    
+    public Bullet(GamePanel p, int x, int y){
+        panel = p;
+        this.x = x;
+        this.y = y;
+
+        bulletImg = ImageManager.loadImage("images/bullet.png");
+        width = bulletImg.getWidth(null);
+        height = bulletImg.getHeight(null);
+
+        dx = 20;
+    }
+
+    public int getX(){
+        return x;
+    }
+
+    public int getY(){
+        return y;
+    }
+
+    public void move(){
+        x += dx;
+    }
+
+    public void draw(Graphics2D g2){
+        g2.drawImage(bulletImg, x, y, width, height, null);
+    }
 
 }

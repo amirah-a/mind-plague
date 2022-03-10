@@ -12,6 +12,7 @@ public class GamePanel extends JPanel {
 	// private static int NUM_ALIENS = 3;
 
 	private Player player;
+    private BulletHandler playerBulletHandler;
 	// SoundManager soundManager;
 
 	private GameThread gameThread;
@@ -22,21 +23,25 @@ public class GamePanel extends JPanel {
 
 	public GamePanel () {
 		player = null;
+        playerBulletHandler = new BulletHandler(this);
       	// 	soundManager = SoundManager.getInstance();
 
       	backgroundImage = ImageManager.loadImage ("images/background.png");
 		image = new BufferedImage (650, 550, BufferedImage.TYPE_INT_RGB);
-
 	}
 
 
 	private void createGameEntities() {
-		
-
 		player = new Player(this); 
 	}
 
+    public Player getPlayer(){
+        return player;
+    }
 
+    public BulletHandler getBulletHandler(){
+        return playerBulletHandler;
+    }
 
 	public void updatePlayer (int direction) {
 
@@ -96,6 +101,7 @@ public class GamePanel extends JPanel {
 
 	public void gameUpdate () {
         player.updateAnimation();
+        playerBulletHandler.update();
 	}
 
 
@@ -106,6 +112,7 @@ public class GamePanel extends JPanel {
 		imageContext.drawImage(backgroundImage, 0, 0, null);	// draw the background image		
 		
 		player.draw(imageContext);
+        playerBulletHandler.draw(imageContext);
 
 		Graphics2D g2 = (Graphics2D) getGraphics();	// get the graphics context for the panel
 		g2.drawImage(image, 0, 0, 650, 550, null);
