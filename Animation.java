@@ -83,7 +83,7 @@ public class Animation {
         Updates this animation's current image (frame), if
         neccesary.
     */
-    public synchronized void update(int dx, int dy) {
+    public synchronized void update() {
         long currTime = System.currentTimeMillis();		// find the current time
 	    long elapsedTime = currTime - startTime;		// find how much time has elapsed since last update
 	    startTime = currTime;					// set start time to current time
@@ -107,8 +107,8 @@ public class Animation {
                 currFrameIndex++;				// set frame corresponding to time animation has run for
             }
         }
-        x += dx;
-        y += dy;
+        // x += dx;
+        // y += dy;
     }
 
     public boolean isActive(){

@@ -1,6 +1,8 @@
 import javax.swing.JPanel;
 import java.awt.Image;
 import java.awt.image.BufferedImage;
+import java.util.LinkedList;
+import java.util.Random;
 import java.awt.Graphics2D;
 
 /**
@@ -9,10 +11,14 @@ import java.awt.Graphics2D;
 
 public class GamePanel extends JPanel {
    
-	// private static int NUM_ALIENS = 3;
+	private static int MAX_ENEMIES = 5; //max number of enemies allowed on screen;
 
 	private Player player;
-    private BulletHandler playerBulletHandler;
+	private LinkedList<Bullet> bullets;
+	private LinkedList<Enemy> enemies;
+	private Bullet tempB;
+	private Enemy tempE;
+    //private BulletHandler playerBulletHandler;
 	// SoundManager soundManager;
 
 	private GameThread gameThread;
@@ -20,10 +26,18 @@ public class GamePanel extends JPanel {
 	private BufferedImage image;
    	private Image backgroundImage;
 
+	private Random random;
+
 
 	public GamePanel () {
 		player = null;
-        playerBulletHandler = new BulletHandler(this);
+		bullets = new LinkedList<Bullet>();
+		enemies = new LinkedList<Enemy>();
+		tempB = null;
+		tempE = null;
+
+		random = new Random();
+        
       	// 	soundManager = SoundManager.getInstance();
 
       	backgroundImage = ImageManager.loadImage ("images/background.png");
@@ -32,16 +46,31 @@ public class GamePanel extends JPanel {
 
 
 	private void createGameEntities() {
-		player = new Player(this); 
+		player = new Player(this);
+		for(int i=0; i<MAX_ENEMIES; i++){
+			enemies.add(new Enemy(this, getPlayer().getPWidth() + 10, getPlayer().getPHeight(), random.nextInt(2)+1));
+		} 
 	}
 
     public Player getPlayer(){
         return player;
     }
 
-    public BulletHandler getBulletHandler(){
-        return playerBulletHandler;
-    }
+	public void addEnemy(Enemy e){
+		enemies.add(e);
+	}
+
+    public void addBullet(Bullet b){
+		bullets.add(b);
+	}
+
+	public void removeEnemy(Enemy e){
+		enemies.remove(e);
+	}
+
+	public void removeBullet(Bullet b){
+		bullets.remove(b);
+	}
 
 	public void updatePlayer (int direction) {
 
@@ -101,7 +130,20 @@ public class GamePanel extends JPanel {
 
 	public void gameUpdate () {
         player.updateAnimation();
-        playerBulletHandler.update();
+
+		for(int i=0; i<bullets.size(); i++){
+			tempB = bullets.get(i);
+			tempB.move();
+
+			if(tempB.getX() > this.getWidth() || tempB.getX() < 0)
+                removeBullet(tempB);
+		}
+
+		for(int i=0; i<enemies.size(); i++){
+			tempE = enemies.get(i);
+			tempE.move();
+		}
+
 	}
 
 
@@ -112,7 +154,16 @@ public class GamePanel extends JPanel {
 		imageContext.drawImage(backgroundImage, 0, 0, null);	// draw the background image		
 		
 		player.draw(imageContext);
-        playerBulletHandler.draw(imageContext);
+
+		for(int i=0; i<bullets.size(); i++){
+			tempB = bullets.get(i);
+			tempB.draw(imageContext);
+		}
+        
+		for(int i =0; i<enemies.size(); i++){
+			tempE = enemies.get(i);
+			tempE.draw(imageContext);
+		}
 
 		Graphics2D g2 = (Graphics2D) getGraphics();	// get the graphics context for the panel
 		g2.drawImage(image, 0, 0, 650, 550, null);

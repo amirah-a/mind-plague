@@ -233,7 +233,7 @@ public class GameWindow extends JFrame
             }
             int x = gamePanel.getPlayer().getX() + gamePanel.getPlayer().getPWidth();
             int y = gamePanel.getPlayer().getY() + gamePanel.getPlayer().getPHeight() - 35;
-            gamePanel.getBulletHandler().addBullet(new Bullet(gamePanel,x, y));
+            gamePanel.addBullet(new Bullet(gamePanel,x, y));
         }
 	}
 

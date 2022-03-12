@@ -100,15 +100,15 @@ public class Player {
 
     public void updateAnimation(){
         if(isShooting)
-            playerShoot.update(0,0);
+            playerShoot.update();
         if(!playerShoot.isActive())
             isShooting = false;
             
         if(isWalking){
             if(dx < 0)
-                playerWalkLeft.update(dx,0);
+                playerWalkLeft.update();
             else if(dx > 0)
-                playerWalkRight.update(dx,0);
+                playerWalkRight.update();
         }        
     }
 
