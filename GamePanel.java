@@ -156,7 +156,7 @@ public class GamePanel extends JPanel {
 
 			if(player.collidesWithEnemy(tempE)){
 				removeEnemy(tempE);
-				tempE = enemies.get(i+1);
+				tempE = enemies.get((i+1)%enemies.size());
 			}
 			//check if enemy got shot by any bullets on screen
 			for(int j=0; j<bullets.size(); j++){
