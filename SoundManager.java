@@ -17,7 +17,17 @@ public class SoundManager {				// a Singleton class
         clip = loadClip("sounds/player_hit.wav");
         clips.put("player_hit", clip);
 
-		
+        clip = loadClip("sounds/enemy_hit1.wav");
+        clips.put("enemy_hit1", clip);
+
+        clip = loadClip("sounds/enemy_hit2.wav");
+        clips.put("enemy_hit2", clip);
+
+		clip = loadClip("sounds/player_dead.wav");
+        clips.put("player_dead", clip);
+
+		clip = loadClip("sounds/background.wav");
+		clips.put("background", clip);
 	}
 
 

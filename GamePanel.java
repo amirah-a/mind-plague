@@ -4,6 +4,8 @@ import java.awt.image.BufferedImage;
 import java.util.LinkedList;
 import java.util.Random;
 import java.awt.Graphics2D;
+import java.awt.Font;
+import java.awt.Color;
 
 /**
    A component that displays all the game entities
@@ -12,6 +14,7 @@ import java.awt.Graphics2D;
 public class GamePanel extends JPanel {
    
 	private static int MAX_ENEMIES = 5; //max number of enemies allowed on screen;
+	private static int MAX_LIVES = 3;
 
 	private Player player;
 	private LinkedList<Bullet> bullets;
@@ -26,7 +29,15 @@ public class GamePanel extends JPanel {
 	private BufferedImage image;
    	private Image backgroundImage;
 
+	private Image[] lives;
+	private int lifeX, lifeY;
+	private int lifeWidth, lifeHeight;
+
+	private int score;
+
 	private Random random;
+
+	String string;
 
 
 	public GamePanel () {
@@ -37,6 +48,12 @@ public class GamePanel extends JPanel {
 		tempE = null;
 
 		random = new Random();
+
+		lives = new Image[MAX_LIVES];
+		lifeX = 5;
+		lifeY = 5;
+
+		score = 0;
         
       	soundManager = SoundManager.getInstance();
 
@@ -56,7 +73,13 @@ public class GamePanel extends JPanel {
 					tempE.setXY(tempE.getX() + 35, tempE.getY());
 				}
 			}
-		} 
+		}
+		
+		// for(int j=0; j<MAX_LIVES; j++){
+		// 	lives[j] = ImageManager.loadImage("images/life.png");
+		// }
+		// lifeWidth = lives[1].getWidth(null);
+		// lifeHeight = lives[1].getHeight(null);
 	}
 
     public Player getPlayer(){
@@ -77,6 +100,11 @@ public class GamePanel extends JPanel {
 
 	public void removeBullet(Bullet b){
 		bullets.remove(b);
+	}
+
+	public String scoreString(){
+		string = "SCORE: " + score;
+		return string;
 	}
 
 	public void updatePlayer (int direction) {
@@ -100,7 +128,7 @@ public class GamePanel extends JPanel {
 		Thread thread;
 
 		if (gameThread == null) {
-			//soundManager.playClip ("background", true);
+			soundManager.playClip ("background", true);
 			createGameEntities();
 			gameThread = new GameThread (this);
 			thread = new Thread (gameThread);			
@@ -114,7 +142,7 @@ public class GamePanel extends JPanel {
 		Thread thread;
 
 		if (gameThread == null || !gameThread.isRunning()) {
-			//soundManager.playClip ("background", true);
+			soundManager.playClip ("background", true);
 			createGameEntities();
 			gameThread = new GameThread (this);
 			thread = new Thread (gameThread);			
@@ -131,7 +159,7 @@ public class GamePanel extends JPanel {
 
 	public void endGame() {					// end the game thread
 		gameThread.endGame();
-		//soundManager.stopClip ("background");
+		soundManager.stopClip ("background");
 	}
 
 
@@ -150,12 +178,14 @@ public class GamePanel extends JPanel {
 			enemies.add(new Enemy(this, getPlayer().getPWidth() + 10, getPlayer().getPHeight(), random.nextInt(2)+1));
 		}
 
+		string = "enemy_hit";
 		for(int i=0; i<enemies.size(); i++){
 			tempE = enemies.get(i);
 			tempE.move();
 
 			if(player.collidesWithEnemy(tempE)){
 				soundManager.playClip("player_hit", false);
+				player.decreaseLives();
 				removeEnemy(tempE);
 				tempE = enemies.get((i+1)%enemies.size());
 			}
@@ -163,12 +193,13 @@ public class GamePanel extends JPanel {
 			for(int j=0; j<bullets.size(); j++){
 				tempB = bullets.get(j);
 				if(tempE.collidesWithBullet(tempB)){
+					string += (random.nextInt(2)+1);
+					soundManager.playClip(string, false);
 					removeEnemy(tempE);
 					removeBullet(tempB);
+					score += 25;
 				}	
 			}
-
-			
 		}
 
 	}
@@ -178,8 +209,15 @@ public class GamePanel extends JPanel {
 
 		Graphics2D imageContext = (Graphics2D) image.getGraphics();
 
-		imageContext.drawImage(backgroundImage, 0, 0, null);	// draw the background image		
+		imageContext.drawImage(backgroundImage, 0, 0, null);  // draw the background image		
 		
+		Font f = new Font ("Times New Roman", Font.BOLD, 18);
+      	imageContext.setFont (f);
+      	imageContext.setColor(Color.WHITE);
+      	imageContext.drawString(scoreString(), 300, 20);
+		// for(int i=0; i<player.getLives(); i++){
+		// 	imageContext.drawImage(lives[i], lifeX + i*lifeWidth, lifeY, null);
+		// }
 		player.draw(imageContext);
 
 		for(int i=0; i<bullets.size(); i++){

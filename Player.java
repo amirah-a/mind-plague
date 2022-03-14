@@ -14,6 +14,8 @@ public class Player {
 
     private int dx, dy;
 
+    private int numLives;
+
     private Image playerIdle;
     public static Animation playerShoot;
     public static Animation playerWalkRight;
@@ -44,6 +46,8 @@ public class Player {
 
         dx = 10;
         dy = 20;
+
+        numLives=3;
     }
 
     public int getX(){
@@ -68,6 +72,19 @@ public class Player {
 
     public void setIsWalking(boolean value){
         isWalking = value;
+    }
+
+    public void increaseLives(){
+        if(numLives < 3)
+            numLives++;
+    }
+
+    public void decreaseLives(){
+        numLives--;
+    }
+
+    public int getLives(){
+        return numLives;
     }
 
     //load frames from stripFiles
