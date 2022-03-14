@@ -49,6 +49,13 @@ public class GamePanel extends JPanel {
 		player = new Player(this);
 		for(int i=0; i<MAX_ENEMIES; i++){
 			enemies.add(new Enemy(this, getPlayer().getPWidth() + 10, getPlayer().getPHeight(), random.nextInt(2)+1));
+			//no enemy overlap
+			for(int k=0; k<enemies.size(); k++){
+				tempE = enemies.get(i);
+				if(tempE.collidesWithEnemy(enemies.get(k)) && enemies.size() > 1){
+					tempE.setXY(tempE.getX() + 35, tempE.getY());
+				}
+			}
 		} 
 	}
 
@@ -139,9 +146,28 @@ public class GamePanel extends JPanel {
                 removeBullet(tempB);
 		}
 
+		if(enemies.size() < MAX_ENEMIES){
+			enemies.add(new Enemy(this, getPlayer().getPWidth() + 10, getPlayer().getPHeight(), random.nextInt(2)+1));
+		}
+
 		for(int i=0; i<enemies.size(); i++){
 			tempE = enemies.get(i);
 			tempE.move();
+
+			if(player.collidesWithEnemy(tempE)){
+				removeEnemy(tempE);
+				tempE = enemies.get(i+1);
+			}
+			//check if enemy got shot by any bullets on screen
+			for(int j=0; j<bullets.size(); j++){
+				tempB = bullets.get(j);
+				if(tempE.collidesWithBullet(tempB)){
+					removeEnemy(tempE);
+					removeBullet(tempB);
+				}	
+			}
+
+			
 		}
 
 	}

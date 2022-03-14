@@ -161,7 +161,17 @@ public class Player {
         }else if(x+width > 650){
             x = 650 - width;
         }
-        
+    }
+
+    public Rectangle2D.Double getBoundingRectangle(){
+        return new Rectangle2D.Double(x, y, width, height);
+    }
+
+    public boolean collidesWithEnemy(Enemy e){
+        Rectangle2D.Double myRect = getBoundingRectangle();
+        Rectangle2D.Double enemyRect = e.getBoundingRectangle();
+
+        return myRect.intersects(enemyRect);
     }
 
 }

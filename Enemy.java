@@ -27,7 +27,7 @@ public class Enemy {
         
         this.width = width;
         this.height = height;
-        x = panel.getWidth() + random.nextInt(30);
+        x = panel.getWidth() + random.nextInt(50);
         y = random.nextInt(panel.getHeight() - 350) + 355 - height;
         path = null;
         setEnemyType(enemyType);
@@ -36,6 +36,19 @@ public class Enemy {
         loadAnimationFrames(enemy, path, 6, true);
         dx = 2; //default speed
         dy = 0;
+    }
+
+    public void setXY(int x, int y){
+        this.x = x;
+        this.y =y;
+    }
+
+    public int getX(){
+        return x;
+    }
+
+    public int getY(){
+        return y;
     }
 
     public void loadAnimationFrames(Animation animation,String path, int amt, boolean loadReverse){
@@ -85,6 +98,24 @@ public class Enemy {
             default:
               path = "images.Biker_run.png";
         }
+    }
+
+    public Rectangle2D.Double getBoundingRectangle(){
+        return new Rectangle2D.Double(x, y, width, height);
+    }
+
+    public boolean collidesWithBullet(Bullet b){
+        Rectangle2D.Double myRect = getBoundingRectangle();
+        Rectangle2D.Double bulletRect = b.getBoundingRectangle();
+      
+        return myRect.intersects(bulletRect);
+    }
+
+    public boolean collidesWithEnemy(Enemy e){
+        Rectangle2D.Double myRect = getBoundingRectangle();
+        Rectangle2D.Double enemyRect = e.getBoundingRectangle();
+      
+        return myRect.intersects(enemyRect);
     }
 
 }

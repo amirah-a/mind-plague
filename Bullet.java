@@ -42,4 +42,8 @@ public class Bullet {
         g2.drawImage(bulletImg, x, y, width, height, null);
     }
 
+    public Rectangle2D.Double getBoundingRectangle() {
+        return new Rectangle2D.Double (x, y, width, height);
+     }
+
 }
