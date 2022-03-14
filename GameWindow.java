@@ -34,6 +34,7 @@ public class GameWindow extends JFrame
 
 	private JPanel mainPanel;
 	private GamePanel gamePanel;
+	SoundManager soundManager;
 
 	@SuppressWarnings({"unchecked"})
 	public GameWindow() {
@@ -156,6 +157,8 @@ public class GameWindow extends JFrame
 		// set status bar message
 
 		statusBarTF.setText("Application started.");
+
+		soundManager = SoundManager.getInstance();
 	}
 
 
@@ -226,6 +229,7 @@ public class GameWindow extends JFrame
         if(keyCode == KeyEvent.VK_SPACE){
             Player.isShooting = true;
             Player.playerShoot.start();
+			soundManager.playClip("player_attack", false);
             try {
                 Thread.sleep(600);
             } catch (InterruptedException e1) {
@@ -248,6 +252,10 @@ public class GameWindow extends JFrame
 
         if(keyCode == KeyEvent.VK_RIGHT){
             Player.isWalking = false;
+        }
+
+		if(keyCode == KeyEvent.VK_SPACE){
+            soundManager.stopClip("player_attack");
         }
 	}
 

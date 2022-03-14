@@ -18,8 +18,8 @@ public class GamePanel extends JPanel {
 	private LinkedList<Enemy> enemies;
 	private Bullet tempB;
 	private Enemy tempE;
-    //private BulletHandler playerBulletHandler;
-	// SoundManager soundManager;
+    
+	SoundManager soundManager;
 
 	private GameThread gameThread;
 
@@ -38,7 +38,7 @@ public class GamePanel extends JPanel {
 
 		random = new Random();
         
-      	// 	soundManager = SoundManager.getInstance();
+      	soundManager = SoundManager.getInstance();
 
       	backgroundImage = ImageManager.loadImage ("images/background.png");
 		image = new BufferedImage (650, 550, BufferedImage.TYPE_INT_RGB);
@@ -155,6 +155,7 @@ public class GamePanel extends JPanel {
 			tempE.move();
 
 			if(player.collidesWithEnemy(tempE)){
+				soundManager.playClip("player_hit", false);
 				removeEnemy(tempE);
 				tempE = enemies.get((i+1)%enemies.size());
 			}
