@@ -75,11 +75,11 @@ public class GamePanel extends JPanel {
 			}
 		}
 		
-		// for(int j=0; j<MAX_LIVES; j++){
-		// 	lives[j] = ImageManager.loadImage("images/life.png");
-		// }
-		// lifeWidth = lives[1].getWidth(null);
-		// lifeHeight = lives[1].getHeight(null);
+		for(int j=0; j<MAX_LIVES; j++){
+			lives[j] = ImageManager.loadImage("images/heart.png");
+		}
+		lifeWidth = lives[1].getWidth(null);
+		lifeHeight = lives[1].getHeight(null);
 	}
 
     public Player getPlayer(){
@@ -184,7 +184,12 @@ public class GamePanel extends JPanel {
 			tempE.move();
 
 			if(player.collidesWithEnemy(tempE)){
-				soundManager.playClip("player_hit", false);
+				if(player.getLives() == 1){
+					soundManager.playClip("player_dead", false);
+					gameThread.setIsRunning(false);
+				}else{
+					soundManager.playClip("player_hit", false);	
+				}
 				player.decreaseLives();
 				removeEnemy(tempE);
 				tempE = enemies.get((i+1)%enemies.size());
@@ -198,6 +203,9 @@ public class GamePanel extends JPanel {
 					removeEnemy(tempE);
 					removeBullet(tempB);
 					score += 25;
+					if(score%100 == 0 && score > 0){
+						player.increaseLives();
+					}
 				}	
 			}
 		}
@@ -215,9 +223,17 @@ public class GamePanel extends JPanel {
       	imageContext.setFont (f);
       	imageContext.setColor(Color.WHITE);
       	imageContext.drawString(scoreString(), 300, 20);
-		// for(int i=0; i<player.getLives(); i++){
-		// 	imageContext.drawImage(lives[i], lifeX + i*lifeWidth, lifeY, null);
-		// }
+
+		for(int i=0; i<player.getLives(); i++){
+			imageContext.drawImage(lives[i], lifeX + i*lifeWidth, lifeY, null);
+		}
+		if(player.getLives() < 3 && player.getLives() > 0){
+			for(int j=player.getLives(); j< MAX_LIVES; j++){
+			lives[j] = ImageManager.loadImage("images/emptyheart.png");
+			imageContext.drawImage(lives[j], lifeX + j * lifeWidth, lifeY, null);
+			}
+		}
+		
 		player.draw(imageContext);
 
 		for(int i=0; i<bullets.size(); i++){
@@ -238,4 +254,24 @@ public class GamePanel extends JPanel {
 
 	}
 
+	public void gameOverScreen(){
+		Graphics2D imageContext = (Graphics2D) image.getGraphics();
+		
+		imageContext.drawImage(backgroundImage, 0, 0 , null);
+		Font f = new Font ("Times New Roman", Font.BOLD, 26);
+      	imageContext.setFont (f);
+      	imageContext.setColor(Color.RED);
+		imageContext.drawString("GAME OVER", 270, 215);
+
+		f = new Font("Times New Roman", Font.BOLD, 18);
+		imageContext.setFont(f);
+		imageContext.setColor(Color.RED);
+		imageContext.drawString(scoreString(), 300, 235);
+
+		Graphics2D g2 = (Graphics2D) getGraphics();
+		g2.drawImage(image, 0, 0, 650, 550, null);
+
+		imageContext.dispose();
+		g2.dispose();
+	}
 }

@@ -21,6 +21,10 @@ public class GameThread implements Runnable {
 		return isRunning;
 	}
 
+	public void setIsRunning(boolean isRunning){
+		this.isRunning = isRunning;
+	}
+
 
 	public void pauseGame() {
 
@@ -56,6 +60,9 @@ public class GameThread implements Runnable {
 					gameUpdate();
 				gameRender();
 				Thread.sleep (50);	
+			}
+			if(!isRunning){
+				gamePanel.gameOverScreen();
 			}
 		}
 		catch(InterruptedException e) {}
