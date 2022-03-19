@@ -186,6 +186,7 @@ public class GamePanel extends JPanel {
 			tempE = enemies.get(i);
 			tempE.move();
 
+			//player collision with enemy
 			if(player.collidesWithEnemy(tempE)){
 				Player.isHurt = true;
 				Player.flickeringCyborg.start();
@@ -196,9 +197,16 @@ public class GamePanel extends JPanel {
 					soundManager.playClip("player_hit", false);	
 				}
 				player.decreaseLives();
+				score -= 75; //lose points for colliding with enemy
 				removeEnemy(tempE);
 				tempE = enemies.get((i+1)%enemies.size());
 			}
+
+			if(tempE.getX() < 0){
+				removeEnemy(tempE);
+				tempE = enemies.get((i+1)%enemies.size());
+			}
+
 			//check if enemy got shot by any bullets on screen
 			for(int j=0; j<bullets.size(); j++){
 				tempB = bullets.get(j);
@@ -210,9 +218,11 @@ public class GamePanel extends JPanel {
 					score += 25;
 					if(score%100 == 0 && score > 0){
 						player.increaseLives();
+						System.out.println(player.getLives());
 					}
 				}	
 			}
+
 		}
 
 	}
@@ -230,12 +240,13 @@ public class GamePanel extends JPanel {
       	imageContext.drawString(scoreString(), 300, 20);
 
 		for(int i=0; i<player.getLives(); i++){
+			lives[i] = ImageManager.loadImage("images/heart.png");
 			imageContext.drawImage(lives[i], lifeX + i*lifeWidth, lifeY, null);
 		}
 		if(player.getLives() < 3 && player.getLives() > 0){
 			for(int j=player.getLives(); j< MAX_LIVES; j++){
-			lives[j] = ImageManager.loadImage("images/emptyheart.png");
-			imageContext.drawImage(lives[j], lifeX + j * lifeWidth, lifeY, null);
+				lives[j] = ImageManager.loadImage("images/emptyheart.png");
+				imageContext.drawImage(lives[j], lifeX + j * lifeWidth, lifeY, null);
 			}
 		}
 		
