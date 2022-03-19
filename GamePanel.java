@@ -110,7 +110,9 @@ public class GamePanel extends JPanel {
 	public void updatePlayer (int direction) {
 
 		if (player != null) {
+
 			player.move(direction);
+			
             //player.updateAnimation();
 		}
 
@@ -164,6 +166,7 @@ public class GamePanel extends JPanel {
 
 
 	public void gameUpdate () {
+
         player.updateAnimation();
 
 		for(int i=0; i<bullets.size(); i++){
@@ -184,6 +187,8 @@ public class GamePanel extends JPanel {
 			tempE.move();
 
 			if(player.collidesWithEnemy(tempE)){
+				Player.isHurt = true;
+				Player.flickeringCyborg.start();
 				if(player.getLives() == 1){
 					soundManager.playClip("player_dead", false);
 					gameThread.setIsRunning(false);
@@ -234,7 +239,18 @@ public class GamePanel extends JPanel {
 			}
 		}
 		
+		// check if player collides with enemy
+		for(int i=0; i<enemies.size(); i++){
+			tempE = enemies.get(i);
+			tempE.move();
+
+			if(player.collidesWithEnemy(tempE)){
+				Player.isHurt = true;
+			}
+		}
+
 		player.draw(imageContext);
+
 
 		for(int i=0; i<bullets.size(); i++){
 			tempB = bullets.get(i);
