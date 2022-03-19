@@ -2,9 +2,12 @@ import java.awt.Color;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
 import java.awt.geom.Rectangle2D;
+
+import javax.sound.sampled.FloatControl;
 import javax.swing.JPanel;
 import java.awt.Image;
 import java.awt.image.BufferedImage;
+import java.nio.Buffer;
 import java.util.ArrayList;
 
 public class Player {
@@ -20,9 +23,11 @@ public class Player {
     public static Animation playerShoot;
     public static Animation playerWalkRight;
     public static Animation playerWalkLeft;
+    public static Animation flickeringCyborg;
 
     public static boolean isShooting;
-    public static boolean isWalking; 
+    public static boolean isWalking;
+    public static boolean isHurt; 
 
 
     public Player(GamePanel p){
@@ -37,12 +42,17 @@ public class Player {
         playerWalkRight = new Animation(panel, width+10, height, false);
         playerWalkLeft = new Animation(panel, width+10, height, false);
 
+        flickeringCyborg = new Animation(panel, width+10, height, true); // bug or feature? 
+                                                                        // when set to true animation does not play
+
         loadAnimationFrames(playerShoot,"images/Cyborg_attack3.png", 8, false);
         loadAnimationFrames(playerWalkRight, "images/Cyborg_run.png", 6, false);
         loadAnimationFrames(playerWalkLeft,"images/Cyborg_run_left.png", 6, true);
+        loadGrayscaleAnimation(flickeringCyborg, "images/Cyborg_idle.png", 8);
         
         isShooting = false;
         isWalking = false;
+        isHurt = false;
 
         dx = 10;
         dy = 20;
@@ -115,9 +125,25 @@ public class Player {
         }
     }
 
+    public void loadGrayscaleAnimation(Animation animation,String path, int amt) {
+
+		BufferedImage image = ImageManager.loadBufferedImage("images/Cyborg_idle.png");
+        BufferedImage copy;
+
+		for (int i=0; i<amt; i++) {
+            copy = ImageManager.copyImage(image);
+            
+            if (i%2 == 0){
+                copy = GrayScaleFX.toGrayScaleFX(copy);
+            }
+            animation.addFrame(copy, 300);
+		}
+	}
+
     public void updateAnimation(){
         if(isShooting)
             playerShoot.update();
+
         if(!playerShoot.isActive())
             isShooting = false;
             
@@ -126,7 +152,14 @@ public class Player {
                 playerWalkLeft.update();
             else if(dx > 0)
                 playerWalkRight.update();
-        }        
+        }
+
+        if(isHurt)
+            flickeringCyborg.update();
+        
+        if(!flickeringCyborg.isActive())
+            isHurt = false;
+
     }
 
     public void draw(Graphics g2){
@@ -138,6 +171,11 @@ public class Player {
         }else if(isWalking && dx < 0){
             playerWalkLeft.draw((Graphics2D) g2, x, y);
         }
+        else if(isHurt){
+            flickeringCyborg.draw((Graphics2D) g2, x, y);
+            // g2.drawImage(playerIdle, x, y, width, height, null); 
+        }
+
         else{
            g2.drawImage(playerIdle, x, y, width, height, null); 
         }    

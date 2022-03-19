@@ -42,7 +42,7 @@ public class Animation {
         this.height = height;
         this.playOnce = playOnce;
         active = true;
-        //start();
+        // start();
 
 	    // x = 5;
         // y = 10;
