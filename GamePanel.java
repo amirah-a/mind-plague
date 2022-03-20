@@ -40,6 +40,7 @@ public class GamePanel extends JPanel {
 
 	String string;
 
+	private boolean playSepia;
 
 	public GamePanel () {
 		player = null;
@@ -55,6 +56,8 @@ public class GamePanel extends JPanel {
 		lifeY = 5;
 
 		score = 0;
+
+		playSepia = false;
         
       	soundManager = SoundManager.getInstance();
 
@@ -170,6 +173,10 @@ public class GamePanel extends JPanel {
 	public void gameUpdate () {
 
         player.updateAnimation();
+		if(playSepia)
+			sepiaFX.update();
+		if(!sepiaFX.getActive())
+			playSepia = false;
 
 		for(int i=0; i<bullets.size(); i++){
 			tempB = bullets.get(i);
@@ -192,6 +199,7 @@ public class GamePanel extends JPanel {
 			if(player.collidesWithEnemy(tempE)){
 				Player.isHurt = true;
 				Player.flickeringCyborg.start();
+
 				if(player.getLives() == 1){
 					soundManager.playClip("player_dead", false);
 					gameThread.setIsRunning(false);
@@ -205,8 +213,11 @@ public class GamePanel extends JPanel {
 			}
 
 			if(tempE.getX() < 0){
+				playSepia = true;
+				//sepiaFX.update();
 				removeEnemy(tempE);
 				tempE = enemies.get((i+1)%enemies.size());
+
 			}
 
 			//check if enemy got shot by any bullets on screen
@@ -226,33 +237,25 @@ public class GamePanel extends JPanel {
 			}
 
 		}
-		for(int i=0; i<enemies.size(); i++){
-			tempE = enemies.get(i);
-			tempE.move();
-
-			if(tempE.passesPlayer()){
-				sepiaFX.update();
-			}
-
-		}
-		
-
 	}
 
 
 	public void gameRender () {				// draw the game objects 
 
 		Graphics2D imageContext = (Graphics2D) image.getGraphics();
-		
-		imageContext.drawImage(backgroundImage, 0, 0, null);  // draw the background image
-		for(int i=0; i<enemies.size(); i++){
-			tempE = enemies.get(i);
-			tempE.move();
 
-			if(tempE.passesPlayer()){
-				imageContext.drawImage(sepiaFX.imageToSepia(), 0, 0, null);	
-			}
-		}
+		imageContext.drawImage(backgroundImage, 0, 0, null);  // draw the background image
+
+		if(playSepia)
+			sepiaFX.draw(imageContext);
+		// for(int i=0; i<enemies.size(); i++){
+		// 	tempE = enemies.get(i);
+		// 	tempE.move();
+
+		// 	if(tempE.passesPlayer()){
+		// 		imageContext.drawImage(sepiaFX.imageToSepia(), 0, 0, null);	
+		// 	}
+		// }
 
 		Font f = new Font ("Times New Roman", Font.BOLD, 18);
       	imageContext.setFont (f);
@@ -267,16 +270,6 @@ public class GamePanel extends JPanel {
 			for(int j=player.getLives(); j< MAX_LIVES; j++){
 				lives[j] = ImageManager.loadImage("images/emptyheart.png");
 				imageContext.drawImage(lives[j], lifeX + j * lifeWidth, lifeY, null);
-			}
-		}
-		
-		// check if player collides with enemy
-		for(int i=0; i<enemies.size(); i++){
-			tempE = enemies.get(i);
-			tempE.move();
-
-			if(player.collidesWithEnemy(tempE)){
-				Player.isHurt = true;
 			}
 		}
 

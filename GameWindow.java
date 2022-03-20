@@ -39,7 +39,7 @@ public class GameWindow extends JFrame
 	@SuppressWarnings({"unchecked"})
 	public GameWindow() {
  
-		setTitle ("A Game With Aliens (with Image Effects)");
+		setTitle ("Cyborg Shooter");
 		setSize (700, 750);
 
 		// create user interface objects

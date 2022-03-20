@@ -8,14 +8,15 @@ import java.awt.image.BufferedImage;
 
 public class SepiaFX implements ImageFX {
 
-	private static final int WIDTH = 120;		// width of the image
-	private static final int HEIGHT = 120;		// height of the image
-	private static final int YPOS = 250;		// vertical position of the image
+	// private static final int WIDTH = 120;		// width of the image
+	// private static final int HEIGHT = 120;		// height of the image
+	// private static final int YPOS = 0;		// vertical position of the image
 
 	private GamePanel panel;
 
 	private int x;
 	private int y;
+	private int width, height;
 
 	private BufferedImage spriteImage;		// image for sprite effect
 	private BufferedImage copy;			// copy of image
@@ -25,18 +26,25 @@ public class SepiaFX implements ImageFX {
 	int time, timeChange;				// to control when the image is grayed
 	boolean originalImage, sepiaImage;
 
+	private boolean active;
+
 
 	public SepiaFX (GamePanel p) {
 		panel = p;
 
 		Random random = new Random();
-		x = random.nextInt (panel.getWidth() - WIDTH);
-		y = YPOS;
+		x = 0;
+		y = 0;
+
+		width = panel.getWidth();
+		height = panel.getHeight();
 
 		time = 10;				// range is 0 to 10
 		timeChange = 1;				// set to 1
 		originalImage = true;
 		sepiaImage = false;
+
+		active = true;
 
 		spriteImage = ImageManager.loadBufferedImage("images/background.png");
 		copy = ImageManager.copyImage(spriteImage);		
@@ -99,7 +107,7 @@ public class SepiaFX implements ImageFX {
 							//  copy original image
 
 		if (originalImage) {			// draw copy (already in colour) and return
-			g2.drawImage(copy, x, y, WIDTH, HEIGHT, null);
+			g2.drawImage(copy, x, y, width, height, null);
 			return;
 		}
 							// change to gray and then draw
@@ -116,7 +124,7 @@ public class SepiaFX implements ImageFX {
   
     		copy.setRGB(0, 0, imWidth, imHeight, pixels, 0, imWidth);	
 
-		g2.drawImage(copy, x, y, WIDTH, HEIGHT, null);
+		g2.drawImage(copy, x, y, width, height, null);
 
 /*
 		BufferedImage dest = new BufferedImage (imWidth, imHeight,
@@ -144,26 +152,31 @@ public class SepiaFX implements ImageFX {
 
 
 	public Rectangle2D.Double getBoundingRectangle() {
-		return new Rectangle2D.Double (x, y, WIDTH, HEIGHT);
+		return new Rectangle2D.Double (x, y, width, height);
 	}
 
 
 	public void update() {				// modify time and change the effect if necessary
-	
+		active = true;
 		time = time + timeChange;
 
-		if (time < 20) {			// original image shown for 20 units of time
+		if (time < 30) {			// original image shown for 30 units of time
 			originalImage = true;
 			sepiaImage = false;
 		}
 		else
-		if (time < 40) {			// gray scale image shown for 20 units of time
+		if (time < 60) {			// gray scale image shown for 40 units of time
 			originalImage = false;
 			sepiaImage = true;
 		}
-		else {		
-			time = 0;
+		else {
+			time = 0;		
+			active = false;
 		}
+	}
+
+	public boolean getActive(){
+		return active;
 	}
 
 }
