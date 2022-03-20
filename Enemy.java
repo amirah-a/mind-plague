@@ -118,4 +118,10 @@ public class Enemy {
         return myRect.intersects(enemyRect);
     }
 
+    public boolean passesPlayer(){
+        if (x < 0)
+            return true;
+        return false;
+    }
+
 }

@@ -21,7 +21,8 @@ public class GamePanel extends JPanel {
 	private LinkedList<Enemy> enemies;
 	private Bullet tempB;
 	private Enemy tempE;
-    
+    SepiaFX sepiaFX;
+
 	SoundManager soundManager;
 
 	private GameThread gameThread;
@@ -64,6 +65,7 @@ public class GamePanel extends JPanel {
 
 	private void createGameEntities() {
 		player = new Player(this);
+		sepiaFX = new SepiaFX(this);
 		for(int i=0; i<MAX_ENEMIES; i++){
 			enemies.add(new Enemy(this, getPlayer().getPWidth() + 10, getPlayer().getPHeight(), random.nextInt(2)+1));
 			//no enemy overlap
@@ -214,6 +216,16 @@ public class GamePanel extends JPanel {
 				}	
 			}
 		}
+		for(int i=0; i<enemies.size(); i++){
+			tempE = enemies.get(i);
+			tempE.move();
+
+			if(tempE.passesPlayer()){
+				sepiaFX.update();
+			}
+
+		}
+		
 
 	}
 
@@ -221,9 +233,17 @@ public class GamePanel extends JPanel {
 	public void gameRender () {				// draw the game objects 
 
 		Graphics2D imageContext = (Graphics2D) image.getGraphics();
-
-		imageContext.drawImage(backgroundImage, 0, 0, null);  // draw the background image		
 		
+		imageContext.drawImage(backgroundImage, 0, 0, null);  // draw the background image
+		for(int i=0; i<enemies.size(); i++){
+			tempE = enemies.get(i);
+			tempE.move();
+
+			if(tempE.passesPlayer()){
+				imageContext.drawImage(sepiaFX.imageToSepia(), 0, 0, null);	
+			}
+		}
+
 		Font f = new Font ("Times New Roman", Font.BOLD, 18);
       	imageContext.setFont (f);
       	imageContext.setColor(Color.WHITE);
