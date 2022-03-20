@@ -51,6 +51,10 @@ public class Enemy {
         return y;
     }
 
+    public void increaseDY(){
+        dy *= 1.5;
+    }
+
     public void loadAnimationFrames(Animation animation,String path, int amt, boolean loadReverse){
         //load attack animation
         Image stripImage = ImageManager.loadImage(path);
@@ -118,10 +122,6 @@ public class Enemy {
         return myRect.intersects(enemyRect);
     }
 
-    public boolean passesPlayer(){
-        if (x < 0)
-            return true;
-        return false;
-    }
+    
 
 }

@@ -217,7 +217,7 @@ public class GamePanel extends JPanel {
 				//sepiaFX.update();
 				removeEnemy(tempE);
 				tempE = enemies.get((i+1)%enemies.size());
-
+				score -= 100;
 			}
 
 			//check if enemy got shot by any bullets on screen
@@ -236,6 +236,8 @@ public class GamePanel extends JPanel {
 				}	
 			}
 
+			if(score < 0)
+				score = 0;
 		}
 	}
 

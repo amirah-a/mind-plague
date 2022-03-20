@@ -157,15 +157,14 @@ public class SepiaFX implements ImageFX {
 
 
 	public void update() {				// modify time and change the effect if necessary
-		active = true;
 		time = time + timeChange;
 
-		if (time < 30) {			// original image shown for 30 units of time
+		if (time < 20) {			// original image shown for 30 units of time
 			originalImage = true;
 			sepiaImage = false;
 		}
 		else
-		if (time < 60) {			// gray scale image shown for 40 units of time
+		if (time < 40) {			// gray scale image shown for 40 units of time
 			originalImage = false;
 			sepiaImage = true;
 		}
