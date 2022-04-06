@@ -2,11 +2,12 @@ import javax.swing.*;			// need this for GUI objects
 import java.awt.*;			// need this for Layout Managers
 import java.awt.event.*;		// need this to respond to GUI events
 	
-public class GameWindow extends JFrame 
-				implements ActionListener,
+public class GameWindow extends JFrame implements
+						ActionListener,
 					   KeyListener,
 					   MouseListener
 {
+
 	// declare instance variables for user interface objects
 
 	// declare labels 
@@ -39,8 +40,8 @@ public class GameWindow extends JFrame
 	@SuppressWarnings({"unchecked"})
 	public GameWindow() {
  
-		setTitle ("Cyborg Shooter");
-		setSize (700, 750);
+		setTitle ("Mind Plague");
+		setSize (600, 650);
 
 		// create user interface objects
 
@@ -94,7 +95,7 @@ public class GameWindow extends JFrame
 		// create the gamePanel for game entities
 
 		gamePanel = new GamePanel();
-        gamePanel.setPreferredSize(new Dimension(650, 550));
+        gamePanel.setPreferredSize(new Dimension(500, 500));
 
 		// create infoPanel
 
@@ -204,40 +205,40 @@ public class GameWindow extends JFrame
 		keyTF.setText(keyText + " pressed.");
 
 		if (keyCode == KeyEvent.VK_UP) {
-			gamePanel.updatePlayer (1);
-			//gamePanel.drawGameEntities();
+			//gamePanel.updatePlayer (1);
+			// //gamePanel.drawGameEntities();
 		}
 
 		if (keyCode == KeyEvent.VK_DOWN) {
-			gamePanel.updatePlayer(2);
-			//gamePanel.drawGameEntities();
+			// gamePanel.updatePlayer(2);
+			// //gamePanel.drawGameEntities();
 		}
 
         if(keyCode == KeyEvent.VK_LEFT){
-            Player.isWalking = true;
-            //Player.playerWalkLeft.start();
+            // Player.isWalking = true;
+            // //Player.playerWalkLeft.start();
             gamePanel.updatePlayer(3);
         }
 
         if(keyCode == KeyEvent.VK_RIGHT){
-            Player.isWalking = true;
-            //Player.playerWalkRight.start();
+            // Player.isWalking = true;
+            // //Player.playerWalkRight.start();
             gamePanel.updatePlayer(4);
         }
 
 
         if(keyCode == KeyEvent.VK_SPACE){
-            Player.isShooting = true;
-            Player.playerShoot.start();
-			soundManager.playClip("player_attack", false);
-            try {
-                Thread.sleep(600);
-            } catch (InterruptedException e1) {
-                e1.printStackTrace();
-            }
-            int x = gamePanel.getPlayer().getX() + gamePanel.getPlayer().getPWidth();
-            int y = gamePanel.getPlayer().getY() + gamePanel.getPlayer().getPHeight() - 35;
-            gamePanel.addBullet(new Bullet(gamePanel,x, y));
+            // Player.isShooting = true;
+            // Player.playerShoot.start();
+			// soundManager.playClip("player_attack", false);
+            // try {
+            //     Thread.sleep(600);
+            // } catch (InterruptedException e1) {
+            //     e1.printStackTrace();
+            // }
+            // int x = gamePanel.getPlayer().getX() + gamePanel.getPlayer().getPWidth();
+            // int y = gamePanel.getPlayer().getY() + gamePanel.getPlayer().getPHeight() - 35;
+            // gamePanel.addBullet(new Bullet(gamePanel,x, y));
         }
 	}
 
@@ -247,11 +248,11 @@ public class GameWindow extends JFrame
 		keyTF.setText(keyText + " released.");
 
         if(keyCode == KeyEvent.VK_LEFT){
-            Player.isWalking = false;
+            //Player.isWalking = false;
         }
 
         if(keyCode == KeyEvent.VK_RIGHT){
-            Player.isWalking = false;
+            //Player.isWalking = false;
         }
 
 		if(keyCode == KeyEvent.VK_SPACE){
@@ -270,14 +271,10 @@ public class GameWindow extends JFrame
 		int x = e.getX();
 		int y = e.getY();
 
-		if (gamePanel.isOnBat(x, y)) {
-			statusBarTF.setText ("Mouse click on bat!");
-			statusBarTF.setBackground(Color.RED);
-		}
-		else {
-			statusBarTF.setText ("");
-			statusBarTF.setBackground(Color.CYAN);
-		}
+		
+		statusBarTF.setText ("");
+		statusBarTF.setBackground(Color.CYAN);
+		
 
 		mouseTF.setText("(" + x +", " + y + ")");
 
