@@ -31,9 +31,16 @@ public class GamePanel extends JPanel {
 		image = new BufferedImage(500, 500, BufferedImage.TYPE_INT_RGB);
 	}
 
+	public void switchEmotion(int emotionIndex){
+		currEmotion = emotions[emotionIndex];
+	}
 
 	private void createGameEntities() {
 		emotions[0] = new Fear(this);
+		emotions[1] = new Love(this);
+		emotions[2] = new Rage(this);
+		emotions[3] = new Sadness(this);
+		emotions[4] = new Happy(this);
 		background = new Background(this, "images/Scrolling_BG.png", 8);	
 	}
 

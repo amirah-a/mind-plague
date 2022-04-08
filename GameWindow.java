@@ -37,7 +37,6 @@ public class GameWindow extends JFrame implements
 	private GamePanel gamePanel;
 	SoundManager soundManager;
 
-	@SuppressWarnings({"unchecked"})
 	public GameWindow() {
  
 		setTitle ("Mind Plague");
@@ -240,6 +239,32 @@ public class GameWindow extends JFrame implements
             // int y = gamePanel.getPlayer().getY() + gamePanel.getPlayer().getPHeight() - 35;
             // gamePanel.addBullet(new Bullet(gamePanel,x, y));
         }
+
+		//switching characters
+		if(keyCode == KeyEvent.VK_1){
+			// we need to add a check here
+			gamePanel.switchEmotion(0); // set to Fear
+		}
+
+		if(keyCode == KeyEvent.VK_2){
+			//we need to add a check here
+			gamePanel.switchEmotion(1); //set to Love
+		}
+
+		if(keyCode == KeyEvent.VK_3){
+			//we need to add a check here
+			gamePanel.switchEmotion(2); //set to Rage
+		}
+
+		if(keyCode == KeyEvent.VK_4){
+			//we need to add a check here
+			gamePanel.switchEmotion(3); //set to Sadness
+		}
+
+		if(keyCode == KeyEvent.VK_5){
+			//we need to add a check here
+			gamePanel.switchEmotion(4); //set to Happy
+		}
 	}
 
 	public void keyReleased(KeyEvent e) {
