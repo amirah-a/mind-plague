@@ -32,7 +32,8 @@ public class Enemy {
         path = null;
         setEnemyType(enemyType);
 
-        enemy = new Animation(panel, this.width, this.height, false);
+        enemy = new Animation(panel, this.width, this.height);
+        enemy.setPlayOnce(false);
         loadAnimationFrames(enemy, path, 6, true);
         dx = 2; //default speed
         dy = 0;

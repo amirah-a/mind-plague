@@ -3,6 +3,7 @@ import java.awt.Graphics;
 import java.awt.Graphics2D;
 import java.awt.geom.Rectangle2D;
 import java.awt.image.BufferedImage;
+import java.util.HashMap;
 
 
 public abstract class Emotion {
@@ -17,25 +18,28 @@ public abstract class Emotion {
     protected Image currIdleImage;
     protected Image[] idleImages;
 
-    protected Animation[] animations;
+    //protected Animation[] animations;
     protected Animation currAnimation;
+
+    protected HashMap<String, Animation> animations;
 
     protected boolean unlocked;
 
     public Emotion(GamePanel p){
         panel = p;
         
-        idleImages = new Image[2];
+        //idleImages = new Image[2];
+        animations = new HashMap<String, Animation>();
         width = 48;
         height = 48;
     }
 
-    protected abstract void loadImages();
+    protected abstract void loadAnimations();
     public abstract void update();
-    public abstract void draw(Graphics g2);
+    public abstract void draw(Graphics2D g2);
 
-    public void loadAnimationFrames(Animation animation,String path, int amt, boolean loadReverse){
-        //load attack animation
+    public Animation loadAnimationFrames(String path, int amt, boolean loadReverse){
+        Animation animation = new Animation(panel, this.width, this.height);
         Image stripImage = ImageManager.loadImage(path);
         int imageWidth = (int) stripImage.getWidth(null) / amt;
         int imageHeight = stripImage.getHeight(null);
@@ -59,6 +63,8 @@ public abstract class Emotion {
                 animation.addFrame(frameImage, 150);
             } 
         }
+
+        return animation;
     }
 
     public Rectangle2D.Double getBoundingRectangle(){

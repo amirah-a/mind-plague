@@ -34,13 +34,13 @@ public class Animation {
     /**
         Creates a new, empty Animation.
     */
-    public Animation(GamePanel p, int width, int height, boolean playOnce) {
+    public Animation(GamePanel p, int width, int height) {
 	    panel = p;
         frames = new ArrayList<AnimFrame>();
         totalDuration = 0;
         this.width = width;
         this.height = height;
-        this.playOnce = playOnce;
+        this.playOnce = false;  //will loop by default
         active = true;
         // start();
 
@@ -53,6 +53,10 @@ public class Animation {
     public void setXY(int x, int y){
         this.x = x;
         this.y =y;
+    }
+
+    public void setPlayOnce(boolean value){
+        playOnce = value;
     }
     
     /**

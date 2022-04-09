@@ -93,8 +93,7 @@ public class GamePanel extends JPanel {
 	}
 
 	public void gameUpdate () {
-
-       
+		currEmotion.update();   
 	}
 
 
