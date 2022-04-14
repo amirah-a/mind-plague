@@ -1,9 +1,11 @@
 import javax.swing.JPanel;
 import java.awt.Image;
 import java.awt.image.BufferedImage;
+import java.lang.System.Logger.Level;
 import java.util.LinkedList;
 import java.util.Random;
 import java.awt.Graphics2D;
+import java.awt.geom.Rectangle2D;
 import java.awt.Font;
 import java.awt.Color;
 
@@ -12,7 +14,8 @@ import java.awt.Color;
 */
 
 public class GamePanel extends JPanel {
-   
+	
+	private static final int MAX_LEVEL = 6;
 	private GameThread gameThread;
 
 	private Emotion[] emotions;  //hold all emotions
@@ -21,14 +24,25 @@ public class GamePanel extends JPanel {
 	SoundManager soundManager;
 
 	private Background background;
-
 	private BufferedImage image;
+
+	public static int LEVEL = 0;	// there are 6 levels - starting at 0
+
+	private Door door, openDoor, closedDoor;
+	private boolean open;
+
+	private int eggsRem;
+	private int[] score;
 
 	public GamePanel () {
 		emotions = new Emotion[5];
 		currEmotion = null;
 
 		image = new BufferedImage(500, 500, BufferedImage.TYPE_INT_RGB);
+		open = false;  // door is not opened - level not unlocked
+
+		eggsRem = 3;
+		score = new int[5]; // 5 scores for 5 levels - not level 0
 	}
 
 	public void switchEmotion(int emotionIndex){
@@ -42,6 +56,8 @@ public class GamePanel extends JPanel {
 		emotions[3] = new Sadness(this);
 		emotions[4] = new Happy(this);
 		background = new Background(this, "images/Scrolling_BG.png", 8);	
+		openDoor = new Door(this, 400, 390, 51, 56, "images/door_closed.png");	
+		closedDoor = new Door(this, 400, 390, 79, 56, "images/door_open.png");
 	}
 
 
@@ -89,11 +105,33 @@ public class GamePanel extends JPanel {
 	public void updatePlayer(int direction){
 		if(background != null){
 			background.move(direction);
+			currEmotion.move(direction);
+			// door.move(direction);
 		}
 	}
 
 	public void gameUpdate () {
-		currEmotion.update();   
+		currEmotion.update();
+		
+		if(!open && LEVEL <= 6){ // door is unopened and there are remaining levels
+
+			if(LEVEL == 0){	// introductory level
+				// check for collisions and other game play
+				// increment level
+			}
+
+			if (LEVEL == 1){
+				// check for collisions and other game play
+				// adjust score[LEVEL-1] -> collects 5 sets of scores, doesnt include the basic intro level
+				// increment level
+			}
+		}
+
+		else if(open && LEVEL <= 6){	// door is opened and there are remaining levels to play
+			clearLevel();
+		}
+
+
 	}
 
 
@@ -101,13 +139,32 @@ public class GamePanel extends JPanel {
 		Graphics2D imageContext = (Graphics2D) image.getGraphics();
 
 		background.draw(imageContext);
+	
+		Font font = new Font ("Roboto", Font.BOLD, 15);
+		imageContext.setFont (font);
+		imageContext.setColor(Color.black);
 
+		if (LEVEL == 0){ // introduction level
+			imageContext.drawString("Enemies Left: "+String.valueOf(3-eggsRem), 375, 20);
+		}
+
+		imageContext.drawString("Level: "+String.valueOf(LEVEL), 15, 20);
+
+
+		if(!open){ // checks if door is opened - eg level 0 killed all 3 eggs
+			openDoor.draw(imageContext); 
+		}
+		else{
+			closedDoor.draw(imageContext);
+		}
+		
 		if(currEmotion != null){
 			currEmotion.draw(imageContext);
 		}
 		
 		Graphics2D g2 = (Graphics2D) getGraphics();
 		g2.drawImage(image, 0, 0, null);
+		
 
 		imageContext.dispose();
 		g2.dispose();
@@ -115,5 +172,12 @@ public class GamePanel extends JPanel {
 
 	public void gameOverScreen(){
 	
+	}
+
+	public void clearLevel(){		// reset any level variables
+		background.resetBackground();
+		currEmotion.resetEmotion();
+		eggsRem = 0;
+		open = false;
 	}
 }

@@ -100,7 +100,7 @@ public class GameWindow extends JFrame implements
 
 		JPanel infoPanel = new JPanel();
 		gridLayout = new GridLayout(3, 2);
-		infoPanel.setLayout(gridLayout);
+		infoPanel.setLayout(gridLayout); 
 		infoPanel.setBackground(Color.ORANGE);
 
 		// add user interface objects to infoPanel
@@ -149,9 +149,9 @@ public class GameWindow extends JFrame implements
 
 		// set properties of window
 
+		setLocationRelativeTo(null);
 		setResizable(true);
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-
 		setVisible(true);
 
 		// set status bar message

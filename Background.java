@@ -1,6 +1,7 @@
 import javax.swing.JPanel;
 import java.awt.Graphics2D;
 import java.awt.Image;
+import java.awt.image.BufferedImage;
 
 public class Background {
     private Image bgImage;
@@ -13,6 +14,8 @@ public class Background {
     private int bg2X;
     private int bgDX;
 
+    private int orginalBgX;
+
     public Background(GamePanel panel, String imageFile, int bgDX) {
     
         this.panel = panel;
@@ -22,9 +25,10 @@ public class Background {
         //System.out.println ("bgImageWidth = " + bgImageWidth);
     
         if (bgImageWidth < panel.getWidth())
-                  System.out.println("Background width < panel width");
+          System.out.println("Background width < panel width");
     
         this.bgDX = bgDX;
+        orginalBgX = bgDX; // this is used to reset the background to the start;
     
       }
     
@@ -83,5 +87,13 @@ public class Background {
       public void draw (Graphics2D g2) {
         g2.drawImage(bgImage, bgX, 0, null);
         g2.drawImage(bgImage, bgX, 0, null);
+      }
+
+      public int getBGX(){
+        return bgX;
+      }
+
+      public void resetBackground(){  // restarts the background at the beginning of the new level
+        bgX = orginalBgX;
       }
 }
