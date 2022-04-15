@@ -39,7 +39,7 @@ public class GamePanel extends JPanel {
 		currEmotion = null;
 
 		image = new BufferedImage(500, 500, BufferedImage.TYPE_INT_RGB);
-		open = false;  // door is not opened - level not unlocked
+		open = false;  // door is not opened - level not finished
 
 		eggsRem = 3;
 		score = new int[5]; // 5 scores for 5 levels - not level 0

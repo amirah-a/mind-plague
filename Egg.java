@@ -5,43 +5,28 @@ import java.awt.geom.Rectangle2D;
 import java.awt.image.BufferedImage;
 import java.util.HashMap;
 
-
-public abstract class Emotion {
-    
+public abstract class Egg {
     protected GamePanel panel;
-
-    public static int x = 50, y = 400; // all emotions should have the same x y
-    protected int width, height;
+    
+    protected int x, y;
     protected int dx, dy;
-    protected int orginalX, orginalY;
-
-    protected Image currIdleImage;
-    protected Image[] idleImages;
-
-    //protected Animation[] animations;
-    protected Animation currAnimation;
+    protected int width, height;
 
     protected HashMap<String, Animation> animations;
+    protected Animation currAnimation;
 
-    protected boolean unlocked;
-
-    public Emotion(GamePanel p){
+    public Egg(GamePanel p){
         panel = p;
-        
-        //idleImages = new Image[2];
+
         animations = new HashMap<String, Animation>();
         width = 48;
         height = 48;
-
-        // used to reset the emotion's position at the start of a new level
-        orginalX = x;
-        orginalY = y;
-        dx = 5;
     }
 
     protected abstract void loadAnimations();
     public abstract void update();
     public abstract void draw(Graphics2D g2);
+    public abstract void move();
 
     public Animation loadAnimationFrames(String path, int amt, boolean loadReverse){
         Animation animation = new Animation(panel, this.width, this.height);
@@ -76,46 +61,11 @@ public abstract class Emotion {
         return new Rectangle2D.Double(x, y, width, height);
     }
 
-    public boolean collidesWithEgg(Egg e){
+    public boolean collidesWithBullet(Bullet b){
         Rectangle2D.Double myRect = getBoundingRectangle();
-        Rectangle2D.Double eggRect = e.getBoundingRectangle();
-
-        return myRect.intersects(eggRect);
-    }
-
-    // for levels
-    public void setUnlocked(boolean value){
-        unlocked = value;
-    }
-
-    public boolean isUnlocked(){
-        return unlocked;
-    }
-
-    public void resetEmotion(){
-        x = orginalX;
-        y = orginalY;
-    }
-
-    // created move method since the player is currently static and cannot move towards the door
-    // ^^ only the bg was moving
-    public void move(int direction){
+        Rectangle2D.Double bulletRect = b.getBoundingRectangle();
       
-        if (direction == 3) {		// move left
-            x = x - dx;
-            
-            if (x < 0)
-              x = 0;
-        }	
-        else				// move right
-        if (direction == 4) {
-            x = x + dx;
-            
-            if (x+75 > panel.getWidth())
-              x = panel.getWidth() - 60;
-        }
-
+        return myRect.intersects(bulletRect);
     }
-    
 
 }
