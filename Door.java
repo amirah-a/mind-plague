@@ -13,7 +13,7 @@ public class Door {
  
     private int dx;
     private int dy;
-
+    private int originalX;
     private BufferedImage door;
     
     private boolean locked;
@@ -29,6 +29,8 @@ public class Door {
         width = w;
         height = h;
 
+        originalX = xPos;
+
         door = ImageManager.loadBufferedImage(fileName);
 
         locked = true;
@@ -41,21 +43,24 @@ public class Door {
     public void move(int direction){
       
         if (direction == 3) {		// move left
-            x = x - dx;
-            
-            if (x < 0)
-              x = 0;
+            if (x > 0)
+                moveRight();
         }	
         else				// move right
         if (direction == 4) {
-            x = x + dx;
-            
-            if (x+75 > panel.getWidth())
-              x = panel.getWidth() - 60;
+            if(x < 500 - door.getWidth())
+                moveLeft();
         }
 
     }
 
+    public void moveLeft(){
+        x = x - dx;
+    }
+
+    public void moveRight(){
+        x = x + dx;
+    }
     public boolean getIsLocked(){
         return locked;
     }

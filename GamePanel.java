@@ -43,6 +43,7 @@ public class GamePanel extends JPanel {
 
 		eggsRem = 3;
 		score = new int[5]; // 5 scores for 5 levels - not level 0
+	
 	}
 
 	public void switchEmotion(int emotionIndex){
@@ -56,8 +57,9 @@ public class GamePanel extends JPanel {
 		emotions[3] = new Sadness(this);
 		emotions[4] = new Happy(this);
 		background = new Background(this, "images/Scrolling_BG.png", 8);	
-		openDoor = new Door(this, 400, 390, 51, 56, "images/door_closed.png");	
-		closedDoor = new Door(this, 400, 390, 79, 56, "images/door_open.png");
+		openDoor = new Door(this, 1840, 390, 51, 56, "images/door_closed.png");	
+		closedDoor = new Door(this, 1840, 390, 79, 56, "images/door_open.png");
+		door = closedDoor;
 	}
 
 
@@ -106,7 +108,7 @@ public class GamePanel extends JPanel {
 		if(background != null){
 			background.move(direction);
 			currEmotion.move(direction);
-			// door.move(direction);
+			door.move(direction);
 		}
 	}
 
@@ -149,18 +151,19 @@ public class GamePanel extends JPanel {
 		}
 
 		imageContext.drawString("Level: "+String.valueOf(LEVEL), 15, 20);
+			if(!open){ // checks if door is opened - eg level 0 killed all 3 eggs
+				door = closedDoor;
+			}
+			else{
+				door = openDoor;
+			}
 
-
-		if(!open){ // checks if door is opened - eg level 0 killed all 3 eggs
-			openDoor.draw(imageContext); 
-		}
-		else{
-			closedDoor.draw(imageContext);
-		}
-		
-		if(currEmotion != null){
-			currEmotion.draw(imageContext);
-		}
+			door.draw(imageContext);
+			
+			
+			if(currEmotion != null){
+				currEmotion.draw(imageContext);
+			}
 		
 		Graphics2D g2 = (Graphics2D) getGraphics();
 		g2.drawImage(image, 0, 0, null);
