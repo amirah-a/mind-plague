@@ -21,6 +21,8 @@ public class GamePanel extends JPanel {
 	private Emotion[] emotions;  //hold all emotions
 	private Emotion currEmotion;
 
+	private LinkedList<Bullet> bullets;
+	private Bullet tempB;
 	SoundManager soundManager;
 
 	private Background background;
@@ -38,6 +40,9 @@ public class GamePanel extends JPanel {
 	public GamePanel () {
 		emotions = new Emotion[5];
 		currEmotion = null;
+
+		bullets = new LinkedList<Bullet>();
+		tempB = null;
 
 		image = new BufferedImage(500, 500, BufferedImage.TYPE_INT_RGB);
 		open = false;  // door is not opened - level not finished
@@ -68,7 +73,45 @@ public class GamePanel extends JPanel {
 		platform = new Platform(this, 1000, 250, 162, 54, "images/platform.png"); 
 	}
 
+	public void addBullet(Bullet b){
+		bullets.add(b);
+	}
 
+	public Bullet createBullet(int x, int y){
+		Bullet bullet;
+		if(currEmotion instanceof Fear){
+			System.out.println("Fear");
+			bullet = new Bullet(this, x, y, "fear");
+			return bullet;
+		}
+			
+		if(currEmotion instanceof Love){
+			System.out.println("Love");
+			bullet = new Bullet(this, x, y, "love");
+			return bullet;
+		}
+			
+		if(currEmotion instanceof Rage){
+			System.out.println("Rage");
+			bullet = new Bullet(this, x, y, "rage");
+			return bullet;
+		}
+			
+		if(currEmotion instanceof Sadness){
+			System.out.println("Sadness");
+			bullet = new Bullet(this, x, y, "sadness");
+			return bullet;
+		}	
+		else{
+			System.out.println("Happy");
+			bullet = new Bullet(this, x, y, "happy");
+			return bullet;
+		}
+	}
+
+	public void removeBullet(Bullet b){
+		bullets.remove(b);
+	}
 
 	public void startGame() {				// initialise and start the game thread 
 
@@ -126,6 +169,16 @@ public class GamePanel extends JPanel {
 
 			if(LEVEL == 0){	// introductory level
 				// check for collisions and other game play
+
+				//bullet handling
+				for(int i=0; i<bullets.size(); i++){
+					tempB = bullets.get(i);
+					tempB.move();
+
+					if(tempB.getX() > this.getWidth())
+						removeBullet(tempB);
+				}
+
 				// increment level
 			}
 
@@ -155,6 +208,12 @@ public class GamePanel extends JPanel {
 
 		if (LEVEL == 0){ // introduction level
 			imageContext.drawString("Enemies Left: "+String.valueOf(3-eggsRem), 375, 20);
+		}
+
+		//bullet handling
+		for(int i=0; i < bullets.size(); i++){
+			tempB = bullets.get(i);
+			tempB.draw(imageContext);
 		}
 
 		imageContext.drawString("Level: "+String.valueOf(LEVEL), 15, 20);

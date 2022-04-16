@@ -235,9 +235,10 @@ public class GameWindow extends JFrame implements
             // } catch (InterruptedException e1) {
             //     e1.printStackTrace();
             // }
-            // int x = gamePanel.getPlayer().getX() + gamePanel.getPlayer().getPWidth();
-            // int y = gamePanel.getPlayer().getY() + gamePanel.getPlayer().getPHeight() - 35;
-            // gamePanel.addBullet(new Bullet(gamePanel,x, y));
+            int x = Emotion.x + 48;
+            int y = Emotion.y + 13;
+            gamePanel.addBullet(gamePanel.createBullet(x, y));
+	
         }
 
 		//switching characters

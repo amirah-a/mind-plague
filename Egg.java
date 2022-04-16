@@ -5,7 +5,7 @@ import java.awt.geom.Rectangle2D;
 import java.awt.image.BufferedImage;
 import java.util.HashMap;
 
-public abstract class Egg {
+public class Egg {
     protected GamePanel panel;
     
     protected int x, y;
@@ -15,18 +15,70 @@ public abstract class Egg {
     protected HashMap<String, Animation> animations;
     protected Animation currAnimation;
 
-    public Egg(GamePanel p){
+    private String eggType; //can be basic, fear, love, etc
+
+    public Egg(GamePanel p, String type){
         panel = p;
 
         animations = new HashMap<String, Animation>();
         width = 48;
         height = 48;
+
+        eggType = type;
+        loadAnimations();
     }
 
-    protected abstract void loadAnimations();
-    public abstract void update();
-    public abstract void draw(Graphics2D g2);
-    public abstract void move();
+    private void loadAnimations(){
+        Animation animation = new Animation(panel, this.width, this.height);
+        switch (eggType) {
+            case "basic":
+                animation = loadAnimationFrames("images/basic_idle_egg_r.png", 8, false);
+                animations.put("idle_right", animation);
+                animation = loadAnimationFrames("images/basic_idle_egg_l.png", 8, false);
+                animations.put("idle_left", animation);
+            case "fear":
+                animation = loadAnimationFrames("images/fear_idle_egg_r.png", 7, false);
+                animations.put("idle_right", animation);
+                animation = loadAnimationFrames("images/fear_idle_egg_l.png", 7, false);
+                animations.put("idle_left", animation);
+
+            case "love":
+                animation = loadAnimationFrames("images/love_idle_egg_r.png", 9, false);
+                animations.put("idle_right", animation);
+                animation = loadAnimationFrames("images/love_idle_egg_l.png", 9, false);
+                animations.put("idle_left", animation);
+            case "rage":
+                animation = loadAnimationFrames("images/rage_idle_egg_r.png", 9, false);
+                animations.put("idle_right", animation);
+                animation = loadAnimationFrames("images/rage_idle_egg_l.png", 9, false);
+                animations.put("idle_left", animation);
+            case "sad":
+                animation = loadAnimationFrames("images/sadness_idle_egg_r.png", 7, false);
+                animations.put("idle_right", animation);
+                animation = loadAnimationFrames("images/sadness_idle_egg_l.png", 7, false);
+                animations.put("idle_left", animation); 
+            case "happy":
+                animation = loadAnimationFrames("images/happy_idle_egg_r.png", 8, false);
+                animations.put("idle_right", animation);
+                animation = loadAnimationFrames("images/happy_idle_egg_l.png", 8, false);
+                animations.put("idle_left", animation);
+            default:
+                throw new IllegalArgumentException("Invalid type of egg: " + eggType);
+        }
+    }
+
+    public void update(){}
+
+    public void draw(Graphics2D g2){}
+
+    public void move(){}
+    
+    public boolean isType(String value){
+        if(eggType.equals(value))
+            return true;
+        
+            return false;
+    }
 
     public Animation loadAnimationFrames(String path, int amt, boolean loadReverse){
         Animation animation = new Animation(panel, this.width, this.height);
