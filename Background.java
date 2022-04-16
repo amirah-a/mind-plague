@@ -20,7 +20,7 @@ public class Background {
     
         this.panel = panel;
         this.bgImage = ImageManager.loadImage(imageFile);
-        bgImageWidth = bgImage.getWidth(null);	// get width of the background
+        bgImageWidth = bgImage.getWidth(null)-bgDX;	// get width of the background
     
         //System.out.println ("bgImageWidth = " + bgImageWidth);
     
