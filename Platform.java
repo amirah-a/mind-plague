@@ -52,7 +52,7 @@ public class Platform {
                 moveLeft();
         }
 
-        System.out.println("x = " + x);
+        // System.out.println("x = " + x);
 
     }
 
