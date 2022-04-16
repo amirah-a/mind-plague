@@ -43,12 +43,12 @@ public class Platform {
     public void move(int direction){
       
         if (direction == 3) {		// move left
-            if (x < 550)
+            // if (x < 550)
                 moveRight();
         }	
         else				// move right
         if (direction == 4) {
-            if(x > -160)
+            // if(x > -160)
                 moveLeft();
         }
 

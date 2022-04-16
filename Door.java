@@ -23,7 +23,7 @@ public class Door {
         x = xPos;
         y = yPos;
   
-        dx = 8;
+        dx = 7;
         dy = 0;
   
         width = w;
@@ -48,7 +48,7 @@ public class Door {
         }	
         else				// move right
         if (direction == 4) {
-            if(x > 400)
+            if(x > 415)
                 moveLeft();
         }
 

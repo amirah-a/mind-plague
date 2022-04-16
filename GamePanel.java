@@ -32,7 +32,7 @@ public class GamePanel extends JPanel {
 
 	private Door door, openDoor, closedDoor;
 	private boolean open;
-	private Platform platform;
+	private Platform[] platform;
 
 	private int eggsRem;
 	private int[] score;
@@ -49,7 +49,7 @@ public class GamePanel extends JPanel {
 
 		eggsRem = 3;
 		score = new int[5]; // 5 scores for 5 levels - not level 0
-	
+		platform = new Platform[2];	
 	}
 
 	public void switchEmotion(int emotionIndex){
@@ -70,7 +70,8 @@ public class GamePanel extends JPanel {
 		door = closedDoor;
 
 		// increase the xPos to place platform further away
-		platform = new Platform(this, 1000, 250, 162, 54, "images/platform.png"); 
+		platform[0] = new Platform(this, 1000, 250, 162, 54, "images/platform.png"); 
+		platform[1] = new Platform(this, 500, 250, 162, 54, "images/platform.png"); 
 	}
 
 	public void addBullet(Bullet b){
@@ -158,7 +159,8 @@ public class GamePanel extends JPanel {
 			background.move(direction);
 			currEmotion.move(direction);
 			door.move(direction);
-			platform.move(direction);
+			for(int i=0; i<2; i++)
+				platform[i].move(direction);
 		}
 	}
 
@@ -225,7 +227,12 @@ public class GamePanel extends JPanel {
 			}
 
 			door.draw(imageContext);
-			platform.draw(imageContext);
+
+			// for(int i=0; i<2; i++)
+			// 	platform[i].draw(imageContext);
+
+			platform[0].draw(imageContext);
+			platform[1].draw(imageContext);
 			
 			if(currEmotion != null){
 				currEmotion.draw(imageContext);

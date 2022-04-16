@@ -73,7 +73,7 @@ public class Background {
         // bg2X = bg2X + bgDX;
     
         String mess = "Moving background right: bgX=" + bgX + " bg1X=" + bg1X + " bg2X=" + bg2X;
-        System.out.println (mess);
+        // System.out.println (mess);
     
         // if (bg1X > 0) {
         //     System.out.println ("Background change: bgX = " + bgX); 
