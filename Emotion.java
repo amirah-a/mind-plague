@@ -96,7 +96,7 @@ public abstract class Emotion {
         x = orginalX;
         y = orginalY;
     }
-    
+
     public void move(int direction){
       
         if (direction == 3) {		// move left
@@ -110,7 +110,7 @@ public abstract class Emotion {
             x = x + dx;
             
             if (x+75 > panel.getWidth())
-              x = panel.getWidth() - 60;
+              x = panel.getWidth() - 75;
         }
 
     }
