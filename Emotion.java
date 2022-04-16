@@ -36,7 +36,7 @@ public abstract class Emotion {
         // used to reset the emotion's position at the start of a new level
         orginalX = x;
         orginalY = y;
-        dx = 5;
+        dx = 2;
     }
 
     protected abstract void loadAnimations();
@@ -96,9 +96,7 @@ public abstract class Emotion {
         x = orginalX;
         y = orginalY;
     }
-
-    // created move method since the player is currently static and cannot move towards the door
-    // ^^ only the bg was moving
+    
     public void move(int direction){
       
         if (direction == 3) {		// move left
