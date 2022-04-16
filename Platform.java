@@ -13,10 +13,12 @@ public class Platform {
  
     private int dx;
     private int dy;
-
-    private BufferedImage Platform;
+    private int originalX;
+    private BufferedImage platform;
+    
+    private boolean locked;
  
-    public Platform(GamePanel p, int xPos, int yPos){
+    public Platform(GamePanel p, int xPos, int yPos, int w, int h, String fileName){
         panel = p;
         x = xPos;
         y = yPos;
@@ -24,32 +26,45 @@ public class Platform {
         dx = 8;
         dy = 0;
   
-        width = 162;
-        height = 54;
+        width = w;
+        height = h;
 
-        Platform = ImageManager.loadBufferedImage("images/platform.png");
+        originalX = xPos;
+
+        platform = ImageManager.loadBufferedImage(fileName);
+
+        locked = true;
     }
 
     public void draw(Graphics2D g2){
-        g2.drawImage(Platform, x, y, width, height, null);
+        g2.drawImage(platform, x, y, width, height, null);
     }
         
     public void move(int direction){
       
         if (direction == 3) {		// move left
-            x = x - dx;
-            
-            if (x < 0)
-              x = 0;
+            if (x < 550)
+                moveRight();
         }	
         else				// move right
         if (direction == 4) {
-            x = x + dx;
-            
-            if (x+75 > panel.getWidth())
-              x = panel.getWidth() - 60;
+            if(x > -160)
+                moveLeft();
         }
+
+        System.out.println("x = " + x);
 
     }
 
+    public void moveLeft(){
+        x = x - dx;
+    }
+
+    public void moveRight(){
+        x = x + dx;
+    }
+    
+    public void resetXPos(){  // restarts the background at the beginning of the new level
+        x = originalX;
+    }
 }

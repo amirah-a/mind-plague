@@ -43,12 +43,12 @@ public class Door {
     public void move(int direction){
       
         if (direction == 3) {		// move left
-            if (x > 0)
+            if (x > 500-door.getWidth())
                 moveRight();
         }	
         else				// move right
         if (direction == 4) {
-            if(x < 500 - door.getWidth())
+            if(x > 400)
                 moveLeft();
         }
 
@@ -68,5 +68,9 @@ public class Door {
     // used to reset the door status when unlocked
     public void setIsLocked(boolean status){
         locked = status;
+    }
+
+    public void resetXPos(){  // restarts the background at the beginning of the new level
+        x = originalX;
     }
 }

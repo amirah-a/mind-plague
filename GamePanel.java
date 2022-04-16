@@ -30,6 +30,7 @@ public class GamePanel extends JPanel {
 
 	private Door door, openDoor, closedDoor;
 	private boolean open;
+	private Platform platform;
 
 	private int eggsRem;
 	private int[] score;
@@ -56,10 +57,15 @@ public class GamePanel extends JPanel {
 		emotions[2] = new Rage(this);
 		emotions[3] = new Sadness(this);
 		emotions[4] = new Happy(this);
+		
 		background = new Background(this, "images/Scrolling_BG.png", 8);	
-		openDoor = new Door(this, 1840, 390, 51, 56, "images/door_closed.png");	
-		closedDoor = new Door(this, 1840, 390, 79, 56, "images/door_open.png");
+		
+		openDoor = new Door(this, 2000, 390, 79, 56, "images/door_open.png");	
+		closedDoor = new Door(this, 2000, 390, 51 , 56, "images/door_closed.png");
 		door = closedDoor;
+
+		// increase the xPos to place platform further away
+		platform = new Platform(this, 1000, 250, 162, 54, "images/platform.png"); 
 	}
 
 
@@ -109,6 +115,7 @@ public class GamePanel extends JPanel {
 			background.move(direction);
 			currEmotion.move(direction);
 			door.move(direction);
+			platform.move(direction);
 		}
 	}
 
@@ -159,7 +166,7 @@ public class GamePanel extends JPanel {
 			}
 
 			door.draw(imageContext);
-			
+			platform.draw(imageContext);
 			
 			if(currEmotion != null){
 				currEmotion.draw(imageContext);
