@@ -10,6 +10,7 @@ public class Bullet {
     private GamePanel panel;
 
     private int x, y;
+    private int originalX, originalY;
     private int width, height;
     private int dx;
     private Image bulletImg;
@@ -19,6 +20,8 @@ public class Bullet {
         panel = p;
         this.x = x;
         this.y = y;
+        originalX = x;
+        originalY = y;
 
         bulletType = type;
         loadBulletImage(type);
@@ -67,6 +70,12 @@ public class Bullet {
 
     public Rectangle2D.Double getBoundingRectangle() {
         return new Rectangle2D.Double (x, y, width, height);
-     }
+    }
+
+    public boolean passedDistance(){
+        if(Math.abs(originalX - x) > 250)
+            return true;
+        return false;
+    }
 
 }

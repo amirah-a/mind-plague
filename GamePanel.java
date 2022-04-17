@@ -177,7 +177,7 @@ public class GamePanel extends JPanel {
 					tempB = bullets.get(i);
 					tempB.move();
 
-					if(tempB.getX() > this.getWidth())
+					if(tempB.passedDistance())
 						removeBullet(tempB);
 				}
 
