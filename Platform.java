@@ -52,8 +52,6 @@ public class Platform {
                 moveLeft();
         }
 
-        System.out.println("x = " + x);
-
     }
 
     public void moveLeft(){
