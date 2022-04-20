@@ -52,8 +52,6 @@ public class Pipe {
                 moveLeft();
         }
 
-        System.out.println("pipeX = " + x);
-
     }
 
     public void moveLeft(){

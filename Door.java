@@ -51,7 +51,7 @@ public class Door {
             if(x > 420)
                 moveLeft();
         }
-
+        // System.out.println("Door: " + x);
     }
 
     public void moveLeft(){

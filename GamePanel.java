@@ -27,8 +27,9 @@ public class GamePanel extends JPanel {
 
 	private Background background;
 	private BufferedImage image;
+	private int emotionIndex;
 
-	public static int LEVEL = 0;	// there are 6 levels - starting at 0
+	public static int LEVEL = 1;	// there are 6 levels - starting at 0
 
 	private Door door, openDoor, closedDoor;
 	private boolean open;
@@ -37,6 +38,9 @@ public class GamePanel extends JPanel {
 
 	private int eggsRem;
 	private int[] score;
+	
+	private Jail jail;
+    private Prisoner jailer;
 
 	public GamePanel () {
 		emotions = new Emotion[5];
@@ -50,7 +54,12 @@ public class GamePanel extends JPanel {
 
 		eggsRem = 3;
 		score = new int[5]; // 5 scores for 5 levels - not level 0
-		platform = new Platform[5];	
+		platform = new Platform[5];
+
+		jail = null;
+		jailer = null;
+		emotionIndex = 0; // fear
+		
 	}
 
 	public void switchEmotion(int emotionIndex){
@@ -79,6 +88,11 @@ public class GamePanel extends JPanel {
 
 		pipe = new Pipe(this, 1950, 0, 56, 120, "images/spawn_1.png");
 
+		if (LEVEL > 0){
+			jail = new Jail(this, 2100, 385);
+			jailer = new Prisoner(this, 2110, 400, LEVEL);
+		}
+			
 	}
 
 	public void addBullet(Bullet b){
@@ -166,21 +180,40 @@ public class GamePanel extends JPanel {
 			background.move(direction);
 			currEmotion.move(direction);
 			door.move(direction);
-			
+
+
+			// bg check to ensure it only moves when the player is at a certain point on the background
+			// when moving towards the door
+
+			if (emotions[LEVEL].isUnlocked() && background.getBGX()*-1 >= 1645 && direction == 4){ // this would change to the collision check
+				jail.decreaseY();
+			}
+
+			if (LEVEL > 0){
+				jail.move(direction);
+				jailer.move(direction);
+			}
+					
 			if (background.getBGX()*-1 < 1832 && background.getBGX() != 0){ // check to stop platfrom from going beyond bg
 				for(int i=0; i<5; i++)
 					platform[i].move(direction);
 				
 				pipe.move(direction);
-			}
-			
-			
+			}			
 		}
 	}
 
 	public void gameUpdate () {
 		currEmotion.update();
+		jailer.update();
 		
+
+		// TODO: in this method check if level is unlocked 
+		// if it is unlocked, set value of 'open' to true in here to change door image
+
+		// TODO: check if level is unlocked to unlock new emotion:
+		emotions[LEVEL].setUnlocked(true); 
+
 		//bullet handling
 		for(int i=0; i<bullets.size(); i++){
 			tempB = bullets.get(i);
@@ -190,8 +223,7 @@ public class GamePanel extends JPanel {
 				removeBullet(tempB);
 		}
 		
-		open = false;
-
+		
 		if(LEVEL <= 6){ // door is unopened and there are remaining levels
 
 			if(LEVEL == 0){	// introductory level
@@ -199,9 +231,7 @@ public class GamePanel extends JPanel {
 			}
 
 			if (LEVEL == 1){
-				// check for collisions and other game play
-				// adjust score[LEVEL-1] -> collects 5 sets of scores, doesnt include the basic intro level
-				// increment level
+
 			}
 		}
 
@@ -222,17 +252,29 @@ public class GamePanel extends JPanel {
 		imageContext.setFont (font);
 		imageContext.setColor(Color.black);
 
+		/* Level-specific objects*/
+
+		if (LEVEL > 0){
+			jailer.draw(imageContext);
+			jail.draw(imageContext);
+		}
+
 		if (LEVEL == 0){ // introduction level
 			imageContext.drawString("Enemies Left: "+String.valueOf(3-eggsRem), 375, 20);
 		}
 
-		//bullet handling
-		for(int i=0; i < bullets.size(); i++){
+		if (LEVEL == 1){
+
+		}
+
+
+		/* Common objects*/
+		
+		for(int i=0; i < bullets.size(); i++){	//bullet handling
 			tempB = bullets.get(i);
 			tempB.draw(imageContext);
 		}
 
-		// game objects
 		imageContext.drawString("Level: "+String.valueOf(LEVEL), 15, 20);
 		
 		if(!open){ // checks if door is opened - eg level 0 killed all 3 eggs
@@ -253,7 +295,8 @@ public class GamePanel extends JPanel {
 		if(currEmotion != null){
 			currEmotion.draw(imageContext);
 		}
-		
+
+	
 		Graphics2D g2 = (Graphics2D) getGraphics();
 		g2.drawImage(image, 0, 0, null);
 		
@@ -266,10 +309,11 @@ public class GamePanel extends JPanel {
 	
 	}
 
-	public void clearLevel(){		// reset any level variables
-		background.resetBackground();
-		currEmotion.resetEmotion();
-		eggsRem = 0;
-		open = false;
+	// will uncomment after first game play to ensure no issues with this method
+	public void clearLevel(){		// reset any level variables 
+		// background.resetBackground();
+		// currEmotion.resetEmotion();
+		// eggsRem = 0;
+		// open = false;
 	}
 }

@@ -14,7 +14,7 @@ public class Jail {
     private int dx;
     private int dy;
 
-    private BufferedImage Platform;
+    private BufferedImage jail;
  
     public Jail(GamePanel p, int xPos, int yPos){
         panel = p;
@@ -24,18 +24,50 @@ public class Jail {
         dx = 8;
         dy = 0;
   
-        width = 112;
-        height = 120;
+        width = 60;
+        height = 65;
 
-        Platform = ImageManager.loadBufferedImage("images/jail.png");
+        jail = ImageManager.loadBufferedImage("images/jail.png");
     }
 
     public void draw(Graphics2D g2){
-        g2.drawImage(Platform, x, y, width, height, null);
+        g2.drawImage(jail, x, y, width, height, null);
     }
+        
         
     public void move(int direction){
       
+        if (direction == 3) {		// move left
+            // if (x > 500-jail.getWidth())
+                moveRight();
+        }	
+        else				// move right
+        if (direction == 4) {
+            if(x > 320)
+                moveLeft();
+        }
+
+        // System.out.println("Jail x: " + x);
     }
+
+    public void moveLeft(){
+        x = x - dx;
+    }
+
+    public void moveRight(){
+        x = x + dx;
+    }
+
+    public void decreaseY(){
+        for (int i=0; i<10; i++){
+            if (y > 300)
+                y = (int)((double)y - .05);
+        }
+            
+    }
+
+    // public void resetXPos(){  // restarts the background at the beginning of the new level
+    //     x = originalX;
+    // }
 
 }
