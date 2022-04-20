@@ -34,13 +34,13 @@ public class GamePanel extends JPanel {
 	private Door door, openDoor, closedDoor;
 	private boolean open;
 	private Platform[] platform;
-	private Pipe pipe;
+	private Portal portal;
 
 	private int eggsRem;
 	private int[] score;
 	
 	private Jail jail;
-    private Prisoner jailer;
+    private Prisoner prisoner;
 
 	public GamePanel () {
 		emotions = new Emotion[5];
@@ -57,7 +57,7 @@ public class GamePanel extends JPanel {
 		platform = new Platform[5];
 
 		jail = null;
-		jailer = null;
+		prisoner = null;
 		emotionIndex = 0; // fear
 		
 	}
@@ -86,11 +86,11 @@ public class GamePanel extends JPanel {
 		platform[3] = new Platform(this, 1350, 250, 162, 54, "images/platform.png");
 		platform[4] = new Platform(this, 1900, 250, 166, 54, "images/long_platform.png"); 
 
-		pipe = new Pipe(this, 1950, 0, 56, 120, "images/spawn_1.png");
+		portal = new Portal(this, 1995, 125, 89, 150, "images/portal.png");
 
 		if (LEVEL > 0){
 			jail = new Jail(this, 2100, 385);
-			jailer = new Prisoner(this, 2110, 400, LEVEL);
+			prisoner = new Prisoner(this, 2110, 400, LEVEL);
 		}
 			
 	}
@@ -191,21 +191,21 @@ public class GamePanel extends JPanel {
 
 			if (LEVEL > 0){
 				jail.move(direction);
-				jailer.move(direction);
+				prisoner.move(direction);
 			}
 					
 			if (background.getBGX()*-1 < 1832 && background.getBGX() != 0){ // check to stop platfrom from going beyond bg
 				for(int i=0; i<5; i++)
 					platform[i].move(direction);
 				
-				pipe.move(direction);
+				portal.move(direction);
 			}			
 		}
 	}
 
 	public void gameUpdate () {
 		currEmotion.update();
-		jailer.update();
+		prisoner.update();
 		
 
 		// TODO: in this method check if level is unlocked 
@@ -231,11 +231,12 @@ public class GamePanel extends JPanel {
 			}
 
 			if (LEVEL == 1){
-
+				
 			}
 		}
 
 		else if(open && LEVEL <= 6){	// door is opened and there are remaining levels to play
+			
 			clearLevel();
 		}
 
@@ -255,7 +256,7 @@ public class GamePanel extends JPanel {
 		/* Level-specific objects*/
 
 		if (LEVEL > 0){
-			jailer.draw(imageContext);
+			prisoner.draw(imageContext);
 			jail.draw(imageContext);
 		}
 
@@ -283,14 +284,13 @@ public class GamePanel extends JPanel {
 		else{
 			door = openDoor;
 		}
-		
-		pipe.draw(imageContext);
-		door.draw(imageContext);
+
 
 		for(int i=0; i<5; i++)
 			platform[i].draw(imageContext);
 
-		
+		portal.draw(imageContext);
+		door.draw(imageContext);
 
 		if(currEmotion != null){
 			currEmotion.draw(imageContext);

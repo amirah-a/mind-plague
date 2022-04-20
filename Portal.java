@@ -4,7 +4,7 @@ import java.awt.Image;
 import java.awt.image.BufferedImage;
 
 
-public class Pipe {
+public class Portal {
     private GamePanel panel;
     private int x;
     private int y;
@@ -18,7 +18,7 @@ public class Pipe {
     
     private boolean locked;
  
-    public Pipe(GamePanel p, int xPos, int yPos, int w, int h, String fileName){
+    public Portal(GamePanel p, int xPos, int yPos, int w, int h, String fileName){
         panel = p;
         x = xPos;
         y = yPos;
