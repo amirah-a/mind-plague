@@ -1,0 +1,73 @@
+import java.awt.Graphics2D;
+import javax.swing.JPanel;
+import java.awt.Image;
+import java.awt.image.BufferedImage;
+
+
+public class Jail {
+    private GamePanel panel;
+    private int x;
+    private int y;
+    private int width;
+    private int height;
+ 
+    private int dx;
+    private int dy;
+
+    private BufferedImage jail;
+ 
+    public Jail(GamePanel p, int xPos, int yPos){
+        panel = p;
+        x = xPos;
+        y = yPos;
+  
+        dx = 8;
+        dy = 0;
+  
+        width = 60;
+        height = 65;
+
+        jail = ImageManager.loadBufferedImage("images/jail.png");
+    }
+
+    public void draw(Graphics2D g2){
+        g2.drawImage(jail, x, y, width, height, null);
+    }
+        
+        
+    public void move(int direction){
+      
+        if (direction == 3) {		// move left
+            // if (x > 500-jail.getWidth())
+                moveRight();
+        }	
+        else				// move right
+        if (direction == 4) {
+            if(x > 320)
+                moveLeft();
+        }
+
+        // System.out.println("Jail x: " + x);
+    }
+
+    public void moveLeft(){
+        x = x - dx;
+    }
+
+    public void moveRight(){
+        x = x + dx;
+    }
+
+    public void decreaseY(){
+        for (int i=0; i<10; i++){
+            if (y > 300)
+                y = (int)((double)y - .05);
+        }
+            
+    }
+
+    // public void resetXPos(){  // restarts the background at the beginning of the new level
+    //     x = originalX;
+    // }
+
+}

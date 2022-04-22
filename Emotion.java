@@ -12,8 +12,8 @@ public abstract class Emotion {
 
     public static int x = 50, y = 400; // all emotions should have the same x y
     protected int width, height;
-
     protected int dx, dy;
+    protected int orginalX, orginalY;
 
     protected Image currIdleImage;
     protected Image[] idleImages;
@@ -32,6 +32,11 @@ public abstract class Emotion {
         animations = new HashMap<String, Animation>();
         width = 48;
         height = 48;
+
+        // used to reset the emotion's position at the start of a new level
+        orginalX = x;
+        orginalY = y;
+        dx = 2;
     }
 
     protected abstract void loadAnimations();
@@ -71,11 +76,11 @@ public abstract class Emotion {
         return new Rectangle2D.Double(x, y, width, height);
     }
 
-    public boolean collidesWithEnemy(Enemy e){
+    public boolean collidesWithEgg(Egg e){
         Rectangle2D.Double myRect = getBoundingRectangle();
-        Rectangle2D.Double enemyRect = e.getBoundingRectangle();
+        Rectangle2D.Double eggRect = e.getBoundingRectangle();
 
-        return myRect.intersects(enemyRect);
+        return myRect.intersects(eggRect);
     }
 
     // for levels
@@ -86,5 +91,29 @@ public abstract class Emotion {
     public boolean isUnlocked(){
         return unlocked;
     }
+
+    public void resetEmotion(){
+        x = orginalX;
+        y = orginalY;
+    }
+
+    public void move(int direction){
+      
+        if (direction == 3) {		// move left
+            x = x - dx;
+            
+            if (x < 0)
+              x = 0;
+        }	
+        else				// move right
+        if (direction == 4) {
+            x = x + dx;
+            
+            if (x+75 > panel.getWidth())
+              x = panel.getWidth() - 75;
+        }
+
+    }
+    
 
 }

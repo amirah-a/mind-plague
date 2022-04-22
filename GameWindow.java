@@ -100,7 +100,7 @@ public class GameWindow extends JFrame implements
 
 		JPanel infoPanel = new JPanel();
 		gridLayout = new GridLayout(3, 2);
-		infoPanel.setLayout(gridLayout);
+		infoPanel.setLayout(gridLayout); 
 		infoPanel.setBackground(Color.ORANGE);
 
 		// add user interface objects to infoPanel
@@ -149,9 +149,9 @@ public class GameWindow extends JFrame implements
 
 		// set properties of window
 
+		setLocationRelativeTo(null);
 		setResizable(true);
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-
 		setVisible(true);
 
 		// set status bar message
@@ -235,9 +235,10 @@ public class GameWindow extends JFrame implements
             // } catch (InterruptedException e1) {
             //     e1.printStackTrace();
             // }
-            // int x = gamePanel.getPlayer().getX() + gamePanel.getPlayer().getPWidth();
-            // int y = gamePanel.getPlayer().getY() + gamePanel.getPlayer().getPHeight() - 35;
-            // gamePanel.addBullet(new Bullet(gamePanel,x, y));
+            int x = Emotion.x + 48;
+            int y = Emotion.y + 13;
+            gamePanel.addBullet(gamePanel.createBullet(x, y));
+	
         }
 
 		//switching characters
@@ -247,22 +248,22 @@ public class GameWindow extends JFrame implements
 		}
 
 		if(keyCode == KeyEvent.VK_2){
-			//we need to add a check here
+			// TODO: we need to add a check here
 			gamePanel.switchEmotion(1); //set to Love
 		}
 
 		if(keyCode == KeyEvent.VK_3){
-			//we need to add a check here
+			//TODO: we need to add a check here
 			gamePanel.switchEmotion(2); //set to Rage
 		}
 
 		if(keyCode == KeyEvent.VK_4){
-			//we need to add a check here
+			//TODO: we need to add a check here
 			gamePanel.switchEmotion(3); //set to Sadness
 		}
 
 		if(keyCode == KeyEvent.VK_5){
-			//we need to add a check here
+			//TODO: we need to add a check here
 			gamePanel.switchEmotion(4); //set to Happy
 		}
 	}
