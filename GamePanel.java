@@ -66,6 +66,10 @@ public class GamePanel extends JPanel {
 		currEmotion = emotions[emotionIndex];
 	}
 
+	public Emotion getCurrEmotion(){
+		return currEmotion;
+	}
+
 	private void createGameEntities() {
 		emotions[0] = new Fear(this);
 		emotions[1] = new Love(this);
@@ -175,10 +179,10 @@ public class GamePanel extends JPanel {
 		//soundManager.stopClip ("background");
 	}
 
-	public void updatePlayer(int direction){
+	public void updateObjects(int direction){
 		if(background != null){
 			background.move(direction);
-			currEmotion.move(direction);
+			//currEmotion.move(direction);
 			door.move(direction);
 
 

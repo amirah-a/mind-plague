@@ -206,6 +206,11 @@ public class GameWindow extends JFrame implements
 		if (keyCode == KeyEvent.VK_UP) {
 			//gamePanel.updatePlayer (1);
 			// //gamePanel.drawGameEntities();
+			if(!gamePanel.getCurrEmotion().isJumping()){
+				gamePanel.getCurrEmotion().setJumping(true);
+				gamePanel.getCurrEmotion().setGravity(10.0);
+			}
+				
 		}
 
 		if (keyCode == KeyEvent.VK_DOWN) {
@@ -216,13 +221,15 @@ public class GameWindow extends JFrame implements
         if(keyCode == KeyEvent.VK_LEFT){
             // Player.isWalking = true;
             // //Player.playerWalkLeft.start();
-            gamePanel.updatePlayer(3);
+            gamePanel.updateObjects(3);
+			gamePanel.getCurrEmotion().setDx(-2);
         }
 
         if(keyCode == KeyEvent.VK_RIGHT){
             // Player.isWalking = true;
             // //Player.playerWalkRight.start();
-            gamePanel.updatePlayer(4);
+            gamePanel.updateObjects(4);
+			gamePanel.getCurrEmotion().setDx(2);
         }
 
 
@@ -275,10 +282,12 @@ public class GameWindow extends JFrame implements
 
         if(keyCode == KeyEvent.VK_LEFT){
             //Player.isWalking = false;
+			gamePanel.getCurrEmotion().setDx(0); //movement
         }
 
         if(keyCode == KeyEvent.VK_RIGHT){
             //Player.isWalking = false;
+			gamePanel.getCurrEmotion().setDx(0);  //no movement
         }
 
 		if(keyCode == KeyEvent.VK_SPACE){
