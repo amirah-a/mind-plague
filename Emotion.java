@@ -132,7 +132,7 @@ public abstract class Emotion {
         
 
         if(jumping){
-            gravity -= 0.4;
+            gravity -= 0.3;
             setDy((int)-gravity);
             if(gravity <= 0.0){
                 jumping = false;
@@ -154,6 +154,30 @@ public abstract class Emotion {
         Rectangle2D.Double eggRect = e.getBoundingRectangle();
 
         return myRect.intersects(eggRect);
+    }
+
+    public boolean isOnTopPlatform(Platform p){
+        Rectangle2D.Double myRect = getBoundingRectangle();
+        Rectangle2D.Double platRect = p.getBoundingRectangle();
+
+        //if objects are colliding and emotion is above the platform
+        if(myRect.intersects(platRect) && y + height > p.getY()  && y + height < p.getY() + 15){
+            //System.out.println("on platform");
+            return true;
+        }
+        //System.out.println("here");
+        return false;
+    }
+
+    public boolean hitBottom(Platform p){
+        Rectangle2D.Double myRect = getBoundingRectangle();
+        Rectangle2D.Double platRect = p.getBoundingRectangle();
+
+        if(myRect.intersects(platRect) && y < p.getY() + 54){
+            return true;
+        }
+
+        return false;
     }
 
     // for levels

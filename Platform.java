@@ -2,6 +2,7 @@ import java.awt.Graphics2D;
 import javax.swing.JPanel;
 import java.awt.Image;
 import java.awt.image.BufferedImage;
+import java.awt.geom.Rectangle2D;
 
 
 public class Platform {
@@ -36,6 +37,14 @@ public class Platform {
         locked = true;
     }
 
+    public int getY(){
+        return y;
+    }
+
+    public int getX(){
+        return x;
+    }
+
     public void draw(Graphics2D g2){
         g2.drawImage(platform, x, y, width, height, null);
     }
@@ -64,5 +73,9 @@ public class Platform {
     
     public void resetXPos(){  // restarts the background at the beginning of the new level
         x = originalX;
+    }
+
+    public Rectangle2D.Double getBoundingRectangle(){
+        return new Rectangle2D.Double(x, y, width, height);
     }
 }
