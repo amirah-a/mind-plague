@@ -22,11 +22,6 @@ public class Fear extends Emotion {
    
     }
 
-    @Override
-    public void update() {
-        // TODO Auto-generated method stub
-        currAnimation.update();
-    }
 
     
     public void draw(Graphics2D g2) {

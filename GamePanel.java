@@ -33,7 +33,7 @@ public class GamePanel extends JPanel {
 
 	private Door door, openDoor, closedDoor;
 	private boolean open;
-	private Platform[] platform;
+	private Platform[] platforms;
 	private Portal portal;
 
 	private int eggsRem;
@@ -54,7 +54,7 @@ public class GamePanel extends JPanel {
 
 		eggsRem = 3;
 		score = new int[5]; // 5 scores for 5 levels - not level 0
-		platform = new Platform[5];
+		platforms = new Platform[5];
 
 		jail = null;
 		prisoner = null;
@@ -64,6 +64,10 @@ public class GamePanel extends JPanel {
 
 	public void switchEmotion(int emotionIndex){
 		currEmotion = emotions[emotionIndex];
+	}
+
+	public Emotion getCurrEmotion(){
+		return currEmotion;
 	}
 
 	private void createGameEntities() {
@@ -80,11 +84,11 @@ public class GamePanel extends JPanel {
 		door = closedDoor;
 
 		// increase the xPos to place platform further away
-		platform[0] = new Platform(this, 600, 300, 93, 54, "images/short_platform.png"); 
-		platform[1] = new Platform(this, 175, 250, 162, 54, "images/platform.png");
-		platform[2] = new Platform(this, 1250, 350, 114, 54, "images/medium_platform.png"); 
-		platform[3] = new Platform(this, 1350, 250, 162, 54, "images/platform.png");
-		platform[4] = new Platform(this, 1900, 250, 166, 54, "images/long_platform.png"); 
+		platforms[0] = new Platform(this, 600, 300, 93, 54, "images/short_platform.png"); 
+		platforms[1] = new Platform(this, 175, 250, 162, 54, "images/platform.png");
+		platforms[2] = new Platform(this, 1250, 350, 114, 54, "images/medium_platform.png"); 
+		platforms[3] = new Platform(this, 1350, 250, 162, 54, "images/platform.png");
+		platforms[4] = new Platform(this, 1900, 250, 166, 54, "images/long_platform.png"); 
 
 		portal = new Portal(this, 1995, 125, 89, 150, "images/portal.png");
 
@@ -175,10 +179,10 @@ public class GamePanel extends JPanel {
 		//soundManager.stopClip ("background");
 	}
 
-	public void updatePlayer(int direction){
+	public void updateObjects(int direction){
 		if(background != null){
 			background.move(direction);
-			currEmotion.move(direction);
+			//currEmotion.move(direction);
 			door.move(direction);
 
 
@@ -196,7 +200,7 @@ public class GamePanel extends JPanel {
 					
 			if (background.getBGX()*-1 < 1832 && background.getBGX() != 0){ // check to stop platfrom from going beyond bg
 				for(int i=0; i<5; i++)
-					platform[i].move(direction);
+					platforms[i].move(direction);
 				
 				portal.move(direction);
 			}			
@@ -221,6 +225,31 @@ public class GamePanel extends JPanel {
 
 			if(tempB.getX() > this.getWidth())
 				removeBullet(tempB);
+		}
+
+		//platform collisions
+		for(int j=0; j<platforms.length; j++){
+			if(currEmotion.isOnTopPlatform(platforms[j])){
+				//System.out.println("Is on platform");
+				if(currEmotion.isFalling()){
+					currEmotion.setDy(0);
+					currEmotion.setFalling(false);
+				}
+			}else{
+				if(!currEmotion.isFalling() && !currEmotion.isJumping()){
+					currEmotion.setGravity(0.0);
+					currEmotion.setFalling(true);
+				}
+			}
+
+			if(currEmotion.hitBottom(platforms[j])){
+				//currEmotion.setDy(0);
+				if(currEmotion.isJumping()){
+					currEmotion.setJumping(false);
+					currEmotion.setGravity(0.0);
+					currEmotion.setFalling(true);
+				}
+			}
 		}
 		
 		
@@ -287,7 +316,7 @@ public class GamePanel extends JPanel {
 
 
 		for(int i=0; i<5; i++)
-			platform[i].draw(imageContext);
+			platforms[i].draw(imageContext);
 
 		portal.draw(imageContext);
 		door.draw(imageContext);

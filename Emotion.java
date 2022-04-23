@@ -15,6 +15,10 @@ public abstract class Emotion {
     protected int dx, dy;
     protected int orginalX, orginalY;
 
+    protected boolean jumping = false, falling = false;
+
+    protected double gravity = 0.0;
+
     protected Image currIdleImage;
     protected Image[] idleImages;
 
@@ -36,12 +40,39 @@ public abstract class Emotion {
         // used to reset the emotion's position at the start of a new level
         orginalX = x;
         orginalY = y;
-        dx = 2;
+        //dx = 2;
     }
 
     protected abstract void loadAnimations();
-    public abstract void update();
     public abstract void draw(Graphics2D g2);
+
+    public void setGravity(double gravity){
+        this.gravity = gravity;
+    }
+
+    public boolean isJumping(){
+        return jumping;
+    }
+
+    public boolean isFalling(){
+        return falling;
+    }
+
+    public void setJumping(boolean value){
+        jumping = value;
+    }
+
+    public void setFalling(boolean value){
+        falling = value;
+    }
+
+    public void setDx(int dx){
+        this.dx = dx;
+    }
+
+    public void setDy(int dy){
+        this.dy = dy;
+    }
 
     public Animation loadAnimationFrames(String path, int amt, boolean loadReverse){
         Animation animation = new Animation(panel, this.width, this.height);
@@ -72,6 +103,48 @@ public abstract class Emotion {
         return animation;
     }
 
+    public void update(){
+        currAnimation.update();
+
+        if(x < 0){
+            dx = 0;
+            x = 0;
+        }else if(x>panel.getWidth() -60){
+            dx = 0;
+            x = panel.getWidth() -60;
+        }
+            
+        
+          
+        
+        //movement
+        x+=dx;  
+        y+=dy;
+
+        
+        
+        if(y + 100 > panel.getHeight()){
+            dy = 0;
+            if(falling)
+                falling = false;
+            //gravity = 0.0;
+        }    
+        
+
+        if(jumping){
+            gravity -= 0.3;
+            setDy((int)-gravity);
+            if(gravity <= 0.0){
+                jumping = false;
+                falling = true;
+            }
+        }
+        if(falling){
+            gravity += 0.1;
+            setDy((int)gravity);    
+        }
+    }
+
     public Rectangle2D.Double getBoundingRectangle(){
         return new Rectangle2D.Double(x, y, width, height);
     }
@@ -81,6 +154,30 @@ public abstract class Emotion {
         Rectangle2D.Double eggRect = e.getBoundingRectangle();
 
         return myRect.intersects(eggRect);
+    }
+
+    public boolean isOnTopPlatform(Platform p){
+        Rectangle2D.Double myRect = getBoundingRectangle();
+        Rectangle2D.Double platRect = p.getBoundingRectangle();
+
+        //if objects are colliding and emotion is above the platform
+        if(myRect.intersects(platRect) && y + height > p.getY()  && y + height < p.getY() + 15){
+            //System.out.println("on platform");
+            return true;
+        }
+        //System.out.println("here");
+        return false;
+    }
+
+    public boolean hitBottom(Platform p){
+        Rectangle2D.Double myRect = getBoundingRectangle();
+        Rectangle2D.Double platRect = p.getBoundingRectangle();
+
+        if(myRect.intersects(platRect) && y < p.getY() + 54){
+            return true;
+        }
+
+        return false;
     }
 
     // for levels
@@ -97,23 +194,23 @@ public abstract class Emotion {
         y = orginalY;
     }
 
-    public void move(int direction){
+    // public void move(int direction){
       
-        if (direction == 3) {		// move left
-            x = x - dx;
+    //     if (direction == 3) {		// move left
+    //         x = x - dx;
             
-            if (x < 0)
-              x = 0;
-        }	
-        else				// move right
-        if (direction == 4) {
-            x = x + dx;
+    //         if (x < 0)
+    //           x = 0;
+    //     }	
+    //     else				// move right
+    //     if (direction == 4) {
+    //         x = x + dx;
             
-            if (x+75 > panel.getWidth())
-              x = panel.getWidth() - 75;
-        }
+    //         if (x+75 > panel.getWidth())
+    //           x = panel.getWidth() - 75;
+    //     }
 
-    }
+    // }
     
 
 }

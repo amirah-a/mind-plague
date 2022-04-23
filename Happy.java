@@ -22,12 +22,6 @@ public class Happy extends Emotion{
    
     }
 
-    @Override
-    public void update() {
-        // TODO Auto-generated method stub
-        currAnimation.update();
-        
-    }
 
     @Override
     public void draw(Graphics2D g2) {
