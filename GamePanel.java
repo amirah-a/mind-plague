@@ -21,6 +21,10 @@ public class GamePanel extends JPanel {
 	private Emotion[] emotions;  //hold all emotions
 	private Emotion currEmotion;
 
+	//eggs
+	private LinkedList<Egg> eggEnemies;
+	private Egg tempE;
+
 	private LinkedList<Bullet> bullets;
 	private Bullet tempB;
 	SoundManager soundManager;
@@ -29,15 +33,18 @@ public class GamePanel extends JPanel {
 	private BufferedImage image;
 	private int emotionIndex;
 
-	public static int LEVEL = 1;	// there are 6 levels - starting at 0
+	public static int LEVEL = 0;	// there are 6 levels - starting at 0
 
 	private Door door, openDoor, closedDoor;
 	private boolean open;
 	private Platform[] platforms;
 	private Portal portal;
 
+	private Random random;
+
 	private int eggsRem;
 	private int[] score;
+	private int ON_SCREEN_EGGS = 5; // we only want 5 eggs on the screen at a time
 	
 	private Jail jail;
     private Prisoner prisoner;
@@ -45,6 +52,9 @@ public class GamePanel extends JPanel {
 	public GamePanel () {
 		emotions = new Emotion[5];
 		currEmotion = null;
+
+		eggEnemies = new LinkedList<Egg>();
+		tempE = null;
 
 		bullets = new LinkedList<Bullet>();
 		tempB = null;
@@ -60,6 +70,7 @@ public class GamePanel extends JPanel {
 		prisoner = null;
 		emotionIndex = 0; // fear
 		
+		random = new Random();
 	}
 
 	public void switchEmotion(int emotionIndex){
@@ -95,6 +106,12 @@ public class GamePanel extends JPanel {
 		if (LEVEL > 0){
 			jail = new Jail(this, 2100, 385);
 			prisoner = new Prisoner(this, 2110, 400, LEVEL);
+		}
+
+		if(LEVEL == 0){
+			for(int i=0; i<eggsRem; i++){
+				addEgg(createEgg());
+			}
 		}
 			
 	}
@@ -137,6 +154,57 @@ public class GamePanel extends JPanel {
 
 	public void removeBullet(Bullet b){
 		bullets.remove(b);
+	}
+
+	public void addEgg(Egg e){
+		eggEnemies.add(e);
+	}
+
+	public void removeEgg(Egg e){
+		eggEnemies.remove(e);
+	}
+
+	public Egg createEgg(){
+		Egg e;
+		String type;
+		int dx;
+		int typeInt = random.nextInt(LEVEL + 1);
+		switch(typeInt -1){
+			case 0:
+				type = "basic";
+				break;
+			case 1:
+				type = "fear";
+				break;
+			case 2:
+				type = "love";
+				break;
+			case 3:
+				type = "rage";
+				break;
+			case 4:
+				type = "sad";
+				break;
+			case 5: 
+				type = "happy";
+				break;
+			default:
+				type = "basic";
+		}
+		typeInt = random.nextInt(2) + 1;
+		switch(typeInt -1){
+			case 0: 
+				dx = -2;
+				break;
+			case 1:
+				dx = 2;
+				break;
+			default:
+				dx = -2;
+		}
+
+		e = new Egg(this, type, 150, 400, dx);
+		return e;
 	}
 
 	public void startGame() {				// initialise and start the game thread 
@@ -190,7 +258,8 @@ public class GamePanel extends JPanel {
 			// when moving towards the door
 
 			if (emotions[LEVEL].isUnlocked() && background.getBGX()*-1 >= 1645 && direction == 4){ // this would change to the collision check
-				jail.decreaseY();
+				if(jail != null)
+					jail.decreaseY();
 			}
 
 			if (LEVEL > 0){
@@ -209,7 +278,8 @@ public class GamePanel extends JPanel {
 
 	public void gameUpdate () {
 		currEmotion.update();
-		prisoner.update();
+		if(prisoner != null)
+			prisoner.update();
 		
 
 		// TODO: in this method check if level is unlocked 
@@ -251,6 +321,13 @@ public class GamePanel extends JPanel {
 				}
 			}
 		}
+
+		//egg handling
+		for(int k=0; k < eggEnemies.size(); k++){
+			tempE = eggEnemies.get(k);
+			tempE.update();
+
+		}
 		
 		
 		if(LEVEL <= 6){ // door is unopened and there are remaining levels
@@ -290,7 +367,7 @@ public class GamePanel extends JPanel {
 		}
 
 		if (LEVEL == 0){ // introduction level
-			imageContext.drawString("Enemies Left: "+String.valueOf(3-eggsRem), 375, 20);
+			imageContext.drawString("Enemies Left: "+String.valueOf(eggsRem), 375, 20);
 		}
 
 		if (LEVEL == 1){
@@ -303,6 +380,11 @@ public class GamePanel extends JPanel {
 		for(int i=0; i < bullets.size(); i++){	//bullet handling
 			tempB = bullets.get(i);
 			tempB.draw(imageContext);
+		}
+
+		for(int j=0; j<eggEnemies.size(); j++){
+			tempE = eggEnemies.get(j);
+			tempE.draw(imageContext);
 		}
 
 		imageContext.drawString("Level: "+String.valueOf(LEVEL), 15, 20);

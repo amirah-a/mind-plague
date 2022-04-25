@@ -17,61 +17,67 @@ public class Egg {
 
     private String eggType; //can be basic, fear, love, etc
 
-    public Egg(GamePanel p, String type){
+    public Egg(GamePanel p, String type, int x, int y, int dx){
         panel = p;
 
+        this.x = x;
+        this.y = y;
+        this.dx = dx;
+
         animations = new HashMap<String, Animation>();
-        width = 48;
-        height = 48;
+        width = 50;
+        height = 50;
 
         eggType = type;
         loadAnimations();
+        currAnimation = animations.get("idle_right");
     }
 
     private void loadAnimations(){
         Animation animation = new Animation(panel, this.width, this.height);
-        switch (eggType) {
-            case "basic":
-                animation = loadAnimationFrames("images/basic_idle_egg_r.png", 8, false);
-                animations.put("idle_right", animation);
-                animation = loadAnimationFrames("images/basic_idle_egg_l.png", 8, false);
-                animations.put("idle_left", animation);
-            case "fear":
-                animation = loadAnimationFrames("images/fear_idle_egg_r.png", 7, false);
-                animations.put("idle_right", animation);
-                animation = loadAnimationFrames("images/fear_idle_egg_l.png", 7, false);
-                animations.put("idle_left", animation);
-
-            case "love":
-                animation = loadAnimationFrames("images/love_idle_egg_r.png", 9, false);
-                animations.put("idle_right", animation);
-                animation = loadAnimationFrames("images/love_idle_egg_l.png", 9, false);
-                animations.put("idle_left", animation);
-            case "rage":
-                animation = loadAnimationFrames("images/rage_idle_egg_r.png", 9, false);
-                animations.put("idle_right", animation);
-                animation = loadAnimationFrames("images/rage_idle_egg_l.png", 9, false);
-                animations.put("idle_left", animation);
-            case "sad":
-                animation = loadAnimationFrames("images/sadness_idle_egg_r.png", 7, false);
-                animations.put("idle_right", animation);
-                animation = loadAnimationFrames("images/sadness_idle_egg_l.png", 7, false);
-                animations.put("idle_left", animation); 
-            case "happy":
-                animation = loadAnimationFrames("images/happy_idle_egg_r.png", 8, false);
-                animations.put("idle_right", animation);
-                animation = loadAnimationFrames("images/happy_idle_egg_l.png", 8, false);
-                animations.put("idle_left", animation);
-            default:
-                throw new IllegalArgumentException("Invalid type of egg: " + eggType);
+        if(eggType.equals("basic")){
+            animation = loadAnimationFrames("images/basic_idle_egg_r.png", 8, false);
+            animations.put("idle_right", animation);
+            animation = loadAnimationFrames("images/basic_idle_egg_l.png", 8, false);
+            animations.put("idle_left", animation);
+        }else if(eggType.equals("fear")){
+            animation = loadAnimationFrames("images/fear_idle_egg_r.png", 7, false);
+            animations.put("idle_right", animation);
+            animation = loadAnimationFrames("images/fear_idle_egg_l.png", 7, false);
+            animations.put("idle_left", animation);
+        }else if(eggType.equals("love")){
+            animation = loadAnimationFrames("images/love_idle_egg_r.png", 9, false);
+            animations.put("idle_right", animation);
+            animation = loadAnimationFrames("images/love_idle_egg_l.png", 9, false);
+            animations.put("idle_left", animation);
+        }else if(eggType.equals("rage")){
+            animation = loadAnimationFrames("images/rage_idle_egg_r.png", 9, false);
+            animations.put("idle_right", animation);
+            animation = loadAnimationFrames("images/rage_idle_egg_l.png", 9, false);
+            animations.put("idle_left", animation);
+        }else if(eggType.equals("sad")){
+            animation = loadAnimationFrames("images/sadness_idle_egg_r.png", 7, false);
+            animations.put("idle_right", animation);
+            animation = loadAnimationFrames("images/sadness_idle_egg_l.png", 7, false);
+            animations.put("idle_left", animation);
+        }else{
+            animation = loadAnimationFrames("images/happy_idle_egg_r.png", 8, false);
+            animations.put("idle_right", animation);
+            animation = loadAnimationFrames("images/happy_idle_egg_l.png", 8, false);
+            animations.put("idle_left", animation);
         }
+                
     }
 
-    public void update(){}
+    public void update(){
+        currAnimation.update();
+        x+=dx;
+    }
 
-    public void draw(Graphics2D g2){}
+    public void draw(Graphics2D g2) {
+        currAnimation.draw(g2, x, y);    
+    }
 
-    public void move(){}
     
     public boolean isType(String value){
         if(eggType.equals(value))
