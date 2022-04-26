@@ -49,6 +49,8 @@ public class GamePanel extends JPanel {
 	private Jail jail;
     private Prisoner prisoner;
 
+	private long spawnTimeElapsed;
+
 	public GamePanel () {
 		emotions = new Emotion[5];
 		currEmotion = null;
@@ -71,6 +73,8 @@ public class GamePanel extends JPanel {
 		emotionIndex = 0; // fear
 		
 		random = new Random();
+
+		spawnTimeElapsed = 0;
 	}
 
 	public void switchEmotion(int emotionIndex){
@@ -108,11 +112,7 @@ public class GamePanel extends JPanel {
 			prisoner = new Prisoner(this, 2110, 400, LEVEL);
 		}
 
-		if(LEVEL == 0){
-			for(int i=0; i<eggsRem; i++){
-				addEgg(createEgg());
-			}
-		}
+		addEgg(createEgg()); // start with one enemy
 			
 	}
 
@@ -277,6 +277,8 @@ public class GamePanel extends JPanel {
 	}
 
 	public void gameUpdate () {
+		spawnTimeElapsed++;
+
 		currEmotion.update();
 		if(prisoner != null)
 			prisoner.update();
@@ -326,6 +328,13 @@ public class GamePanel extends JPanel {
 		for(int k=0; k < eggEnemies.size(); k++){
 			tempE = eggEnemies.get(k);
 			tempE.update();
+
+			//spawn enemies if we can about every 30 loop runs
+			if(eggEnemies.size() < Math.min(eggsRem, ON_SCREEN_EGGS) && spawnTimeElapsed > 30){
+				addEgg(createEgg());
+				spawnTimeElapsed=0;
+			}
+				
 
 		}
 		

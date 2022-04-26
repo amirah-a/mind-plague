@@ -9,11 +9,14 @@ public class Egg {
     protected GamePanel panel;
     
     protected int x, y;
+    private int startX, startY; //used for ai walking motion
     protected int dx, dy;
     protected int width, height;
 
     protected HashMap<String, Animation> animations;
     protected Animation currAnimation;
+
+    private boolean attackMode;
 
     private String eggType; //can be basic, fear, love, etc
 
@@ -22,7 +25,11 @@ public class Egg {
 
         this.x = x;
         this.y = y;
+        startX = x;
+        startY = y;
         this.dx = dx;
+
+        attackMode = false;
 
         animations = new HashMap<String, Animation>();
         width = 50;
@@ -31,6 +38,14 @@ public class Egg {
         eggType = type;
         loadAnimations();
         currAnimation = animations.get("idle_right");
+    }
+
+    public boolean getAttackMode(){
+        return attackMode;
+    }
+
+    public void setAttackMode(boolean value){
+        attackMode = value;
     }
 
     private void loadAnimations(){
@@ -68,14 +83,25 @@ public class Egg {
         }
                 
     }
+ 
 
     public void update(){
         currAnimation.update();
-        x+=dx;
+        walk();
     }
 
     public void draw(Graphics2D g2) {
-        currAnimation.draw(g2, x, y);    
+        currAnimation.draw(g2, x, y);
+        //g2.drawRect(x-100, y-100, 250, 250);    
+    }
+
+    public void walk(){
+        if(Math.abs(startX - x) > 150){
+            startX = x; //new starting point
+            dx = -dx; // opposite direction
+        }
+
+        x+=dx;
     }
 
     
@@ -124,6 +150,15 @@ public class Egg {
         Rectangle2D.Double bulletRect = b.getBoundingRectangle();
       
         return myRect.intersects(bulletRect);
+    }
+
+    public boolean withinAttackRange(Emotion e){
+        Rectangle2D.Double areaRect = new Rectangle2D.Double(x-100, y-100, 250, 250);
+        Rectangle2D.Double emotionRect = e.getBoundingRectangle();
+
+        if(areaRect.intersects(emotionRect))
+            return true;
+        return false;
     }
 
 }
