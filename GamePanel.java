@@ -210,7 +210,7 @@ public class GamePanel extends JPanel {
 				dx = -2;
 		}
 
-		e = new Egg(this, type, 150, 400, dx);
+		e = new Egg(this, type, 1995, 220, dx);
 		return e;
 	}
 
@@ -352,7 +352,7 @@ public class GamePanel extends JPanel {
 				spawnTimeElapsed=0;
 			}
 
-			//collision
+			//bullet collision
 			for(int i=0; i<bullets.size(); i++){
 				tempB = bullets.get(i);
 				if(tempE.collidesWithBullet(tempB)){
@@ -372,6 +372,32 @@ public class GamePanel extends JPanel {
 					}	
 				}
 			}
+
+			//plaform collision
+			for(int j=0; j<platforms.length; j++){
+				if(tempE.isOnTopPlatform(platforms[j])){
+					//System.out.println("Is on platform");
+					if(tempE.isFalling()){
+						tempE.setDy(0);
+						tempE.setFalling(false);
+					}
+				}else{
+					if(!tempE.isFalling() && !tempE.isJumping()){
+						tempE.setGravity(0.0);
+						tempE.setFalling(true);
+					}
+				}
+	
+				if(tempE.hitBottom(platforms[j])){
+					//currEmotion.setDy(0);
+					if(tempE.isJumping()){
+						tempE.setJumping(false);
+						tempE.setGravity(0.0);
+						tempE.setFalling(true);
+					}
+				}
+			}
+
 		}
 
 		if(eggEnemies.size()==0 && eggsRem>0)

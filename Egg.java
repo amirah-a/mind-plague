@@ -15,6 +15,9 @@ public class Egg {
     private int oppDx;
     protected int width, height;
 
+    private boolean jumping, falling;
+    private double gravity = 0.0;
+
     protected HashMap<String, Animation> animations;
     protected Animation currAnimation;
 
@@ -44,6 +47,9 @@ public class Egg {
         width = 50;
         height = 50;
 
+        jumping = false;
+        falling = false;
+
         healthBars = new Image[6];
         loadImages();
         health = 5;
@@ -56,12 +62,41 @@ public class Egg {
         currAnimation = animations.get("idle_right");
     }
 
+    public boolean isJumping(){
+        return jumping;
+    }
+
+    public boolean isFalling(){
+        return falling;
+    }
+
+    public void setJumping(boolean value){
+        jumping = value;
+    }
+
+    public void setFalling(boolean value){
+        falling = value;
+    }
+
+    public void setGravity(double gravity){
+        this.gravity = gravity;
+    }
+
     public int getX(){
         return x;
     }
 
     public int getY(){
         return y;
+    }
+
+    public void setDx(int dx){
+        this.dx = dx;
+        oppDx = -dx;
+    }
+
+    public void setDy(int dy){
+        this.dy = dy;
     }
 
     public boolean getAttackMode(){
@@ -112,6 +147,29 @@ public class Egg {
     public void update(){
         currAnimation.update();
         walk();
+
+        y+=dy;
+        
+        if(y + 100 > panel.getHeight()){
+            dy = 0;
+            if(falling)
+                falling = false;
+            //gravity = 0.0;
+        }    
+        
+
+        if(jumping){
+            gravity -= 0.3;
+            setDy((int)-gravity);
+            if(gravity <= 0.0){
+                jumping = false;
+                falling = true;
+            }
+        }
+        if(falling){
+            gravity += 0.1;
+            setDy((int)gravity);    
+        }
     }
 
     public void draw(Graphics2D g2) {
@@ -131,9 +189,6 @@ public class Egg {
                 oppDx= -dx;
             }
         }
-        //System.out.println(dx);
-        // System.out.println(x);
-        // if ( x > 0)
         x+=dx;
     }
 
@@ -230,6 +285,30 @@ public class Egg {
 
         if(areaRect.intersects(emotionRect))
             return true;
+        return false;
+    }
+
+    public boolean isOnTopPlatform(Platform p){
+        Rectangle2D.Double myRect = getBoundingRectangle();
+        Rectangle2D.Double platRect = p.getBoundingRectangle();
+
+        //if objects are colliding and emotion is above the platform
+        if(myRect.intersects(platRect) && y + height > p.getY()  && y + height < p.getY() + 15){
+            //System.out.println("on platform");
+            return true;
+        }
+        //System.out.println("here");
+        return false;
+    }
+
+    public boolean hitBottom(Platform p){
+        Rectangle2D.Double myRect = getBoundingRectangle();
+        Rectangle2D.Double platRect = p.getBoundingRectangle();
+
+        if(myRect.intersects(platRect) && y < p.getY() + 54){
+            return true;
+        }
+
         return false;
     }
 
