@@ -33,7 +33,7 @@ public class GamePanel extends JPanel {
 	private BufferedImage image;
 	private int emotionIndex;
 
-	public static int LEVEL = 0;	// there are 6 levels - starting at 0
+	public static int LEVEL = 1;	// there are 6 levels - starting at 0
 
 	private Door door, openDoor, closedDoor;
 	private boolean open;
@@ -259,26 +259,22 @@ public class GamePanel extends JPanel {
 			background.move(direction);
 			//currEmotion.move(direction);
 			door.move(direction);
-
-
-			// bg check to ensure it only moves when the player is at a certain point on the background
-			// when moving towards the door
-
-			if (emotions[LEVEL].isUnlocked() && background.getBGX()*-1 >= 1645 && direction == 4){ // this would change to the collision check
-				if(jail != null)
-					jail.decreaseY();
-			}
-
+			
 			if (LEVEL > 0){
 				jail.move(direction);
 				prisoner.move(direction);
 			}
-					
+			
 			if (background.getBGX()*-1 < 1832 && background.getBGX() != 0){ // check to stop platfrom from going beyond bg
 				for(int i=0; i<5; i++)
 					platforms[i].move(direction);
 				
 				portal.move(direction);
+				
+				for(int k=0; k < eggEnemies.size(); k++){
+					tempE = eggEnemies.get(k);
+					tempE.move(direction);
+				}
 			}			
 		}
 	}
@@ -297,6 +293,13 @@ public class GamePanel extends JPanel {
 			}
 		}
 
+		// insert check here to see if player has collected a key
+		// I left the boundaries in so that when the player moves to the end of the screen
+		// they can see the jail move	
+		if (emotions[LEVEL].isUnlocked() && background.getBGX()*-1 >= 1645){ // jail only moves if player has collected the key and is within sight of the jail
+			if(jail != null)
+				jail.moveUp();
+		}
 
 		// TODO: in this method check if level is unlocked 
 		// if it is unlocked, set value of 'open' to true in here to change door image

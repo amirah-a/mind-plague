@@ -4,13 +4,14 @@ import java.awt.Graphics2D;
 import java.awt.geom.Rectangle2D;
 import java.awt.image.BufferedImage;
 import java.util.HashMap;
+import java.util.Random;
 
 public class Egg {
     protected GamePanel panel;
     
     protected int x, y;
     private int startX, startY; //used for ai walking motion
-    protected int dx, dy;
+    protected int dx, dy, bgDx;
     private int oppDx;
     protected int width, height;
 
@@ -35,6 +36,7 @@ public class Egg {
         startY = y;
         this.dx = dx;
         oppDx = -dx;
+        bgDx = 8;
 
         attackMode = false;
 
@@ -126,12 +128,36 @@ public class Egg {
                 startX = x; //new starting point
                 pauseTimeElapsed = 0;
                 dx = oppDx;
-            }    
+            }
         }
         //System.out.println(dx);
+        // System.out.println(x);
         x+=dx;
     }
 
+
+    public void move(int direction){
+      
+        if (direction == 3) {		// move left
+            // if (x > 500-jail.getWidth())
+                moveRight();
+        }	
+        else				// move right
+        if (direction == 4) {
+            // if(x > 444)
+                moveLeft();
+        }
+
+        System.out.println("Egg x: " + x);
+    }
+
+    public void moveLeft(){
+        x = x - bgDx;
+    }
+
+    public void moveRight(){
+        x = x+bgDx ;
+    }    
     
     public boolean isType(String value){
         if(eggType.equals(value))

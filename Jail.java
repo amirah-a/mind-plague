@@ -22,7 +22,7 @@ public class Jail {
         y = yPos;
   
         dx = 8;
-        dy = 0;
+        dy = 2;
   
         width = 60;
         height = 65;
@@ -58,13 +58,11 @@ public class Jail {
         x = x + dx;
     }
 
-    public void decreaseY(){
-        for (int i=0; i<10; i++){
-            if (y > 300)
-                y = (int)((double)y - .05);
-        }
-            
+    public void moveUp(){
+        if(y > 325)
+            y = y - dy;
     }
+
 
     // public void resetXPos(){  // restarts the background at the beginning of the new level
     //     x = originalX;
