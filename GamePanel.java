@@ -265,16 +265,16 @@ public class GamePanel extends JPanel {
 				prisoner.move(direction);
 			}
 			
+
 			if (background.getBGX()*-1 < 1832 && background.getBGX() != 0){ // check to stop platfrom from going beyond bg
 				for(int i=0; i<5; i++)
 					platforms[i].move(direction);
-				
-				portal.move(direction);
 				
 				for(int k=0; k < eggEnemies.size(); k++){
 					tempE = eggEnemies.get(k);
 					tempE.move(direction);
 				}
+				portal.move(direction);
 			}			
 		}
 	}

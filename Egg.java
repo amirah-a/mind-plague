@@ -124,14 +124,16 @@ public class Egg {
         if(Math.abs(startX - x) > 150){
             dx = 0;
             pauseTimeElapsed++;
-            if(pauseTimeElapsed > 30){
+            if(pauseTimeElapsed > 30 || x < 0 || x  > panel.getWidth()-currAnimation.getImage().getWidth(null)){
                 startX = x; //new starting point
                 pauseTimeElapsed = 0;
                 dx = oppDx;
+                oppDx= -dx;
             }
         }
         //System.out.println(dx);
         // System.out.println(x);
+        // if ( x > 0)
         x+=dx;
     }
 
@@ -139,7 +141,7 @@ public class Egg {
     public void move(int direction){
       
         if (direction == 3) {		// move left
-            // if (x > 500-jail.getWidth())
+            // if (x < 500-currAnimation.getImage().getWidth(null))
                 moveRight();
         }	
         else				// move right
@@ -156,7 +158,7 @@ public class Egg {
     }
 
     public void moveRight(){
-        x = x+bgDx ;
+        x = x + bgDx;
     }    
     
     public boolean isType(String value){
