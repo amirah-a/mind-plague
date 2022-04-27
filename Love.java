@@ -21,7 +21,6 @@ public class Love extends Emotion{
         animations.put("idle_left", animation);
     }
 
-
     @Override
     public void draw(Graphics2D g2) {
        currAnimation.draw(g2, x, y);

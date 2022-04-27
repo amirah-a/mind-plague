@@ -39,8 +39,11 @@ public class GamePanel extends JPanel {
 	private boolean open;
 	private Platform[] platforms;
 	private Portal portal;
+	private Key key;
+	private boolean droppedKey, pickedUpKey;
 
 	private Random random;
+	private int keyChance;
 
 	private int eggsRem;
 	private int[] score;
@@ -67,12 +70,16 @@ public class GamePanel extends JPanel {
 		eggsRem = 3;
 		score = new int[5]; // 5 scores for 5 levels - not level 0
 		platforms = new Platform[5];
+		key = null;
 
 		jail = null;
 		prisoner = null;
 		emotionIndex = 0; // fear
 		
 		random = new Random();
+		keyChance = 0;
+		droppedKey = false;
+		pickedUpKey = false;
 
 		spawnTimeElapsed = 0;
 	}
@@ -183,7 +190,7 @@ public class GamePanel extends JPanel {
 				type = "rage";
 				break;
 			case 4:
-				type = "sad";
+				type = "sadness";
 				break;
 			case 5: 
 				type = "happy";
@@ -283,6 +290,13 @@ public class GamePanel extends JPanel {
 		if(prisoner != null)
 			prisoner.update();
 		
+		if(key!=null){
+			if(currEmotion.collidesWithKey(key)){
+				currEmotion.setHasKey(true);
+				pickedUpKey = true;
+			}
+		}
+
 
 		// TODO: in this method check if level is unlocked 
 		// if it is unlocked, set value of 'open' to true in here to change door image
@@ -334,9 +348,31 @@ public class GamePanel extends JPanel {
 				addEgg(createEgg());
 				spawnTimeElapsed=0;
 			}
-				
 
+			//collision
+			for(int i=0; i<bullets.size(); i++){
+				tempB = bullets.get(i);
+				if(tempE.collidesWithBullet(tempB)){
+					if(tempE.isType(tempB.getType()) || tempE.isType("basic")){
+						removeBullet(tempB);
+						if(tempE.getHealth() > 0)
+							tempE.decreaseHealth();
+						else{
+							keyChance = random.nextInt(eggsRem) + 1;
+							if(keyChance == 1 && !droppedKey){
+								key = new Key(this,tempE.getX(), tempE.getY());
+								droppedKey = true;
+							}
+							removeEgg(tempE);
+							eggsRem--;
+						}
+					}	
+				}
+			}
 		}
+
+		if(eggEnemies.size()==0 && eggsRem>0)
+			addEgg(createEgg());
 		
 		
 		if(LEVEL <= 6){ // door is unopened and there are remaining levels
@@ -416,6 +452,13 @@ public class GamePanel extends JPanel {
 			currEmotion.draw(imageContext);
 		}
 
+		if(droppedKey && !pickedUpKey){
+			key.draw(imageContext);
+		}
+
+		if(pickedUpKey && currEmotion.HasKey()){
+			key.draw(imageContext, this.getWidth()/2, 0);
+		}
 	
 		Graphics2D g2 = (Graphics2D) getGraphics();
 		g2.drawImage(image, 0, 0, null);

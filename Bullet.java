@@ -52,6 +52,10 @@ public class Bullet {
         return false;
     }
 
+    public String getType(){
+        return bulletType;
+    }
+
     public int getX(){
         return x;
     }

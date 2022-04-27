@@ -11,10 +11,16 @@ public class Egg {
     protected int x, y;
     private int startX, startY; //used for ai walking motion
     protected int dx, dy;
+    private int oppDx;
     protected int width, height;
 
     protected HashMap<String, Animation> animations;
     protected Animation currAnimation;
+
+    private Image[] healthBars;
+    private int health;
+
+    private long pauseTimeElapsed;
 
     private boolean attackMode;
 
@@ -28,6 +34,7 @@ public class Egg {
         startX = x;
         startY = y;
         this.dx = dx;
+        oppDx = -dx;
 
         attackMode = false;
 
@@ -35,9 +42,24 @@ public class Egg {
         width = 50;
         height = 50;
 
+        healthBars = new Image[6];
+        loadImages();
+        health = 5;
+
+
+        pauseTimeElapsed =0;
+
         eggType = type;
         loadAnimations();
         currAnimation = animations.get("idle_right");
+    }
+
+    public int getX(){
+        return x;
+    }
+
+    public int getY(){
+        return y;
     }
 
     public boolean getAttackMode(){
@@ -70,7 +92,7 @@ public class Egg {
             animations.put("idle_right", animation);
             animation = loadAnimationFrames("images/rage_idle_egg_l.png", 9, false);
             animations.put("idle_left", animation);
-        }else if(eggType.equals("sad")){
+        }else if(eggType.equals("sadness")){
             animation = loadAnimationFrames("images/sadness_idle_egg_r.png", 7, false);
             animations.put("idle_right", animation);
             animation = loadAnimationFrames("images/sadness_idle_egg_l.png", 7, false);
@@ -92,15 +114,21 @@ public class Egg {
 
     public void draw(Graphics2D g2) {
         currAnimation.draw(g2, x, y);
+        g2.drawImage(healthBars[health], x, y - healthBars[health].getHeight(null), null);
         //g2.drawRect(x-100, y-100, 250, 250);    
     }
 
     public void walk(){
         if(Math.abs(startX - x) > 150){
-            startX = x; //new starting point
-            dx = -dx; // opposite direction
+            dx = 0;
+            pauseTimeElapsed++;
+            if(pauseTimeElapsed > 30){
+                startX = x; //new starting point
+                pauseTimeElapsed = 0;
+                dx = oppDx;
+            }    
         }
-
+        //System.out.println(dx);
         x+=dx;
     }
 
@@ -112,6 +140,13 @@ public class Egg {
             return false;
     }
 
+    public void decreaseHealth(){
+        health--;
+    }
+
+    public int getHealth(){
+        return health;
+    }
     public Animation loadAnimationFrames(String path, int amt, boolean loadReverse){
         Animation animation = new Animation(panel, this.width, this.height);
         Image stripImage = ImageManager.loadImage(path);
@@ -139,6 +174,15 @@ public class Egg {
         }
 
         return animation;
+    }
+
+    public void loadImages(){
+        healthBars[0] = ImageManager.loadImage("images/health0.png");
+        healthBars[1] = ImageManager.loadImage("images/health1.png");
+        healthBars[2] = ImageManager.loadImage("images/health2.png");
+        healthBars[3] = ImageManager.loadImage("images/health3.png");
+        healthBars[4] = ImageManager.loadImage("images/health4.png");
+        healthBars[5] = ImageManager.loadImage("images/health5.png");
     }
 
     public Rectangle2D.Double getBoundingRectangle(){

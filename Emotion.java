@@ -12,7 +12,7 @@ public abstract class Emotion {
 
     public static int x = 50, y = 400; // all emotions should have the same x y
     protected int width, height;
-    protected int dx, dy;
+    public static int dx, dy;
     protected int orginalX, orginalY;
 
     protected boolean jumping = false, falling = false;
@@ -28,6 +28,7 @@ public abstract class Emotion {
     protected HashMap<String, Animation> animations;
 
     protected boolean unlocked;
+    protected boolean hasKey;
 
     public Emotion(GamePanel p){
         panel = p;
@@ -36,6 +37,7 @@ public abstract class Emotion {
         animations = new HashMap<String, Animation>();
         width = 48;
         height = 48;
+        hasKey = false;
 
         // used to reset the emotion's position at the start of a new level
         orginalX = x;
@@ -45,6 +47,14 @@ public abstract class Emotion {
 
     protected abstract void loadAnimations();
     public abstract void draw(Graphics2D g2);
+
+    public boolean HasKey(){
+        return hasKey;
+    }
+
+    public void setHasKey(boolean value){
+        hasKey = value;
+    }
 
     public void setGravity(double gravity){
         this.gravity = gravity;
@@ -154,6 +164,13 @@ public abstract class Emotion {
         Rectangle2D.Double eggRect = e.getBoundingRectangle();
 
         return myRect.intersects(eggRect);
+    }
+
+    public boolean collidesWithKey(Key k){
+        Rectangle2D.Double myRect = getBoundingRectangle();
+        Rectangle2D.Double keyRect = k.getBoundingRectangle();
+
+        return myRect.intersects(keyRect);
     }
 
     public boolean isOnTopPlatform(Platform p){
