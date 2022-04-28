@@ -41,19 +41,23 @@ public class Key {
     public void move(int direction){
       
         if (direction == 3) {		// move left
-            x = x - dx;
-            
-            if (x < 0)
-              x = 0;
+            // if (x < 550)
+                moveRight();
         }	
         else				// move right
         if (direction == 4) {
-            x = x + dx;
-            
-            if (x+75 > panel.getWidth())
-              x = panel.getWidth() - 60;
+            // if(x > -160)
+                moveLeft();
         }
 
+    }
+
+    public void moveLeft(){
+        x = x - dx;
+    }
+
+    public void moveRight(){
+        x = x + dx;
     }
 
     public Rectangle2D.Double getBoundingRectangle(){

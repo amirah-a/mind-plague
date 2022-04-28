@@ -255,22 +255,22 @@ public class GameWindow extends JFrame implements
 		}
 
 		if(keyCode == KeyEvent.VK_2){
-			// TODO: we need to add a check here
+			// if (GamePanel.emotionIndex <= 1)
 			gamePanel.switchEmotion(1); //set to Love
 		}
 
 		if(keyCode == KeyEvent.VK_3){
-			//TODO: we need to add a check here
+			// if (GamePanel.emotionIndex <= 2)
 			gamePanel.switchEmotion(2); //set to Rage
 		}
 
 		if(keyCode == KeyEvent.VK_4){
-			//TODO: we need to add a check here
+			// if (GamePanel.emotionIndex <= 3)
 			gamePanel.switchEmotion(3); //set to Sadness
 		}
 
 		if(keyCode == KeyEvent.VK_5){
-			//TODO: we need to add a check here
+			// if (GamePanel.emotionIndex <= 4)
 			gamePanel.switchEmotion(4); //set to Happy
 		}
 	}

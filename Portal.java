@@ -52,6 +52,7 @@ public class Portal {
                 moveLeft();
         }
 
+        System.out.println("Portal x: " + x);
     }
 
     public void moveLeft(){
@@ -64,5 +65,13 @@ public class Portal {
     
     public void resetXPos(){  // restarts the background at the beginning of the new level
         x = originalX;
+    }
+
+    public int getX(){
+        return x;
+    }
+
+    public int getY(){
+        return y;
     }
 }

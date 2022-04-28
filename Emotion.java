@@ -124,9 +124,6 @@ public abstract class Emotion {
             x = panel.getWidth() -60;
         }
             
-        
-          
-        
         //movement
         x+=dx;  
         y+=dy;

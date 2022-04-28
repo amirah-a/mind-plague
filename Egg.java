@@ -146,7 +146,9 @@ public class Egg {
 
     public void update(){
         currAnimation.update();
-        walk();
+        if (x > 0 &&  x < panel.getWidth()-currAnimation.getImage().getWidth(null) )
+            walk();
+        // System.out.println(panel.getWidth()-currAnimation.getImage().getWidth(null));
 
         y+=dy;
         
@@ -182,7 +184,7 @@ public class Egg {
         if(Math.abs(startX - x) > 150){
             dx = 0;
             pauseTimeElapsed++;
-            if(pauseTimeElapsed > 30 || x < 0 || x  > panel.getWidth()-currAnimation.getImage().getWidth(null)){
+            if(pauseTimeElapsed > 25){
                 startX = x; //new starting point
                 pauseTimeElapsed = 0;
                 dx = oppDx;

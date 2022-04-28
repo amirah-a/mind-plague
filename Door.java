@@ -65,4 +65,18 @@ public class Door {
     public void resetXPos(){  // restarts the background at the beginning of the new level
         x = originalX;
     }
+
+    public int getX() {
+        return x;
+    }
+
+    public int getY() {
+        return x;
+    }
+
+    public void setXY(int x, int y){
+        this.x = x;
+        this.y = y;
+    }
+
 }

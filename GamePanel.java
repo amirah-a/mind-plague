@@ -35,7 +35,7 @@ public class GamePanel extends JPanel {
 
 	public static int LEVEL = 1;	// there are 6 levels - starting at 0
 
-	private Door door, openDoor, closedDoor;
+	private Door[] door;
 	private boolean open;
 	private Platform[] platforms;
 	private Portal portal;
@@ -81,6 +81,8 @@ public class GamePanel extends JPanel {
 		droppedKey = false;
 		pickedUpKey = false;
 
+		door = new Door[2];
+
 		spawnTimeElapsed = 0;
 	}
 
@@ -101,9 +103,8 @@ public class GamePanel extends JPanel {
 		
 		background = new Background(this, "images/Scrolling_BG.png", 8);	
 		
-		openDoor = new Door(this, 2200, 390, 79, 56, "images/door_open.png");	
-		closedDoor = new Door(this, 2200, 390, 51 , 56, "images/door_closed.png");
-		door = closedDoor;
+		door[0] = new Door(this, 2200, 390, 79, 56, "images/door_open.png");	
+		door[1] = new Door(this, 2200, 390, 51 , 56, "images/door_closed.png");
 
 		// increase the xPos to place platform further away
 		platforms[0] = new Platform(this, 600, 300, 93, 54, "images/short_platform.png"); 
@@ -201,16 +202,16 @@ public class GamePanel extends JPanel {
 		typeInt = random.nextInt(2) + 1;
 		switch(typeInt -1){
 			case 0: 
-				dx = -2;
+				dx = -3;
 				break;
 			case 1:
-				dx = 2;
+				dx = 3;
 				break;
 			default:
-				dx = -2;
+				dx = -3;
 		}
 
-		e = new Egg(this, type, 1995, 220, dx);
+		e = new Egg(this, type, portal.getX()-(int)spawnTimeElapsed, portal.getY(), dx);
 		return e;
 	}
 
@@ -258,7 +259,9 @@ public class GamePanel extends JPanel {
 		if(background != null){
 			background.move(direction);
 			//currEmotion.move(direction);
-			door.move(direction);
+			for(int i=0; i<2; i++)
+				door[i].move(direction);
+			
 			
 			if (LEVEL > 0){
 				jail.move(direction);
@@ -275,6 +278,9 @@ public class GamePanel extends JPanel {
 					tempE.move(direction);
 				}
 				portal.move(direction);
+				
+				if (key != null)
+					key.move(direction);
 			}			
 		}
 	}
@@ -297,8 +303,10 @@ public class GamePanel extends JPanel {
 		// I left the boundaries in so that when the player moves to the end of the screen
 		// they can see the jail move	
 		if (emotions[LEVEL].isUnlocked() && background.getBGX()*-1 >= 1645){ // jail only moves if player has collected the key and is within sight of the jail
-			if(jail != null)
+			if(jail != null && pickedUpKey && eggsRem == 0){
+				open = true;
 				jail.moveUp();
+			}
 		}
 
 		// TODO: in this method check if level is unlocked 
@@ -450,6 +458,22 @@ public class GamePanel extends JPanel {
 
 
 		/* Common objects*/
+		int door_index;
+		if(!open){ // checks if door is opened - eg level 0 killed all 3 eggs	
+			door_index=1;
+		}
+		else{
+			
+			door_index=0;
+		}
+		door[door_index].draw(imageContext);
+		
+		imageContext.drawString("Level: "+String.valueOf(LEVEL), 15, 20);
+
+		for(int i=0; i<5; i++)
+			platforms[i].draw(imageContext);
+
+
 		
 		for(int i=0; i < bullets.size(); i++){	//bullet handling
 			tempB = bullets.get(i);
@@ -460,22 +484,6 @@ public class GamePanel extends JPanel {
 			tempE = eggEnemies.get(j);
 			tempE.draw(imageContext);
 		}
-
-		imageContext.drawString("Level: "+String.valueOf(LEVEL), 15, 20);
-		
-		if(!open){ // checks if door is opened - eg level 0 killed all 3 eggs
-			door = closedDoor;
-		}
-		else{
-			door = openDoor;
-		}
-
-
-		for(int i=0; i<5; i++)
-			platforms[i].draw(imageContext);
-
-		portal.draw(imageContext);
-		door.draw(imageContext);
 
 		if(currEmotion != null){
 			currEmotion.draw(imageContext);
@@ -488,7 +496,10 @@ public class GamePanel extends JPanel {
 		if(pickedUpKey && currEmotion.HasKey()){
 			key.draw(imageContext, this.getWidth()/2, 0);
 		}
-	
+
+		portal.draw(imageContext);
+		
+		
 		Graphics2D g2 = (Graphics2D) getGraphics();
 		g2.drawImage(image, 0, 0, null);
 		
