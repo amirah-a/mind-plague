@@ -126,28 +126,6 @@ public class SepiaFX implements ImageFX {
 
 		g2.drawImage(copy, x, y, width, height, null);
 
-/*
-		BufferedImage dest = new BufferedImage (imWidth, imHeight,
-							BufferedImage.TYPE_INT_ARGB);
-
-    		Graphics2D g2d = dest.createGraphics();
-
-		// Vertical Flip?
-
-		g2d.drawImage(copy, imWidth, 0, 0,imHeight,
-			 	   0, 0, imWidth, imHeight, null);
-
-*/ 		
-
-		// Horizontal Flip?
-
-/*
-		g2d.drawImage(copy, 0, imHeight, imWidth, 0,
-			 	   0, 0, imWidth, imHeight, null);
-
-		g2.drawImage(dest, x, y, WIDTH, HEIGHT, null);
-*/
-
 	}
 
 

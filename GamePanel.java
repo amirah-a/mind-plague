@@ -35,6 +35,10 @@ public class GamePanel extends JPanel {
 
 	public static int LEVEL = 1;	// there are 6 levels - starting at 0
 
+	//Pelican
+	private Pelican[] pelican;
+	private boolean isAttacking; 
+
 	private Door[] door;
 	private boolean open;
 	private Platform[] platforms;
@@ -83,6 +87,8 @@ public class GamePanel extends JPanel {
 
 		door = new Door[2];
 
+		pelican = new Pelican[2];
+
 		spawnTimeElapsed = 0;
 	}
 
@@ -105,6 +111,10 @@ public class GamePanel extends JPanel {
 		
 		door[0] = new Door(this, 2200, 390, 79, 56, "images/door_open.png");	
 		door[1] = new Door(this, 2200, 390, 51 , 56, "images/door_closed.png");
+
+		// if pelican isAttacking index=1 else index=0
+		pelican[0] = new Pelican(this, 2200, 390, 204, 120, "images/pelican_idle.png");	
+		pelican[1] = new Pelican(this, 2200, 390, 204 , 120, "images/pelican_attack.png");
 
 		// increase the xPos to place platform further away
 		platforms[0] = new Platform(this, 600, 300, 93, 54, "images/short_platform.png"); 
