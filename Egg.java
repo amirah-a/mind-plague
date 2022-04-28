@@ -26,8 +26,11 @@ public class Egg {
     private int health;
 
     private long pauseTimeElapsed;
+    private long attackTimeElapsed;
 
     private boolean attackMode;
+
+    private Random random;
 
     private String eggType; //can be basic, fear, love, etc
 
@@ -61,6 +64,9 @@ public class Egg {
 
 
         pauseTimeElapsed =0;
+        attackTimeElapsed = 0;
+
+        random = new Random();
 
         eggType = type;
         loadAnimations();
@@ -187,6 +193,18 @@ public class Egg {
         currAnimation.draw(g2, x, y);
         g2.drawImage(healthBars[health], x, y - healthBars[health].getHeight(null), null);
         //g2.drawRect(x-100, y-100, 250, 250);    
+    }
+
+    public boolean attack(){
+        attackTimeElapsed++;
+        if(attackTimeElapsed>50){
+            attackTimeElapsed = 0;
+            int attackChance = random.nextInt(4);
+            if(attackChance == 0){
+                return true;
+            } 
+        }
+        return false;
     }
 
     public void walk(){

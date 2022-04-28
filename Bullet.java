@@ -16,7 +16,7 @@ public class Bullet {
     private Image bulletImg;
     private String bulletType;
 
-    public Bullet(GamePanel p, int x, int y, String type){
+    public Bullet(GamePanel p, int x, int y, String type, int dx){
         panel = p;
         this.x = x;
         this.y = y;
@@ -28,7 +28,7 @@ public class Bullet {
         width = bulletImg.getWidth(null);
         height = bulletImg.getHeight(null);
 
-        dx = 20;
+        this.dx = dx;
     }
 
     private void loadBulletImage(String type){
@@ -43,6 +43,10 @@ public class Bullet {
             bulletImg = ImageManager.loadImage("images/sadness_bullet.png");
         if(type.equals("happy"))
             bulletImg = ImageManager.loadImage("images/happy_bullet.png");
+        
+        if(type.equals("egg")){
+            bulletImg = ImageManager.loadImage("images/egg_bullet.png");
+        }
     }
 
     public boolean isType(String value){

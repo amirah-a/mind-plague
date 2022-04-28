@@ -23,7 +23,9 @@ public class GamePanel extends JPanel {
 
 	//eggs
 	private LinkedList<Egg> eggEnemies;
+	private LinkedList<Bullet> enemyBullets;
 	private Egg tempE;
+	private Bullet tempEnemyB;
 
 	private LinkedList<Bullet> bullets;
 	private Bullet tempB;
@@ -33,7 +35,7 @@ public class GamePanel extends JPanel {
 	private BufferedImage image;
 	private int emotionIndex;
 
-	public static int LEVEL = 5;	// there are 6 levels - starting at 0
+	public static int LEVEL = 0;	// there are 6 levels - starting at 0
 
 	//Pelican
 	private Pelican[] pelican;
@@ -64,6 +66,8 @@ public class GamePanel extends JPanel {
 
 		eggEnemies = new LinkedList<Egg>();
 		tempE = null;
+		enemyBullets = new LinkedList<Bullet>();
+		tempEnemyB = null;
 
 		bullets = new LinkedList<Bullet>();
 		tempB = null;
@@ -137,40 +141,65 @@ public class GamePanel extends JPanel {
 		bullets.add(b);
 	}
 
+	public void addEnemyBullet(Bullet b){
+		enemyBullets.add(b);	
+	}
+
 	public Bullet createBullet(int x, int y){
 		Bullet bullet;
+		int dx;
+		if(currEmotion.getDx() == 0){
+			if(currEmotion.getprevDx() == 0){
+				dx = 20;
+			}else{
+				dx = currEmotion.getprevDx()*10;
+			}	
+		}else{
+			dx = currEmotion.getDx()*10;
+		}
+
 		if(currEmotion instanceof Fear){
 			System.out.println("Fear");
-			bullet = new Bullet(this, x, y, "fear");
+			bullet = new Bullet(this, x, y, "fear", dx);
 			return bullet;
 		}
 			
 		if(currEmotion instanceof Love){
 			System.out.println("Love");
-			bullet = new Bullet(this, x, y, "love");
+			bullet = new Bullet(this, x, y, "love", dx);
 			return bullet;
 		}
 			
 		if(currEmotion instanceof Rage){
 			System.out.println("Rage");
-			bullet = new Bullet(this, x, y, "rage");
+			bullet = new Bullet(this, x, y, "rage", dx);
 			return bullet;
 		}
 			
 		if(currEmotion instanceof Sadness){
 			System.out.println("Sadness");
-			bullet = new Bullet(this, x, y, "sadness");
+			bullet = new Bullet(this, x, y, "sadness", dx);
 			return bullet;
 		}	
 		else{
 			System.out.println("Happy");
-			bullet = new Bullet(this, x, y, "happy");
+			bullet = new Bullet(this, x, y, "happy", dx);
 			return bullet;
 		}
 	}
 
+	public Bullet createEnemyBullet(int x, int y, int dx){
+		Bullet bullet;
+		bullet = new Bullet(this, x, y, "egg", dx);
+		return bullet;
+	}
+
 	public void removeBullet(Bullet b){
 		bullets.remove(b);
+	}
+
+	public void removeEnemyBullet(Bullet b){
+		enemyBullets.remove(b);
 	}
 
 	public void addEgg(Egg e){
@@ -186,7 +215,7 @@ public class GamePanel extends JPanel {
 		String type;
 		int dx;
 		int typeInt = random.nextInt(LEVEL + 1);
-		switch(typeInt -1){
+		switch(typeInt){
 			case 0:
 				type = "basic";
 				break;
@@ -222,6 +251,12 @@ public class GamePanel extends JPanel {
 
 		e = new Egg(this, type, portal.getX()-(int)spawnTimeElapsed, portal.getY(), dx);
 		return e;
+	}
+
+	public int getEggBulletDx(Egg e){
+		if(currEmotion.x >= e.getX())
+			return 20;
+		return -20;
 	}
 
 	public void startGame() {				// initialise and start the game thread 
@@ -327,21 +362,30 @@ public class GamePanel extends JPanel {
 		}
 
 
-		//bullet handling
+		//player bullet handling
 		for(int i=0; i<bullets.size(); i++){
 			tempB = bullets.get(i);
 			tempB.move();
 
-			if(tempB.getX() > this.getWidth())
+			if(tempB.passedDistance())
 				removeBullet(tempB);
+		}
+
+		//enemy bullet handling
+		for(int a=0; a<enemyBullets.size(); a++){
+			tempEnemyB = enemyBullets.get(a);
+			tempEnemyB.move();
+
+			if(tempEnemyB.passedDistance())
+				removeEnemyBullet(tempB);
 		}
 
 		//platform collisions
 		for(int j=0; j<platforms.length; j++){
 			if(currEmotion.isOnTopPlatform(platforms[j])){
-				//System.out.println("Is on platform");
+				
 				if(currEmotion.isFalling()){
-					currEmotion.setDy(0);
+					currEmotion.setDy(0);					
 					currEmotion.setFalling(false);
 				}
 			}else{
@@ -350,7 +394,6 @@ public class GamePanel extends JPanel {
 					currEmotion.setFalling(true);
 				}
 			}
-
 			if(currEmotion.hitBottom(platforms[j])){
 				//currEmotion.setDy(0);
 				if(currEmotion.isJumping()){
@@ -359,6 +402,7 @@ public class GamePanel extends JPanel {
 					currEmotion.setFalling(true);
 				}
 			}
+			
 		}
 
 		//egg handling
@@ -417,6 +461,11 @@ public class GamePanel extends JPanel {
 						tempE.setFalling(true);
 					}
 				}
+			}
+
+			//enemy attack
+			if(tempE.attack()){
+				addEnemyBullet(createEnemyBullet(tempE.getX() + 40, tempE.getY()+13, getEggBulletDx(tempE)));
 			}
 
 		}
@@ -490,9 +539,15 @@ public class GamePanel extends JPanel {
 			tempB.draw(imageContext);
 		}
 
+
 		for(int j=0; j<eggEnemies.size(); j++){
 			tempE = eggEnemies.get(j);
 			tempE.draw(imageContext);
+		}
+
+		for(int i =0; i<enemyBullets.size(); i++){
+			tempEnemyB = enemyBullets.get(i);
+			tempEnemyB.draw(imageContext);
 		}
 
 		if(currEmotion != null){

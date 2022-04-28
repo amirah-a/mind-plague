@@ -213,11 +213,6 @@ public class GameWindow extends JFrame implements
 				
 		}
 
-		if (keyCode == KeyEvent.VK_DOWN) {
-			// gamePanel.updatePlayer(2);
-			// //gamePanel.drawGameEntities();
-		}
-
         if(keyCode == KeyEvent.VK_LEFT){
             // Player.isWalking = true;
             // //Player.playerWalkLeft.start();
@@ -242,7 +237,7 @@ public class GameWindow extends JFrame implements
             // } catch (InterruptedException e1) {
             //     e1.printStackTrace();
             // }
-            int x = Emotion.x + 48;
+            int x = Emotion.x + 40;
             int y = Emotion.y + 13;
             gamePanel.addBullet(gamePanel.createBullet(x, y));
 	

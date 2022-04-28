@@ -12,7 +12,7 @@ public abstract class Emotion {
 
     public static int x = 50, y = 400; // all emotions should have the same x y
     protected int width, height;
-    public static int dx, dy;
+    public static int dx, dy, prevDx;
     protected int orginalX, orginalY;
 
     protected boolean jumping = false, falling = false;
@@ -77,11 +77,20 @@ public abstract class Emotion {
     }
 
     public void setDx(int dx){
+        prevDx = this.dx;
         this.dx = dx;
     }
 
     public void setDy(int dy){
         this.dy = dy;
+    }
+
+    public int getDx(){
+        return dx;
+    }
+
+    public int getprevDx(){
+        return prevDx;
     }
 
     public Animation loadAnimationFrames(String path, int amt, boolean loadReverse){
@@ -117,10 +126,10 @@ public abstract class Emotion {
         currAnimation.update();
 
         if(x < 0){
-            dx = 0;
+            setDx(0);
             x = 0;
         }else if(x>panel.getWidth() -60){
-            dx = 0;
+            setDx(0);
             x = panel.getWidth() -60;
         }
             
@@ -139,7 +148,7 @@ public abstract class Emotion {
         
 
         if(jumping){
-            gravity -= 0.3;
+            gravity -= 0.22;
             setDy((int)-gravity);
             if(gravity <= 0.0){
                 jumping = false;
@@ -147,7 +156,7 @@ public abstract class Emotion {
             }
         }
         if(falling){
-            gravity += 0.1;
+            gravity += 0.3;
             setDy((int)gravity);    
         }
     }
@@ -200,7 +209,7 @@ public abstract class Emotion {
         Rectangle2D.Double myRect = getBoundingRectangle();
         Rectangle2D.Double platRect = p.getBoundingRectangle();
 
-        if(myRect.intersects(platRect) && y < p.getY() + 54){
+        if(myRect.intersects(platRect) && y < p.getY() + 50 && y > p.getY()){
             return true;
         }
 
@@ -220,24 +229,6 @@ public abstract class Emotion {
         x = orginalX;
         y = orginalY;
     }
-
-    // public void move(int direction){
-      
-    //     if (direction == 3) {		// move left
-    //         x = x - dx;
-            
-    //         if (x < 0)
-    //           x = 0;
-    //     }	
-    //     else				// move right
-    //     if (direction == 4) {
-    //         x = x + dx;
-            
-    //         if (x+75 > panel.getWidth())
-    //           x = panel.getWidth() - 75;
-    //     }
-
-    // }
     
 
 }
