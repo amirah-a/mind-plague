@@ -1,5 +1,6 @@
 import java.awt.Graphics2D;
 import javax.swing.JPanel;
+import java.awt.geom.Rectangle2D;
 import java.awt.Image;
 import java.awt.image.BufferedImage;
 
@@ -13,6 +14,7 @@ public class Jail {
  
     private int dx;
     private int dy;
+    private int originalX, originalY;
 
     private BufferedImage jail;
  
@@ -20,7 +22,10 @@ public class Jail {
         panel = p;
         x = xPos;
         y = yPos;
-  
+        
+        originalX = xPos;
+        originalY = yPos;
+        
         dx = 8;
         dy = 2;
   
@@ -63,9 +68,12 @@ public class Jail {
             y = y - dy;
     }
 
+    public Rectangle2D.Double getBoundingRectangle(){
+        return new Rectangle2D.Double(x, y, width, height);
+    }
 
-    // public void resetXPos(){  // restarts the background at the beginning of the new level
-    //     x = originalX;
-    // }
-
+    public void reset(){
+        x = originalX;
+        y = originalY;
+    }
 }

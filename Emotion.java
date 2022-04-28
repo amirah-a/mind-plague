@@ -170,6 +170,19 @@ public abstract class Emotion {
         return myRect.intersects(keyRect);
     }
 
+    public boolean collidesWithJail(Jail jail) {
+        Rectangle2D.Double myRect = getBoundingRectangle();
+        Rectangle2D.Double jailRect = jail.getBoundingRectangle();
+
+        return myRect.intersects(jailRect);
+    }
+
+    public boolean collidesWithDoor(Door d){
+        Rectangle2D.Double myRect = getBoundingRectangle();
+        Rectangle2D.Double doorRect = d.getBoundingRectangle();
+
+        return myRect.intersects(doorRect);
+    }
     public boolean isOnTopPlatform(Platform p){
         Rectangle2D.Double myRect = getBoundingRectangle();
         Rectangle2D.Double platRect = p.getBoundingRectangle();

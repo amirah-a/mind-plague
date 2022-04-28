@@ -33,7 +33,7 @@ public class GamePanel extends JPanel {
 	private BufferedImage image;
 	private int emotionIndex;
 
-	public static int LEVEL = 1;	// there are 6 levels - starting at 0
+	public static int LEVEL = 5;	// there are 6 levels - starting at 0
 
 	//Pelican
 	private Pelican[] pelican;
@@ -71,7 +71,7 @@ public class GamePanel extends JPanel {
 		image = new BufferedImage(500, 500, BufferedImage.TYPE_INT_RGB);
 		open = false;  // door is not opened - level not finished
 
-		eggsRem = 3;
+		eggsRem =  Math.min(3+2*LEVEL, 10);
 		score = new int[5]; // 5 scores for 5 levels - not level 0
 		platforms = new Platform[5];
 		key = null;
@@ -113,8 +113,8 @@ public class GamePanel extends JPanel {
 		door[1] = new Door(this, 2200, 390, 51 , 56, "images/door_closed.png");
 
 		// if pelican isAttacking index=1 else index=0
-		pelican[0] = new Pelican(this, 2200, 390, 204, 120, "images/pelican_idle.png");	
-		pelican[1] = new Pelican(this, 2200, 390, 204 , 120, "images/pelican_attack.png");
+		pelican[0] = new Pelican(this, 2000, 330, 204, 120, "images/pelican_idle.png");	
+		pelican[1] = new Pelican(this, 2000, 330, 204 , 120, "images/pelican_attack.png");
 
 		// increase the xPos to place platform further away
 		platforms[0] = new Platform(this, 600, 300, 93, 54, "images/short_platform.png"); 
@@ -125,10 +125,9 @@ public class GamePanel extends JPanel {
 
 		portal = new Portal(this, 1995, 125, 89, 150, "images/portal.png");
 
-		if (LEVEL > 0){
-			jail = new Jail(this, 2100, 385);
-			prisoner = new Prisoner(this, 2110, 400, LEVEL);
-		}
+	
+		jail = new Jail(this, 2100, 385);
+		prisoner = new Prisoner(this, 2110, 400, LEVEL);
 
 		addEgg(createEgg()); // start with one enemy
 			
@@ -273,11 +272,19 @@ public class GamePanel extends JPanel {
 				door[i].move(direction);
 			
 			
-			if (LEVEL > 0){
-				jail.move(direction);
-				prisoner.move(direction);
+			if (LEVEL > 0 && LEVEL < 5){
+				if (jail != null && prisoner != null){
+					jail.move(direction);
+					prisoner.move(direction);
+				}
+				
 			}
 			
+			if (LEVEL+1 == 6){
+				for(int i=0; i<2; i++){
+					pelican[i].move(direction);
+				}
+			}
 
 			if (background.getBGX()*-1 < 1832 && background.getBGX() != 0){ // check to stop platfrom from going beyond bg
 				for(int i=0; i<5; i++)
@@ -291,7 +298,8 @@ public class GamePanel extends JPanel {
 				
 				if (key != null)
 					key.move(direction);
-			}			
+			}	
+					
 		}
 	}
 
@@ -299,7 +307,7 @@ public class GamePanel extends JPanel {
 		spawnTimeElapsed++;
 
 		currEmotion.update();
-		if(prisoner != null)
+		if(prisoner != null && LEVEL < 5)
 			prisoner.update();
 		
 		if(key!=null){
@@ -309,21 +317,15 @@ public class GamePanel extends JPanel {
 			}
 		}
 
-		// insert check here to see if player has collected a key
-		// I left the boundaries in so that when the player moves to the end of the screen
-		// they can see the jail move	
-		if (emotions[LEVEL].isUnlocked() && background.getBGX()*-1 >= 1645){ // jail only moves if player has collected the key and is within sight of the jail
-			if(jail != null && pickedUpKey && eggsRem == 0){
-				open = true;
-				jail.moveUp();
-			}
+		if (pickedUpKey && currEmotion.collidesWithJail(jail)){
+			jail.moveUp();
+			emotions[LEVEL].setUnlocked(true);
 		}
 
-		// TODO: in this method check if level is unlocked 
-		// if it is unlocked, set value of 'open' to true in here to change door image
+		if(eggsRem == 0 && emotions[LEVEL].isUnlocked()){
+			open = true;
+		}
 
-		// TODO: check if level is unlocked to unlock new emotion:
-		emotions[LEVEL].setUnlocked(true); 
 
 		//bullet handling
 		for(int i=0; i<bullets.size(); i++){
@@ -386,6 +388,7 @@ public class GamePanel extends JPanel {
 							}
 							removeEgg(tempE);
 							eggsRem--;
+
 						}
 					}	
 				}
@@ -422,22 +425,14 @@ public class GamePanel extends JPanel {
 			addEgg(createEgg());
 		
 		
-		if(LEVEL <= 6){ // door is unopened and there are remaining levels
-
-			if(LEVEL == 0){	// introductory level
-
-			}
-
-			if (LEVEL == 1){
-				
+		if (open && currEmotion.collidesWithDoor(door[0])){
+			clearLevel(); 
+			try {
+				Thread.sleep(100);
+			} catch (InterruptedException e) {
+				e.printStackTrace();
 			}
 		}
-
-		else if(open && LEVEL <= 6){	// door is opened and there are remaining levels to play
-			
-			clearLevel();
-		}
-
 
 	}
 
@@ -453,17 +448,21 @@ public class GamePanel extends JPanel {
 
 		/* Level-specific objects*/
 
-		if (LEVEL > 0){
-			prisoner.draw(imageContext);
-			jail.draw(imageContext);
+		if (LEVEL > 0 && LEVEL < 5){
+			if (jail != null && prisoner != null){
+				prisoner.draw(imageContext);
+				jail.draw(imageContext);
+			}
 		}
 
-		if (LEVEL == 0){ // introduction level
-			imageContext.drawString("Enemies Left: "+String.valueOf(eggsRem), 375, 20);
-		}
-
-		if (LEVEL == 1){
-
+		if (LEVEL+1 == 6){
+			int pelican_index;
+			if(!isAttacking)
+				pelican_index = 0; // pelican is idle
+			else
+				pelican_index = 1;
+				
+			pelican[pelican_index].draw(imageContext);
 		}
 
 
@@ -478,7 +477,8 @@ public class GamePanel extends JPanel {
 		}
 		door[door_index].draw(imageContext);
 		
-		imageContext.drawString("Level: "+String.valueOf(LEVEL), 15, 20);
+		imageContext.drawString("Level: "+String.valueOf(LEVEL+1), 15, 20);
+		imageContext.drawString("Enemies Left: "+String.valueOf(eggsRem), 375, 20);
 
 		for(int i=0; i<5; i++)
 			platforms[i].draw(imageContext);
@@ -524,9 +524,41 @@ public class GamePanel extends JPanel {
 
 	// will uncomment after first game play to ensure no issues with this method
 	public void clearLevel(){		// reset any level variables 
-		// background.resetBackground();
-		// currEmotion.resetEmotion();
-		// eggsRem = 0;
-		// open = false;
+		background.resetBackground();
+		currEmotion.resetEmotion();
+		
+		open = false;
+		pickedUpKey = false;
+		droppedKey = false;
+		key = null;
+
+		if (jail != null){
+			jail.reset();
+			prisoner.reset();
+
+		}
+
+		portal.reset();
+
+
+		for(int i=0; i<2; i++){
+			door[i].reset();
+			pelican[i].reset();
+		}
+
+		for(int k=0; k < eggEnemies.size(); k++){
+			tempE = eggEnemies.get(k);
+			tempE.reset();
+		}
+
+		for(int i=0; i<5; i++){
+			platforms[i].reset();
+		}
+		
+		if(LEVEL < 6){
+			LEVEL++;	
+			prisoner.loadAnimations(LEVEL);
+			eggsRem = Math.min(3+2*LEVEL, 10);	
+		}
 	}
 }

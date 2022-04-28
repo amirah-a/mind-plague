@@ -13,7 +13,7 @@ public class Portal {
  
     private int dx;
     private int dy;
-    private int originalX;
+    private int originalX, originalY;
     private BufferedImage platform;
     
     private boolean locked;
@@ -30,7 +30,8 @@ public class Portal {
         height = h;
 
         originalX = xPos;
-
+        originalY = yPos;
+        
         platform = ImageManager.loadBufferedImage(fileName);
 
         locked = true;
@@ -52,7 +53,7 @@ public class Portal {
                 moveLeft();
         }
 
-        System.out.println("Portal x: " + x);
+        // System.out.println("Portal x: " + x);
     }
 
     public void moveLeft(){
@@ -63,10 +64,10 @@ public class Portal {
         x = x + dx;
     }
     
-    public void resetXPos(){  // restarts the background at the beginning of the new level
+    public void reset(){
         x = originalX;
+        y = originalY;
     }
-
     public int getX(){
         return x;
     }

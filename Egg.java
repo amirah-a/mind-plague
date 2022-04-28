@@ -13,6 +13,7 @@ public class Egg {
     private int startX, startY; //used for ai walking motion
     protected int dx, dy, bgDx;
     private int oppDx;
+    private int originalX, originalY;
     protected int width, height;
 
     private boolean jumping, falling;
@@ -35,6 +36,10 @@ public class Egg {
 
         this.x = x;
         this.y = y;
+
+        originalX = x;
+        originalY = y;
+        
         startX = x;
         startY = y;
         this.dx = dx;
@@ -146,8 +151,12 @@ public class Egg {
 
     public void update(){
         currAnimation.update();
-        if (x > 0 &&  x < panel.getWidth()-currAnimation.getImage().getWidth(null) )
+        if (x > 0 &&  x <= panel.getWidth()-currAnimation.getImage().getWidth(null) )
             walk();
+        else{
+            dx = oppDx;
+            oppDx = -dx;
+        }
         // System.out.println(panel.getWidth()-currAnimation.getImage().getWidth(null));
 
         y+=dy;
@@ -207,7 +216,7 @@ public class Egg {
                 moveLeft();
         }
 
-        System.out.println("Egg x: " + x);
+        // System.out.println("Egg x: " + x);
     }
 
     public void moveLeft(){
@@ -312,6 +321,12 @@ public class Egg {
         }
 
         return false;
+    }
+
+
+    public void reset(){
+        x = originalX;
+        y = originalY;
     }
 
 }

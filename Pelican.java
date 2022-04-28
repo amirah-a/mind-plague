@@ -13,7 +13,7 @@ public class Pelican {
  
     private int dx;
     private int dy;
-    private int originalX;
+    private int originalX, originalY;
     private BufferedImage pelican;
     
     private boolean locked;
@@ -30,6 +30,7 @@ public class Pelican {
         height = h;
 
         originalX = xPos;
+        originalY = yPos;
 
         pelican = ImageManager.loadBufferedImage(fileName);
 
@@ -43,15 +44,15 @@ public class Pelican {
     public void move(int direction){
       
         if (direction == 3) {		// move left
-            if (x > 500-pelican.getWidth())
+            // if (x > 500-pelican.getWidth())
                 moveRight();
         }	
         else				// move right
         if (direction == 4) {
-            if(x > 420)
+            if(x > 200)
                 moveLeft();
         }
-        // System.out.println("pelican: " + x);
+        System.out.println("pelican: " + x);
     }
 
     public void moveLeft(){
@@ -62,8 +63,9 @@ public class Pelican {
         x = x + dx;
     }
 
-    public void resetXPos(){  // restarts the background at the beginning of the new level
+    public void reset(){
         x = originalX;
+        y = originalY;
     }
 
     public int getX() {

@@ -14,7 +14,7 @@ public class Platform {
  
     private int dx;
     private int dy;
-    private int originalX;
+    private int originalX, originalY;
     private BufferedImage platform;
     
     private boolean locked;
@@ -31,6 +31,7 @@ public class Platform {
         height = h;
 
         originalX = xPos;
+        originalY = yPos;
 
         platform = ImageManager.loadBufferedImage(fileName);
 
@@ -71,8 +72,9 @@ public class Platform {
         x = x + dx;
     }
     
-    public void resetXPos(){  // restarts the background at the beginning of the new level
+    public void reset(){
         x = originalX;
+        y = originalY;
     }
 
     public Rectangle2D.Double getBoundingRectangle(){
