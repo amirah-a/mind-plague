@@ -30,6 +30,8 @@ public abstract class Emotion {
     protected boolean unlocked;
     protected boolean hasKey;
 
+    protected int health;
+
     public Emotion(GamePanel p){
         panel = p;
         
@@ -43,6 +45,8 @@ public abstract class Emotion {
         orginalX = x;
         orginalY = y;
         //dx = 2;
+
+        health = 5;
     }
 
     protected abstract void loadAnimations();
@@ -92,6 +96,14 @@ public abstract class Emotion {
     public int getprevDx(){
         return prevDx;
     }
+
+    public int getHealth(){
+        return health;
+    }
+    public void decreaseHealth(){
+        health-=1;
+    }
+
 
     public Animation loadAnimationFrames(String path, int amt, boolean loadReverse){
         Animation animation = new Animation(panel, this.width, this.height);
@@ -205,6 +217,13 @@ public abstract class Emotion {
         return false;
     }
 
+    public boolean collidesWithBullet(Bullet bullet) {
+        Rectangle2D.Double myRect = getBoundingRectangle();
+        Rectangle2D.Double bulletRect = bullet.getBoundingRectangle();
+
+        return myRect.intersects(bulletRect);
+    }
+
     public boolean hitBottom(Platform p){
         Rectangle2D.Double myRect = getBoundingRectangle();
         Rectangle2D.Double platRect = p.getBoundingRectangle();
@@ -228,7 +247,25 @@ public abstract class Emotion {
     public void resetEmotion(){
         x = orginalX;
         y = orginalY;
+        health = 5;
     }
-    
+    public void setAnimation(int direction) {
+
+        if (direction == -3){
+            currAnimation = animations.get("idle_left");
+        }
+
+        if (direction == -4){
+            currAnimation = animations.get("idle_right");
+        }
+
+        if (direction == 3){
+            currAnimation = animations.get("walk_left");
+        }
+
+        if (direction == 4){
+            currAnimation = animations.get("walk_right");
+        }
+    }  
 
 }

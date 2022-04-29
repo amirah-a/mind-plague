@@ -44,6 +44,7 @@ public class GamePanel extends JPanel {
 	private Door[] door;
 	private boolean open;
 	private Platform[] platforms;
+	private Image[] health;
 	private Portal portal;
 	private Key key;
 	private boolean droppedKey, pickedUpKey;
@@ -94,6 +95,7 @@ public class GamePanel extends JPanel {
 		pelican = new Pelican[2];
 
 		spawnTimeElapsed = 0;
+		health = new Image[6];
 	}
 
 	public void switchEmotion(int emotionIndex){
@@ -134,6 +136,8 @@ public class GamePanel extends JPanel {
 		prisoner = new Prisoner(this, 2110, 400, LEVEL);
 
 		addEgg(createEgg()); // start with one enemy
+
+		loadImages();
 			
 	}
 
@@ -249,7 +253,7 @@ public class GamePanel extends JPanel {
 				dx = -3;
 		}
 
-		e = new Egg(this, type, portal.getX()-(int)spawnTimeElapsed, portal.getY(), dx);
+		e = new Egg(this, type, portal.getX(), portal.getY(), dx);
 		return e;
 	}
 
@@ -258,6 +262,14 @@ public class GamePanel extends JPanel {
 			return 20;
 		return -20;
 	}
+
+    public void loadImages(){
+		String prefix ="images/healthbar_";
+
+		for (int i=0; i<6; i++){
+    	    health[i] = ImageManager.loadImage(prefix + i + ".png");
+		}
+    }
 
 	public void startGame() {				// initialise and start the game thread 
 
@@ -340,7 +352,7 @@ public class GamePanel extends JPanel {
 
 	public void gameUpdate () {
 		spawnTimeElapsed++;
-
+		
 		currEmotion.update();
 		if(prisoner != null && LEVEL < 5)
 			prisoner.update();
@@ -470,6 +482,23 @@ public class GamePanel extends JPanel {
 
 		}
 
+		for(int x=0; x<enemyBullets.size(); x++){
+			tempB = enemyBullets.get(x);
+
+			if (currEmotion.collidesWithBullet(tempB)){
+				removeEnemyBullet(tempB);
+
+				if(currEmotion.getHealth() > 0){
+					currEmotion.decreaseHealth();
+					// break;
+				}
+				else if (currEmotion.getHealth() < 0){
+					// Game Over
+					// set running to false;
+				}
+			}
+		}
+
 		if(eggEnemies.size()==0 && eggsRem>0)
 			addEgg(createEgg());
 		
@@ -484,7 +513,6 @@ public class GamePanel extends JPanel {
 		}
 
 	}
-
 
 	public void gameRender () {				// draw the game objects 
 		Graphics2D imageContext = (Graphics2D) image.getGraphics();
@@ -516,6 +544,8 @@ public class GamePanel extends JPanel {
 
 
 		/* Common objects*/
+		portal.draw(imageContext);
+
 		int door_index;
 		if(!open){ // checks if door is opened - eg level 0 killed all 3 eggs	
 			door_index=1;
@@ -562,7 +592,8 @@ public class GamePanel extends JPanel {
 			key.draw(imageContext, this.getWidth()/2, 0);
 		}
 
-		portal.draw(imageContext);
+		imageContext.drawImage(health[currEmotion.getHealth()], 15, 40, 15, 195, null);
+		System.out.println(currEmotion.getHealth());
 		
 		
 		Graphics2D g2 = (Graphics2D) getGraphics();
@@ -577,7 +608,7 @@ public class GamePanel extends JPanel {
 	
 	}
 
-	// will uncomment after first game play to ensure no issues with this method
+
 	public void clearLevel(){		// reset any level variables 
 		background.resetBackground();
 		currEmotion.resetEmotion();

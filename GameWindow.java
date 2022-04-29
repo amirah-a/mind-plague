@@ -218,6 +218,7 @@ public class GameWindow extends JFrame implements
             // //Player.playerWalkLeft.start();
             gamePanel.updateObjects(3);
 			gamePanel.getCurrEmotion().setDx(-2);
+			gamePanel.getCurrEmotion().setAnimation(3);
         }
 
         if(keyCode == KeyEvent.VK_RIGHT){
@@ -225,6 +226,7 @@ public class GameWindow extends JFrame implements
             // //Player.playerWalkRight.start();
             gamePanel.updateObjects(4);
 			gamePanel.getCurrEmotion().setDx(2);
+			gamePanel.getCurrEmotion().setAnimation(4);
         }
 
 
@@ -244,27 +246,27 @@ public class GameWindow extends JFrame implements
         }
 
 		//switching characters
-		if(keyCode == KeyEvent.VK_1){
+		if(keyCode == KeyEvent.VK_1 || keyCode == KeyEvent.VK_NUMPAD1){
 			// we need to add a check here
 			gamePanel.switchEmotion(0); // set to Fear
 		}
 
-		if(keyCode == KeyEvent.VK_2){
+		if(keyCode == KeyEvent.VK_2 || keyCode == KeyEvent.VK_NUMPAD2){
 			// if (GamePanel.emotionIndex <= 1)
 			gamePanel.switchEmotion(1); //set to Love
 		}
 
-		if(keyCode == KeyEvent.VK_3){
+		if(keyCode == KeyEvent.VK_3 || keyCode == KeyEvent.VK_NUMPAD3){
 			// if (GamePanel.emotionIndex <= 2)
 			gamePanel.switchEmotion(2); //set to Rage
 		}
 
-		if(keyCode == KeyEvent.VK_4){
+		if(keyCode == KeyEvent.VK_4 || keyCode == KeyEvent.VK_NUMPAD4){
 			// if (GamePanel.emotionIndex <= 3)
 			gamePanel.switchEmotion(3); //set to Sadness
 		}
 
-		if(keyCode == KeyEvent.VK_5){
+		if(keyCode == KeyEvent.VK_5 || keyCode == KeyEvent.VK_NUMPAD5){
 			// if (GamePanel.emotionIndex <= 4)
 			gamePanel.switchEmotion(4); //set to Happy
 		}
@@ -278,11 +280,13 @@ public class GameWindow extends JFrame implements
         if(keyCode == KeyEvent.VK_LEFT){
             //Player.isWalking = false;
 			gamePanel.getCurrEmotion().setDx(0); //movement
+			gamePanel.getCurrEmotion().setAnimation(-3);
         }
 
         if(keyCode == KeyEvent.VK_RIGHT){
             //Player.isWalking = false;
 			gamePanel.getCurrEmotion().setDx(0);  //no movement
+			gamePanel.getCurrEmotion().setAnimation(-4);
         }
 
 		if(keyCode == KeyEvent.VK_SPACE){
