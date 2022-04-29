@@ -506,7 +506,7 @@ public class GamePanel extends JPanel {
 		if (open && currEmotion.collidesWithDoor(door[0])){
 			clearLevel(); 
 			try {
-				Thread.sleep(100);
+				Thread.sleep(1000);
 			} catch (InterruptedException e) {
 				e.printStackTrace();
 			}
