@@ -490,7 +490,7 @@ public class GamePanel extends JPanel {
 				
 				currEmotion.decreaseHealth();
 				
-				if (currEmotion.getHealth() == 4){
+				if (currEmotion.getHealth() == 0){
 					gameThread.setIsRunning(false);
 				}
 
