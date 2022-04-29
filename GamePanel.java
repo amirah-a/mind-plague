@@ -487,15 +487,14 @@ public class GamePanel extends JPanel {
 
 			if (currEmotion.collidesWithBullet(tempB)){
 				removeEnemyBullet(tempB);
+				
+				currEmotion.decreaseHealth();
+				
+				if (currEmotion.getHealth() == 4){
+					gameThread.setIsRunning(false);
+				}
 
-				if(currEmotion.getHealth() > 0){
-					currEmotion.decreaseHealth();
-					// break;
-				}
-				else if (currEmotion.getHealth() < 0){
-					// Game Over
-					// set running to false;
-				}
+				
 			}
 		}
 
@@ -511,7 +510,6 @@ public class GamePanel extends JPanel {
 				e.printStackTrace();
 			}
 		}
-
 	}
 
 	public void gameRender () {				// draw the game objects 
@@ -605,8 +603,23 @@ public class GamePanel extends JPanel {
 	}
 
 	public void gameOverScreen(){
+		Graphics2D imageContext = (Graphics2D) image.getGraphics();
+		
+		background.draw(imageContext);
+		background.draw(imageContext);
+
+		Font f = new Font ("ROBOTO", Font.BOLD, 50);
+      	imageContext.setFont (f);
+      	imageContext.setColor(Color.BLACK);
+		imageContext.drawString("GAME OVER", 100, 250);
+
+		Graphics2D g2 = (Graphics2D) getGraphics();
+		g2.drawImage(image, 0, 0, null);
+		
+		imageContext.dispose();
+		g2.dispose();
+	}	
 	
-	}
 
 
 	public void clearLevel(){		// reset any level variables 
