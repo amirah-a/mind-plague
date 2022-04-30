@@ -80,10 +80,22 @@ public class Bullet {
         return new Rectangle2D.Double (x, y, width, height);
     }
 
+    public boolean collidesWithBullet(Bullet b){
+        Rectangle2D.Double myRect = getBoundingRectangle();
+        Rectangle2D.Double bulletRect = b.getBoundingRectangle();
+      
+        return myRect.intersects(bulletRect);
+    }
+    
     public boolean passedDistance(){
         if(Math.abs(originalX - x) > 250)
             return true;
         return false;
+    }
+
+    public void moveDown(String type, int dy){
+        if(y < 400 && type.equals("egg"))
+            y += dy;
     }
 
 }

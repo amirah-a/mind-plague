@@ -1,7 +1,6 @@
 import javax.swing.JPanel;
 import java.awt.Image;
 import java.awt.image.BufferedImage;
-import java.lang.System.Logger.Level;
 import java.util.LinkedList;
 import java.util.Random;
 import java.awt.Graphics2D;
@@ -33,13 +32,14 @@ public class GamePanel extends JPanel {
 
 	private Background background;
 	private BufferedImage image;
-	private int emotionIndex;
 
-	public static int LEVEL = 0;	// there are 6 levels - starting at 0
+	public static int LEVEL=0;	// there are 6 levels - starting at 0
 
 	//Pelican
 	private Pelican[] pelican;
-	private boolean isAttacking; 
+	private Pelican currPelican;
+	private LinkedList<Bullet> pelicanBullets;
+	private Bullet tempPB;
 
 	private Door[] door;
 	private boolean open;
@@ -69,6 +69,9 @@ public class GamePanel extends JPanel {
 		tempE = null;
 		enemyBullets = new LinkedList<Bullet>();
 		tempEnemyB = null;
+		pelicanBullets = new LinkedList<Bullet>();
+		tempPB = null;
+		
 
 		bullets = new LinkedList<Bullet>();
 		tempB = null;
@@ -83,7 +86,6 @@ public class GamePanel extends JPanel {
 
 		jail = null;
 		prisoner = null;
-		emotionIndex = 0; // fear
 		
 		random = new Random();
 		keyChance = 0;
@@ -93,6 +95,7 @@ public class GamePanel extends JPanel {
 		door = new Door[2];
 
 		pelican = new Pelican[2];
+		currPelican = null;
 
 		spawnTimeElapsed = 0;
 		health = new Image[6];
@@ -121,6 +124,7 @@ public class GamePanel extends JPanel {
 		// if pelican isAttacking index=1 else index=0
 		pelican[0] = new Pelican(this, 2000, 330, 204, 120, "images/pelican_idle.png");	
 		pelican[1] = new Pelican(this, 2000, 330, 204 , 120, "images/pelican_attack.png");
+		currPelican = pelican[0];
 
 		// increase the xPos to place platform further away
 		platforms[0] = new Platform(this, 600, 300, 93, 54, "images/short_platform.png"); 
@@ -147,6 +151,10 @@ public class GamePanel extends JPanel {
 
 	public void addEnemyBullet(Bullet b){
 		enemyBullets.add(b);	
+	}
+
+	public void addPelicanBullet(Bullet b){
+		pelicanBullets.add(b);
 	}
 
 	public Bullet createBullet(int x, int y){
@@ -204,6 +212,10 @@ public class GamePanel extends JPanel {
 
 	public void removeEnemyBullet(Bullet b){
 		enemyBullets.remove(b);
+	}
+
+	public void removePelicanBullet(Bullet b){
+		pelicanBullets.remove(b);
 	}
 
 	public void addEgg(Egg e){
@@ -373,6 +385,13 @@ public class GamePanel extends JPanel {
 			open = true;
 		}
 
+		if (LEVEL == 5 && pelicanBullets != null){
+			for (int i=0; i<pelicanBullets.size(); i++){
+				tempPB = pelicanBullets.get(i);
+				tempPB.moveDown("egg", 8);
+			}
+		}
+		
 
 		//player bullet handling
 		for(int i=0; i<bullets.size(); i++){
@@ -446,7 +465,23 @@ public class GamePanel extends JPanel {
 							eggsRem--;
 
 						}
-					}	
+					}
+				}
+				
+				// attack pelican
+				if (LEVEL == 5){
+					if (currPelican.collidesWithBullet(tempB)){
+						removeBullet(tempB);
+						
+						if (currPelican.getHealth() > 0){
+							if (currEmotion.getX() < currPelican.getX()) // cannot shoot boss from behind
+								currPelican.decreaseHealth();
+						}
+						else
+							gameThread.setIsRunning(false);
+							gameThread.setState(true);
+						
+					}
 				}
 			}
 
@@ -482,19 +517,44 @@ public class GamePanel extends JPanel {
 
 		}
 
+		// pelican attack
+		if (LEVEL == 5){
+			if (currPelican.attack() && eggsRem == 0){
+				currPelican = pelican[1];
+				addPelicanBullet(createEnemyBullet(currPelican.getX()+30, currPelican.getOriginalY()+8, -20));
+			}
+			else{
+				currPelican = pelican[0];
+			}
+
+			for(int x=0; x<pelicanBullets.size(); x++){
+				tempPB = pelicanBullets.get(x);
+
+				if (currEmotion.collidesWithBullet(tempPB)){
+					removeBullet(tempPB);
+					currEmotion.decreaseHealth();
+				}
+
+				if (currEmotion.getHealth() < 0){
+					gameThread.setIsRunning(false);
+					gameThread.setState(false);
+				}
+			}
+
+
+		}
+
 		for(int x=0; x<enemyBullets.size(); x++){
 			tempB = enemyBullets.get(x);
 
 			if (currEmotion.collidesWithBullet(tempB)){
 				removeEnemyBullet(tempB);
-				
 				currEmotion.decreaseHealth();
 				
 				if (currEmotion.getHealth() == 0){
 					gameThread.setIsRunning(false);
+					gameThread.setState(false);
 				}
-
-				
 			}
 		}
 
@@ -530,14 +590,15 @@ public class GamePanel extends JPanel {
 			}
 		}
 
-		if (LEVEL+1 == 6){
-			int pelican_index;
-			if(!isAttacking)
-				pelican_index = 0; // pelican is idle
-			else
-				pelican_index = 1;
-				
-			pelican[pelican_index].draw(imageContext);
+		if (LEVEL == 5){
+			
+			currPelican.draw(imageContext);
+
+			for (int z=0; z<pelicanBullets.size(); z++){
+				tempPB = pelicanBullets.get(z);
+				tempPB.draw(imageContext);
+			}
+			
 		}
 
 
@@ -591,9 +652,7 @@ public class GamePanel extends JPanel {
 		}
 
 		imageContext.drawImage(health[currEmotion.getHealth()], 15, 40, 15, 195, null);
-		System.out.println(currEmotion.getHealth());
-		
-		
+
 		Graphics2D g2 = (Graphics2D) getGraphics();
 		g2.drawImage(image, 0, 0, null);
 		
@@ -602,16 +661,29 @@ public class GamePanel extends JPanel {
 		g2.dispose();
 	}
 
-	public void gameOverScreen(){
+	public void gameOverScreen(boolean outcome){
 		Graphics2D imageContext = (Graphics2D) image.getGraphics();
-		
+		Font f = new Font ("ROBOTO", Font.BOLD, 30);
+
 		background.draw(imageContext);
 		background.draw(imageContext);
 
-		Font f = new Font ("ROBOTO", Font.BOLD, 50);
-      	imageContext.setFont (f);
-      	imageContext.setColor(Color.BLACK);
-		imageContext.drawString("GAME OVER", 100, 250);
+		Rectangle2D.Double card = new Rectangle2D.Double(25,215,450, 100);
+		imageContext.setColor(Color.BLACK);
+		imageContext.fill(card);
+		imageContext.draw(card);
+
+		if (outcome){	// player wins
+			imageContext.setFont (f);
+			imageContext.setColor(Color.GREEN);
+		  	imageContext.drawString("CONGRATULATIONS!", 100, 250);
+			imageContext.drawString("MIND PLAGUE DESTROYED", 50, 300);
+		}
+		else{	// player loses
+			imageContext.setFont (f);
+			imageContext.setColor(Color.RED);
+		  	imageContext.drawString("GAME OVER", 160, 275);
+		}
 
 		Graphics2D g2 = (Graphics2D) getGraphics();
 		g2.drawImage(image, 0, 0, null);
@@ -659,5 +731,9 @@ public class GamePanel extends JPanel {
 			prisoner.loadAnimations(LEVEL);
 			eggsRem = Math.min(3+2*LEVEL, 10);	
 		}
+
+		bullets = null;
+		enemyBullets = null;
+		pelicanBullets = null;
 	}
 }

@@ -9,11 +9,13 @@ public class GameThread implements Runnable {
 	private GamePanel gamePanel;
 	private boolean isRunning;
 	private boolean isPaused;
+	private boolean outcome;
 
 	public GameThread (GamePanel gamePanel) {
 		this.gamePanel = gamePanel;
 		isRunning = false;
 		isPaused = false;
+		outcome = false;
 	}
 
 	
@@ -23,6 +25,10 @@ public class GameThread implements Runnable {
 
 	public void setIsRunning(boolean isRunning){
 		this.isRunning = isRunning;
+	}
+
+	public void setState(boolean state){
+		outcome = state;
 	}
 
 
@@ -62,7 +68,7 @@ public class GameThread implements Runnable {
 				Thread.sleep (50);	
 			}
 			if(!isRunning){
-				gamePanel.gameOverScreen();
+				gamePanel.gameOverScreen(outcome);
 			}
 		}
 		catch(InterruptedException e) {}

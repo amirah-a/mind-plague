@@ -30,7 +30,7 @@ public abstract class Emotion {
     protected boolean unlocked;
     protected boolean hasKey;
 
-    protected int health;
+    protected static int health;
 
     public Emotion(GamePanel p){
         panel = p;
@@ -266,6 +266,10 @@ public abstract class Emotion {
         if (direction == 4){
             currAnimation = animations.get("walk_right");
         }
+    }
+
+    public int getX() {
+        return x;
     }  
 
 }

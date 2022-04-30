@@ -181,28 +181,27 @@ public class GameWindow extends JFrame implements
 
 		//switching characters
 		if(keyCode == KeyEvent.VK_1 || keyCode == KeyEvent.VK_NUMPAD1){
-			// we need to add a check here
 			gamePanel.switchEmotion(0); // set to Fear
 		}
 
 		if(keyCode == KeyEvent.VK_2 || keyCode == KeyEvent.VK_NUMPAD2){
-			// if (GamePanel.emotionIndex <= 1)
-			gamePanel.switchEmotion(1); //set to Love
+			if (GamePanel.LEVEL >= 1)
+				gamePanel.switchEmotion(1); //set to Love
 		}
 
 		if(keyCode == KeyEvent.VK_3 || keyCode == KeyEvent.VK_NUMPAD3){
-			// if (GamePanel.emotionIndex <= 2)
-			gamePanel.switchEmotion(2); //set to Rage
+			if (GamePanel.LEVEL >= 2)
+				gamePanel.switchEmotion(2); //set to Rage
 		}
 
 		if(keyCode == KeyEvent.VK_4 || keyCode == KeyEvent.VK_NUMPAD4){
-			// if (GamePanel.emotionIndex <= 3)
-			gamePanel.switchEmotion(3); //set to Sadness
+			if (GamePanel.LEVEL >= 3)
+				gamePanel.switchEmotion(3); //set to Sadness
 		}
 
 		if(keyCode == KeyEvent.VK_5 || keyCode == KeyEvent.VK_NUMPAD5){
-			// if (GamePanel.emotionIndex <= 4)
-			gamePanel.switchEmotion(4); //set to Happy
+			if (GamePanel.LEVEL >= 4)
+				gamePanel.switchEmotion(4); //set to Happy
 		}
 	}
 
