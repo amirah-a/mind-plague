@@ -185,22 +185,22 @@ public class GameWindow extends JFrame implements
 		}
 
 		if(keyCode == KeyEvent.VK_2 || keyCode == KeyEvent.VK_NUMPAD2){
-			if (GamePanel.LEVEL >= 1)
+			if (GamePanel.LEVEL >= 2)
 				gamePanel.switchEmotion(1); //set to Love
 		}
 
 		if(keyCode == KeyEvent.VK_3 || keyCode == KeyEvent.VK_NUMPAD3){
-			if (GamePanel.LEVEL >= 2)
+			if (GamePanel.LEVEL >= 3)
 				gamePanel.switchEmotion(2); //set to Rage
 		}
 
 		if(keyCode == KeyEvent.VK_4 || keyCode == KeyEvent.VK_NUMPAD4){
-			if (GamePanel.LEVEL >= 3)
+			if (GamePanel.LEVEL >= 4)
 				gamePanel.switchEmotion(3); //set to Sadness
 		}
 
 		if(keyCode == KeyEvent.VK_5 || keyCode == KeyEvent.VK_NUMPAD5){
-			if (GamePanel.LEVEL >= 4)
+			if (GamePanel.LEVEL >= 5)
 				gamePanel.switchEmotion(4); //set to Happy
 		}
 	}

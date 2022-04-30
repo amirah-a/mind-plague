@@ -33,7 +33,7 @@ public class GamePanel extends JPanel {
 	private Background background;
 	private BufferedImage image;
 
-	public static int LEVEL=0;	// there are 6 levels - starting at 0
+	public static int LEVEL=4;	// there are 6 levels - starting at 0
 
 	//Pelican
 	private Pelican[] pelican;
@@ -171,30 +171,30 @@ public class GamePanel extends JPanel {
 		}
 
 		if(currEmotion instanceof Fear){
-			System.out.println("Fear");
+			// System.out.println("Fear");
 			bullet = new Bullet(this, x, y, "fear", dx);
 			return bullet;
 		}
 			
 		if(currEmotion instanceof Love){
-			System.out.println("Love");
+			// System.out.println("Love");
 			bullet = new Bullet(this, x, y, "love", dx);
 			return bullet;
 		}
 			
 		if(currEmotion instanceof Rage){
-			System.out.println("Rage");
+			// System.out.println("Rage");
 			bullet = new Bullet(this, x, y, "rage", dx);
 			return bullet;
 		}
 			
 		if(currEmotion instanceof Sadness){
-			System.out.println("Sadness");
+			// System.out.println("Sadness");
 			bullet = new Bullet(this, x, y, "sadness", dx);
 			return bullet;
 		}	
 		else{
-			System.out.println("Happy");
+			// System.out.println("Happy");
 			bullet = new Bullet(this, x, y, "happy", dx);
 			return bullet;
 		}
@@ -456,13 +456,16 @@ public class GamePanel extends JPanel {
 						if(tempE.getHealth() > 0)
 							tempE.decreaseHealth();
 						else{
-							keyChance = random.nextInt(eggsRem) + 1;
-							if(keyChance == 1 && !droppedKey){
-								key = new Key(this,tempE.getX(), tempE.getY());
-								droppedKey = true;
+							if (eggsRem > 0){
+								keyChance = random.nextInt(eggsRem) + 1;
+								System.out.println(eggsRem);
+								if(keyChance == 1 && !droppedKey){
+									key = new Key(this,tempE.getX(), tempE.getY());
+									droppedKey = true;
+								}
+								removeEgg(tempE);
+								eggsRem--;
 							}
-							removeEgg(tempE);
-							eggsRem--;
 
 						}
 					}
@@ -519,7 +522,7 @@ public class GamePanel extends JPanel {
 
 		// pelican attack
 		if (LEVEL == 5){
-			if (currPelican.attack() && eggsRem == 0){
+			if (currPelican.attack()){
 				currPelican = pelican[1];
 				addPelicanBullet(createEnemyBullet(currPelican.getX()+30, currPelican.getOriginalY()+8, -20));
 			}
@@ -593,10 +596,11 @@ public class GamePanel extends JPanel {
 		if (LEVEL == 5){
 			
 			currPelican.draw(imageContext);
-
-			for (int z=0; z<pelicanBullets.size(); z++){
-				tempPB = pelicanBullets.get(z);
-				tempPB.draw(imageContext);
+			if (pelicanBullets != null){
+				for (int z=0; z<pelicanBullets.size(); z++){
+					tempPB = pelicanBullets.get(z);
+					tempPB.draw(imageContext);
+				}
 			}
 			
 		}
@@ -622,21 +626,23 @@ public class GamePanel extends JPanel {
 			platforms[i].draw(imageContext);
 
 
-		
-		for(int i=0; i < bullets.size(); i++){	//bullet handling
-			tempB = bullets.get(i);
-			tempB.draw(imageContext);
+		if (bullets != null){		
+			for(int i=0; i < bullets.size(); i++){	//bullet handling
+				tempB = bullets.get(i);
+				tempB.draw(imageContext);
+			}
 		}
-
 
 		for(int j=0; j<eggEnemies.size(); j++){
 			tempE = eggEnemies.get(j);
 			tempE.draw(imageContext);
 		}
 
-		for(int i =0; i<enemyBullets.size(); i++){
-			tempEnemyB = enemyBullets.get(i);
-			tempEnemyB.draw(imageContext);
+		if (enemyBullets != null){
+			for(int i =0; i<enemyBullets.size(); i++){
+				tempEnemyB = enemyBullets.get(i);
+				tempEnemyB.draw(imageContext);
+			}
 		}
 
 		if(currEmotion != null){
@@ -732,8 +738,8 @@ public class GamePanel extends JPanel {
 			eggsRem = Math.min(3+2*LEVEL, 10);	
 		}
 
-		bullets = null;
-		enemyBullets = null;
-		pelicanBullets = null;
+		// bullets = null;
+		// enemyBullets = null;
+		// pelicanBullets = null;
 	}
 }
