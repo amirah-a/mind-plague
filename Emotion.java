@@ -104,6 +104,11 @@ public abstract class Emotion {
         health-=1;
     }
 
+    public void increaseHealth(){
+        if(health<5)
+            health++;
+    }
+
 
     public Animation loadAnimationFrames(String path, int amt, boolean loadReverse){
         Animation animation = new Animation(panel, this.width, this.height);
@@ -189,6 +194,13 @@ public abstract class Emotion {
         Rectangle2D.Double keyRect = k.getBoundingRectangle();
 
         return myRect.intersects(keyRect);
+    }
+
+    public boolean collidesWithLife(Life l){
+        Rectangle2D.Double myRect = getBoundingRectangle();
+        Rectangle2D.Double lifeRect = l.getBoundingRectangle();
+
+        return myRect.intersects(lifeRect);
     }
 
     public boolean collidesWithJail(Jail jail) {

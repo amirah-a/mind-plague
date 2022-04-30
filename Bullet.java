@@ -88,7 +88,7 @@ public class Bullet {
     }
     
     public boolean passedDistance(){
-        if(Math.abs(originalX - x) > 250)
+        if(Math.abs(originalX - x) > 200)
             return true;
         return false;
     }

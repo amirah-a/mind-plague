@@ -26,6 +26,9 @@ public class GamePanel extends JPanel {
 	private Egg tempE;
 	private Bullet tempEnemyB;
 
+	private LinkedList<Life> lifePowerups;
+	private Life tempLife;
+
 	private LinkedList<Bullet> bullets;
 	private Bullet tempB;
 	SoundManager soundManager;
@@ -33,7 +36,7 @@ public class GamePanel extends JPanel {
 	private Background background;
 	private BufferedImage image;
 
-	public static int LEVEL=4;	// there are 6 levels - starting at 0
+	public static int LEVEL=0;	// there are 6 levels - starting at 0
 
 	//Pelican
 	private Pelican[] pelican;
@@ -51,6 +54,7 @@ public class GamePanel extends JPanel {
 
 	private Random random;
 	private int keyChance;
+	private int lifeChance;
 
 	private int eggsRem;
 	private int[] score;
@@ -71,7 +75,9 @@ public class GamePanel extends JPanel {
 		tempEnemyB = null;
 		pelicanBullets = new LinkedList<Bullet>();
 		tempPB = null;
-		
+
+		lifePowerups = new LinkedList<Life>();
+		tempLife = null;		
 
 		bullets = new LinkedList<Bullet>();
 		tempB = null;
@@ -89,6 +95,7 @@ public class GamePanel extends JPanel {
 		
 		random = new Random();
 		keyChance = 0;
+		lifeChance = 0;
 		droppedKey = false;
 		pickedUpKey = false;
 
@@ -357,6 +364,11 @@ public class GamePanel extends JPanel {
 				
 				if (key != null)
 					key.move(direction);
+
+				for(int j=0; j<lifePowerups.size(); j++){
+					tempLife=lifePowerups.get(j);
+					tempLife.move(direction);
+				}
 			}	
 					
 		}
@@ -398,6 +410,22 @@ public class GamePanel extends JPanel {
 			tempB = bullets.get(i);
 			tempB.move();
 
+			// attack pelican
+			if (LEVEL == 5){
+				if (currPelican.collidesWithBullet(tempB)){
+					removeBullet(tempB);
+					
+					if (currPelican.getHealth() > 0){
+						if (currEmotion.getX() < currPelican.getX()) // cannot shoot boss from behind
+							currPelican.decreaseHealth();
+					}
+					else
+						gameThread.setIsRunning(false);
+						gameThread.setState(true);
+					
+				}
+			}
+
 			if(tempB.passedDistance())
 				removeBullet(tempB);
 		}
@@ -407,8 +435,18 @@ public class GamePanel extends JPanel {
 			tempEnemyB = enemyBullets.get(a);
 			tempEnemyB.move();
 
+			if (currEmotion.collidesWithBullet(tempEnemyB)){
+				removeEnemyBullet(tempEnemyB);
+				currEmotion.decreaseHealth();
+				
+				if (currEmotion.getHealth() == 0){
+					gameThread.setIsRunning(false);
+					gameThread.setState(false);
+				}
+			}
+
 			if(tempEnemyB.passedDistance())
-				removeEnemyBullet(tempB);
+				removeEnemyBullet(tempEnemyB);
 		}
 
 		//platform collisions
@@ -458,10 +496,15 @@ public class GamePanel extends JPanel {
 						else{
 							if (eggsRem > 0){
 								keyChance = random.nextInt(eggsRem) + 1;
-								System.out.println(eggsRem);
+								lifeChance = random.nextInt(3); //20% chance to drop heart
+								//System.out.println(lifeChance);
 								if(keyChance == 1 && !droppedKey){
 									key = new Key(this,tempE.getX(), tempE.getY());
 									droppedKey = true;
+								}
+								if(lifeChance == 0){
+									lifePowerups.add(new Life(this, tempE.getX() + 5, tempE.getY()));
+									System.out.println(lifePowerups.size());
 								}
 								removeEgg(tempE);
 								eggsRem--;
@@ -469,23 +512,7 @@ public class GamePanel extends JPanel {
 
 						}
 					}
-				}
-				
-				// attack pelican
-				if (LEVEL == 5){
-					if (currPelican.collidesWithBullet(tempB)){
-						removeBullet(tempB);
-						
-						if (currPelican.getHealth() > 0){
-							if (currEmotion.getX() < currPelican.getX()) // cannot shoot boss from behind
-								currPelican.decreaseHealth();
-						}
-						else
-							gameThread.setIsRunning(false);
-							gameThread.setState(true);
-						
-					}
-				}
+				}	
 			}
 
 			//plaform collision
@@ -520,6 +547,15 @@ public class GamePanel extends JPanel {
 
 		}
 
+		//life powerup handling
+		for(int i=0; i<lifePowerups.size(); i++){
+			tempLife = lifePowerups.get(i);
+			if(currEmotion.collidesWithLife(tempLife)){
+				currEmotion.increaseHealth();
+				lifePowerups.remove(tempLife);
+			}
+		}
+
 		// pelican attack
 		if (LEVEL == 5){
 			if (currPelican.attack()){
@@ -547,19 +583,6 @@ public class GamePanel extends JPanel {
 
 		}
 
-		for(int x=0; x<enemyBullets.size(); x++){
-			tempB = enemyBullets.get(x);
-
-			if (currEmotion.collidesWithBullet(tempB)){
-				removeEnemyBullet(tempB);
-				currEmotion.decreaseHealth();
-				
-				if (currEmotion.getHealth() == 0){
-					gameThread.setIsRunning(false);
-					gameThread.setState(false);
-				}
-			}
-		}
 
 		if(eggEnemies.size()==0 && eggsRem>0)
 			addEgg(createEgg());
@@ -643,6 +666,11 @@ public class GamePanel extends JPanel {
 				tempEnemyB = enemyBullets.get(i);
 				tempEnemyB.draw(imageContext);
 			}
+		}
+
+		for(int i=0; i<lifePowerups.size(); i++){
+			tempLife = lifePowerups.get(i);
+			tempLife.draw(imageContext);
 		}
 
 		if(currEmotion != null){
@@ -738,8 +766,9 @@ public class GamePanel extends JPanel {
 			eggsRem = Math.min(3+2*LEVEL, 10);	
 		}
 
-		// bullets = null;
-		// enemyBullets = null;
-		// pelicanBullets = null;
+		bullets.removeAll(bullets);
+		enemyBullets.removeAll(enemyBullets);
+		pelicanBullets.removeAll(pelicanBullets);
+		lifePowerups.removeAll(lifePowerups);
 	}
 }
