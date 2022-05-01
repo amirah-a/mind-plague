@@ -57,7 +57,6 @@ public class GamePanel extends JPanel {
 	private int lifeChance;
 
 	private int eggsRem;
-	private int[] score;
 	private int ON_SCREEN_EGGS = 5; // we only want 5 eggs on the screen at a time
 	
 	private Jail jail;
@@ -68,7 +67,7 @@ public class GamePanel extends JPanel {
 	private DisintegrateFX pelicanFX;
 	private boolean disintegrate;
 
-	private int emotionIndex;
+	private int[] score;
 
 
 	public GamePanel () {
@@ -116,8 +115,6 @@ public class GamePanel extends JPanel {
 		pelicanFX = new DisintegrateFX(this);
 		disintegrate = false;
 
-		emotionIndex = 0;
-
 		soundManager = SoundManager.getInstance();
 	}
 
@@ -163,6 +160,10 @@ public class GamePanel extends JPanel {
 		addEgg(createEgg()); // start with one enemy
 
 		loadImages();
+
+		for (int i=0; i<5; i++){ // initialze score
+			score[i]=0;
+		}
 			
 	}
 
@@ -447,6 +448,9 @@ public class GamePanel extends JPanel {
 						disintegrate = true;
 						currPelican.setXY(1000, 2000); // moves the pelican and all its related objects out of frame
 						currPelican.setIsActive(false); 	// stops the pelican and its related objects from being updated
+
+						if (LEVEL > 0 && LEVEL < 6)
+							score[LEVEL]+=50;
 						
 					}
 
@@ -557,8 +561,12 @@ public class GamePanel extends JPanel {
 								if(lifeChance == 0)
 									lifePowerups.add(new Life(this, tempE.getX() + 5, tempE.getY()));
 								
+								if (LEVEL > 0 && LEVEL < 6)
+									score[LEVEL]+=10;
+								
 								removeEgg(tempE);
-								eggsRem--;
+								if (eggsRem > 0)
+									eggsRem--;
 								
 							}
 						}
@@ -719,6 +727,8 @@ public class GamePanel extends JPanel {
 		
 		imageContext.drawString("Level: "+String.valueOf(LEVEL+1), 15, 20);
 		imageContext.drawString("Enemies Left: "+String.valueOf(eggsRem), 375, 20);
+		if (LEVEL > 0 && LEVEL < 6)
+			imageContext.drawString("Score: "+String.valueOf(score[LEVEL]), 230, 50);
 
 		for(int i=0; i<5; i++)
 			platforms[i].draw(imageContext);
