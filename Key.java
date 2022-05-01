@@ -2,6 +2,7 @@ import java.awt.Graphics2D;
 import javax.swing.JPanel;
 import java.awt.Image;
 import java.awt.image.BufferedImage;
+import java.awt.geom.Rectangle2D;
 
 
 public class Key {
@@ -14,7 +15,7 @@ public class Key {
     private int dx;
     private int dy;
 
-    private BufferedImage Platform;
+    private BufferedImage Key;
  
     public Key(GamePanel p, int xPos, int yPos){
         panel = p;
@@ -23,33 +24,44 @@ public class Key {
   
         dx = 8;
         dy = 0;
-  
-        width = 162;
-        height = 54;
 
-        Platform = ImageManager.loadBufferedImage("images/key.png");
+        Key = ImageManager.loadBufferedImage("images/key.png");
+        width = Key.getWidth();
+        height = Key.getHeight();
     }
 
     public void draw(Graphics2D g2){
-        g2.drawImage(Platform, x, y, width, height, null);
+        g2.drawImage(Key, x, y, width, height, null);
+    }
+
+    public void draw(Graphics2D g2, int x, int y){
+        g2.drawImage(Key, x, y, width, height, null);
     }
         
     public void move(int direction){
       
         if (direction == 3) {		// move left
-            x = x - dx;
-            
-            if (x < 0)
-              x = 0;
+            // if (x < 550)
+                moveRight();
         }	
         else				// move right
         if (direction == 4) {
-            x = x + dx;
-            
-            if (x+75 > panel.getWidth())
-              x = panel.getWidth() - 60;
+            // if(x > -160)
+                moveLeft();
         }
 
+    }
+
+    public void moveLeft(){
+        x = x - dx;
+    }
+
+    public void moveRight(){
+        x = x + dx;
+    }
+
+    public Rectangle2D.Double getBoundingRectangle(){
+        return new Rectangle2D.Double(x, y, width, height);
     }
 
 }

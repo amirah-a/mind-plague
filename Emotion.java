@@ -12,7 +12,7 @@ public abstract class Emotion {
 
     public static int x = 50, y = 400; // all emotions should have the same x y
     protected int width, height;
-    protected int dx, dy;
+    public static int dx, dy, prevDx;
     protected int orginalX, orginalY;
 
     protected boolean jumping = false, falling = false;
@@ -28,6 +28,9 @@ public abstract class Emotion {
     protected HashMap<String, Animation> animations;
 
     protected boolean unlocked;
+    protected boolean hasKey;
+
+    protected static int health;
 
     public Emotion(GamePanel p){
         panel = p;
@@ -36,15 +39,26 @@ public abstract class Emotion {
         animations = new HashMap<String, Animation>();
         width = 48;
         height = 48;
+        hasKey = false;
 
         // used to reset the emotion's position at the start of a new level
         orginalX = x;
         orginalY = y;
         //dx = 2;
+
+        health = 5;
     }
 
     protected abstract void loadAnimations();
     public abstract void draw(Graphics2D g2);
+
+    public boolean HasKey(){
+        return hasKey;
+    }
+
+    public void setHasKey(boolean value){
+        hasKey = value;
+    }
 
     public void setGravity(double gravity){
         this.gravity = gravity;
@@ -67,12 +81,34 @@ public abstract class Emotion {
     }
 
     public void setDx(int dx){
+        prevDx = this.dx;
         this.dx = dx;
     }
 
     public void setDy(int dy){
         this.dy = dy;
     }
+
+    public int getDx(){
+        return dx;
+    }
+
+    public int getprevDx(){
+        return prevDx;
+    }
+
+    public int getHealth(){
+        return health;
+    }
+    public void decreaseHealth(){
+        health-=1;
+    }
+
+    public void increaseHealth(){
+        if(health<5)
+            health++;
+    }
+
 
     public Animation loadAnimationFrames(String path, int amt, boolean loadReverse){
         Animation animation = new Animation(panel, this.width, this.height);
@@ -107,16 +143,13 @@ public abstract class Emotion {
         currAnimation.update();
 
         if(x < 0){
-            dx = 0;
+            setDx(0);
             x = 0;
         }else if(x>panel.getWidth() -60){
-            dx = 0;
+            setDx(0);
             x = panel.getWidth() -60;
         }
             
-        
-          
-        
         //movement
         x+=dx;  
         y+=dy;
@@ -132,7 +165,7 @@ public abstract class Emotion {
         
 
         if(jumping){
-            gravity -= 0.3;
+            gravity -= 0.22;
             setDy((int)-gravity);
             if(gravity <= 0.0){
                 jumping = false;
@@ -140,7 +173,7 @@ public abstract class Emotion {
             }
         }
         if(falling){
-            gravity += 0.1;
+            gravity += 0.3;
             setDy((int)gravity);    
         }
     }
@@ -156,6 +189,33 @@ public abstract class Emotion {
         return myRect.intersects(eggRect);
     }
 
+    public boolean collidesWithKey(Key k){
+        Rectangle2D.Double myRect = getBoundingRectangle();
+        Rectangle2D.Double keyRect = k.getBoundingRectangle();
+
+        return myRect.intersects(keyRect);
+    }
+
+    public boolean collidesWithLife(Life l){
+        Rectangle2D.Double myRect = getBoundingRectangle();
+        Rectangle2D.Double lifeRect = l.getBoundingRectangle();
+
+        return myRect.intersects(lifeRect);
+    }
+
+    public boolean collidesWithJail(Jail jail) {
+        Rectangle2D.Double myRect = getBoundingRectangle();
+        Rectangle2D.Double jailRect = jail.getBoundingRectangle();
+
+        return myRect.intersects(jailRect);
+    }
+
+    public boolean collidesWithDoor(Door d){
+        Rectangle2D.Double myRect = getBoundingRectangle();
+        Rectangle2D.Double doorRect = d.getBoundingRectangle();
+
+        return myRect.intersects(doorRect);
+    }
     public boolean isOnTopPlatform(Platform p){
         Rectangle2D.Double myRect = getBoundingRectangle();
         Rectangle2D.Double platRect = p.getBoundingRectangle();
@@ -169,11 +229,18 @@ public abstract class Emotion {
         return false;
     }
 
+    public boolean collidesWithBullet(Bullet bullet) {
+        Rectangle2D.Double myRect = getBoundingRectangle();
+        Rectangle2D.Double bulletRect = bullet.getBoundingRectangle();
+
+        return myRect.intersects(bulletRect);
+    }
+
     public boolean hitBottom(Platform p){
         Rectangle2D.Double myRect = getBoundingRectangle();
         Rectangle2D.Double platRect = p.getBoundingRectangle();
 
-        if(myRect.intersects(platRect) && y < p.getY() + 54){
+        if(myRect.intersects(platRect) && y < p.getY() + 50 && y > p.getY()){
             return true;
         }
 
@@ -192,25 +259,33 @@ public abstract class Emotion {
     public void resetEmotion(){
         x = orginalX;
         y = orginalY;
+        health = 5;
+    }
+    public void setAnimation(int direction) {
+
+        if (direction == -3){
+            currAnimation = animations.get("idle_left");
+        }
+
+        if (direction == -4){
+            currAnimation = animations.get("idle_right");
+        }
+
+        if (direction == 3){
+            currAnimation = animations.get("walk_left");
+        }
+
+        if (direction == 4){
+            currAnimation = animations.get("walk_right");
+        }
     }
 
-    // public void move(int direction){
-      
-    //     if (direction == 3) {		// move left
-    //         x = x - dx;
-            
-    //         if (x < 0)
-    //           x = 0;
-    //     }	
-    //     else				// move right
-    //     if (direction == 4) {
-    //         x = x + dx;
-            
-    //         if (x+75 > panel.getWidth())
-    //           x = panel.getWidth() - 75;
-    //     }
+    public int getX() {
+        return x;
+    }  
 
-    // }
-    
+    public Animation getAnimation(){
+        return currAnimation;
+    }
 
 }

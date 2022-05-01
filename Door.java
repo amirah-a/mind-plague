@@ -1,4 +1,5 @@
 import java.awt.Graphics2D;
+import java.awt.geom.Rectangle2D;
 import javax.swing.JPanel;
 import java.awt.Image;
 import java.awt.image.BufferedImage;
@@ -13,7 +14,7 @@ public class Door {
  
     private int dx;
     private int dy;
-    private int originalX;
+    private int originalX, originalY;
     private BufferedImage door;
     
     private boolean locked;
@@ -30,6 +31,8 @@ public class Door {
         height = h;
 
         originalX = xPos;
+        originalY = yPos;
+
 
         door = ImageManager.loadBufferedImage(fileName);
 
@@ -40,6 +43,7 @@ public class Door {
         g2.drawImage(door, x, y, width, height, null);
     }
         
+
     public void move(int direction){
       
         if (direction == 3) {		// move left
@@ -54,6 +58,10 @@ public class Door {
         // System.out.println("Door: " + x);
     }
 
+    public Rectangle2D.Double getBoundingRectangle(){
+        return new Rectangle2D.Double(x, y, width, height);
+    }
+
     public void moveLeft(){
         x = x - dx;
     }
@@ -62,7 +70,22 @@ public class Door {
         x = x + dx;
     }
 
-    public void resetXPos(){  // restarts the background at the beginning of the new level
+    public void reset(){
         x = originalX;
+        y = originalY;
     }
+
+    public int getX() {
+        return x;
+    }
+
+    public int getY() {
+        return x;
+    }
+
+    public void setXY(int x, int y){
+        this.x = x;
+        this.y = y;
+    }
+
 }

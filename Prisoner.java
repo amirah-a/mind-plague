@@ -35,7 +35,7 @@ public class Prisoner{
         loadAnimations(character);
     }
 
-    protected void loadAnimations(int character) {
+    public void loadAnimations(int character) {
         // Love
         if (character == 1){
             animation = loadAnimationFrames("images/love_idle_l.png", 15, false);
@@ -101,11 +101,6 @@ public class Prisoner{
     public void moveRight(){
         x = x + dx;
     }
-    
-    public void resetXPos(){  // restarts the background at the beginning of the new level
-        x = originalX;
-    }
-
 
     public Animation loadAnimationFrames(String path, int amt, boolean loadReverse){
         Animation animation = new Animation(panel, this.width, this.height);
@@ -135,4 +130,9 @@ public class Prisoner{
 
         return animation;
     }    
+
+    public void reset(){
+        x = originalX;
+        y = originalY;
+    }
 }

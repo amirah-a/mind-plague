@@ -16,7 +16,7 @@ public class Bullet {
     private Image bulletImg;
     private String bulletType;
 
-    public Bullet(GamePanel p, int x, int y, String type){
+    public Bullet(GamePanel p, int x, int y, String type, int dx){
         panel = p;
         this.x = x;
         this.y = y;
@@ -28,7 +28,7 @@ public class Bullet {
         width = bulletImg.getWidth(null);
         height = bulletImg.getHeight(null);
 
-        dx = 20;
+        this.dx = dx;
     }
 
     private void loadBulletImage(String type){
@@ -43,6 +43,10 @@ public class Bullet {
             bulletImg = ImageManager.loadImage("images/sadness_bullet.png");
         if(type.equals("happy"))
             bulletImg = ImageManager.loadImage("images/happy_bullet.png");
+        
+        if(type.equals("egg")){
+            bulletImg = ImageManager.loadImage("images/egg_bullet.png");
+        }
     }
 
     public boolean isType(String value){
@@ -50,6 +54,10 @@ public class Bullet {
             return true;
 
         return false;
+    }
+
+    public String getType(){
+        return bulletType;
     }
 
     public int getX(){
@@ -72,10 +80,22 @@ public class Bullet {
         return new Rectangle2D.Double (x, y, width, height);
     }
 
+    public boolean collidesWithBullet(Bullet b){
+        Rectangle2D.Double myRect = getBoundingRectangle();
+        Rectangle2D.Double bulletRect = b.getBoundingRectangle();
+      
+        return myRect.intersects(bulletRect);
+    }
+    
     public boolean passedDistance(){
-        if(Math.abs(originalX - x) > 250)
+        if(Math.abs(originalX - x) > 200)
             return true;
         return false;
+    }
+
+    public void moveDown(String type, int dy){
+        if(y < 400 && type.equals("egg"))
+            y += dy;
     }
 
 }
