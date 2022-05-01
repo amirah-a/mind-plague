@@ -284,4 +284,8 @@ public abstract class Emotion {
         return x;
     }  
 
+    public Animation getAnimation(){
+        return currAnimation;
+    }
+
 }

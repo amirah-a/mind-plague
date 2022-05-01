@@ -71,7 +71,6 @@ public class GameThread implements Runnable {
 			}
 			if(!isRunning){
 				soundManager.stopClip("background");
-				soundManager.playClip("game-over", false);
 				gamePanel.gameOverScreen(outcome);
 			}
 		}

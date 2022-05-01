@@ -24,8 +24,8 @@ public class SoundManager {				// a Singleton class
 		clip = loadClip("sounds/enemy-shoot.wav");
 		clips.put("enemy-attack", clip);
 
-		clip = loadClip("sounds/game-over.wav");
-		clips.put("game-over", clip);
+		clip = loadClip("sounds/game-successful.wav");
+		clips.put("win", clip);
 
 		clip = loadClip("sounds/level-complete.wav");
 		clips.put("success", clip);
@@ -42,6 +42,9 @@ public class SoundManager {				// a Singleton class
 
 		clip = loadClip("sounds/player_dead.wav");
         clips.put("player_dead", clip);
+
+		clip = loadClip("sounds/game-failed.wav");
+		clips.put("lose", clip);
 	}
 
 

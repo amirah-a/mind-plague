@@ -761,11 +761,11 @@ public class GamePanel extends JPanel {
 		}
 
 		int h;
-		if (currEmotion.getHealth() <= 0){
+		if (currEmotion.getHealth() < 0){
 			h = 0;
 		}
-
-		h = currEmotion.getHealth();
+		else
+			h = currEmotion.getHealth();
 		imageContext.drawImage(health[h], 15, 40, 15, 195, null);
 
 		Graphics2D g2 = (Graphics2D) getGraphics();
@@ -791,14 +791,18 @@ public class GamePanel extends JPanel {
 		if (outcome){	// player wins
 			imageContext.setFont (f);
 			imageContext.setColor(Color.GREEN);
+			soundManager.playClip("win", false);
 		  	imageContext.drawString("CONGRATULATIONS!", 100, 250);
 			imageContext.drawString("MIND PLAGUE DESTROYED", 50, 300);
 		}
 		else{	// player loses
 			imageContext.setFont (f);
 			imageContext.setColor(Color.RED);
+			soundManager.playClip("lose", false);
 		  	imageContext.drawString("GAME OVER", 160, 275);
 		}
+
+		imageContext.drawImage(currEmotion.getAnimation().getImage(), getWidth()/2, 400, 48, 48, null);
 
 		Graphics2D g2 = (Graphics2D) getGraphics();
 		g2.drawImage(image, 0, 0, null);
