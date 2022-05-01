@@ -327,18 +327,21 @@ public class GamePanel extends JPanel {
 		Thread thread;
 
 		if (gameThread == null || !gameThread.isRunning()) {
-			// soundManager.playClip ("background", true);
+			soundManager.playClip ("background", true);
+			clearLevel();
 			createGameEntities();
 			gameThread = new GameThread (this);
 			thread = new Thread (gameThread);			
 			thread.start();
-			//animation2.start();
+			currEmotion.getAnimation().start();
+
 		}
 	}
 
 
 	public void pauseGame() {				// pause the game (don't update game entities)
 		gameThread.pauseGame();
+		soundManager.stopClip("background");
 	}
 
 
