@@ -253,7 +253,8 @@ public class GamePanel extends JPanel {
 		Egg e;
 		String type;
 		int dx;
-		int typeInt = random.nextInt(LEVEL + 1);
+
+		int typeInt = random.nextInt(LEVEL+1);
 		switch(typeInt){
 			case 0:
 				type = "basic";
@@ -288,7 +289,7 @@ public class GamePanel extends JPanel {
 				dx = -3;
 		}
 
-		e = new Egg(this, type, portal.getX(), portal.getY()+10, dx);
+		e = new Egg(this, type, portal.getX()-(int)spawnTimeElapsed, portal.getY()+10, dx);
 		return e;
 	}
 
@@ -409,9 +410,13 @@ public class GamePanel extends JPanel {
 				pickedUpKey = true;
 			}
 		}
+		
+		if (pickedUpKey && LEVEL == 0){
+			open = true;
+		}
 
 		if (pickedUpKey && currEmotion.collidesWithJail(jail)){
-			if (LEVEL >= 0 && LEVEL < 6)
+			if (LEVEL > 0 && LEVEL < 6)
 				jail.moveUp();
 				emotions[LEVEL].setUnlocked(true);
 		}
@@ -450,15 +455,18 @@ public class GamePanel extends JPanel {
 						currPelican.setIsActive(false); 	// stops the pelican and its related objects from being updated
 
 						if (LEVEL > 0 && LEVEL < 6)
-							score[LEVEL]+=50;
+							score[LEVEL-1]+=50;
 						
 					}
 
-					else if (currPelican.getHealth() < 0 && eggsRem < 0){
+					if (eggsRem == 0 && !currPelican.getIsActive()){
 						gameThread.setIsRunning(false);
+						try {
+							Thread.sleep(10000);
+						} catch (InterruptedException e) {
+						}
 						gameThread.setState(true);
 					}
-					
 				}
 			}
 
@@ -533,7 +541,7 @@ public class GamePanel extends JPanel {
 			tempE.update();
 
 			//spawn enemies if we can about every 30 loop runs
-			if(eggEnemies.size() < Math.min(eggsRem, ON_SCREEN_EGGS) && spawnTimeElapsed > 40){
+			if(eggEnemies.size() < Math.min(eggsRem, ON_SCREEN_EGGS) && spawnTimeElapsed > 30){
 				addEgg(createEgg());
 				spawnTimeElapsed=0;
 			}
@@ -541,37 +549,41 @@ public class GamePanel extends JPanel {
 			//bullet collision
 			for(int i=0; i<bullets.size(); i++){
 				tempB = bullets.get(i);
+				
 				if(tempE.collidesWithBullet(tempB)){
+					
 					if(tempE.isType(tempB.getType()) || tempE.isType("basic")){
 						removeBullet(tempB);
 						if(tempE.getHealth() > 0)
 							tempE.decreaseHealth();
 						else{
-								int chance = eggsRem;
-								if (eggsRem == 0)
-									chance = eggsRem + 1;
+							removeEgg(tempE);
+							
+							if (eggsRem > 0)
+								eggsRem--;
+								
+							int chance = eggsRem;
+							if (eggsRem <= 0)
+								chance = random.nextInt(ON_SCREEN_EGGS) % (ON_SCREEN_EGGS - 1 + 1) + 1;
+							System.out.println(eggsRem);
 
-								keyChance = random.nextInt(chance);
-								lifeChance = random.nextInt(3); //20% chance to drop heart
-								//System.out.println(lifeChance);
-								if(keyChance == 1 && !droppedKey){
-									key = new Key(this,tempE.getX(), tempE.getY());
-									droppedKey = true;
-								}
+							keyChance = random.nextInt(chance);
+							lifeChance = random.nextInt(3); //20% chance to drop heart
+								// System.out.println(lifeChance);
+							if(keyChance == 1 && !droppedKey){
+								key = new Key(this,tempE.getX(), tempE.getY());
+								droppedKey = true;
+							}
 								if(lifeChance == 0)
 									lifePowerups.add(new Life(this, tempE.getX() + 5, tempE.getY()));
 								
 								if (LEVEL > 0 && LEVEL < 6)
-									score[LEVEL]+=10;
-								
-								removeEgg(tempE);
-								if (eggsRem > 0)
-									eggsRem--;
-								
+									score[LEVEL-1]+=10;
+
 							}
 						}
-					}	
-				}
+					}
+				}	
 
 			//plaform collision
 			for(int j=0; j<platforms.length; j++){
@@ -597,15 +609,16 @@ public class GamePanel extends JPanel {
 					}
 				}
 			}
-			if(eggEnemies.size()==0 && eggsRem>0)
-				addEgg(createEgg());
-
+		
 			//enemy attack
 			if(tempE.attack()){
 				addEnemyBullet(createEnemyBullet(tempE.getX() + 40, tempE.getY()+13, getEggBulletDx(tempE)));
 			}
 
 		}
+
+		if(eggEnemies.size()==0 && eggsRem>0)
+			addEgg(createEgg());
 
 		//life powerup handling
 		for(int i=0; i<lifePowerups.size(); i++){
@@ -649,11 +662,6 @@ public class GamePanel extends JPanel {
 					}
 				}
 		}
-
-
-		if(eggEnemies.size()==0 && eggsRem>0)
-			addEgg(createEgg());
-		
 		
 		if (open && currEmotion.collidesWithDoor(door[0])){
 			clearLevel(); 
@@ -661,6 +669,16 @@ public class GamePanel extends JPanel {
 				Thread.sleep(1000);
 			} catch (InterruptedException e) {
 				e.printStackTrace();
+			}
+		}
+
+		 if (LEVEL == 5){
+
+			if (eggsRem  == 0 && !currPelican.getIsActive()){
+				gameThread.setIsRunning(false);
+				gameThread.setState(true);
+
+				System.out.println("you win");
 			}
 		}
 	}
@@ -701,14 +719,6 @@ public class GamePanel extends JPanel {
 				pelicanFX.draw(imageContext);
 			}	
 
-			if (LEVEL == 5 && eggsRem == 0 && !currPelican.getIsActive()){
-				gameThread.setIsRunning(false);
-				try {
-                    Thread.sleep(10000);
-                } catch (InterruptedException e) {
-                }
-				gameThread.setState(true);
-			}
 		}
 
 
@@ -727,8 +737,9 @@ public class GamePanel extends JPanel {
 		
 		imageContext.drawString("Level: "+String.valueOf(LEVEL+1), 15, 20);
 		imageContext.drawString("Enemies Left: "+String.valueOf(eggsRem), 375, 20);
+		
 		if (LEVEL > 0 && LEVEL < 6)
-			imageContext.drawString("Score: "+String.valueOf(score[LEVEL]), 230, 60);
+			imageContext.drawString("Score: "+String.valueOf(score[LEVEL-1]), 230, 60);
 
 		for(int i=0; i<5; i++)
 			platforms[i].draw(imageContext);
@@ -813,7 +824,18 @@ public class GamePanel extends JPanel {
 		}
 
 		imageContext.drawImage(currEmotion.getAnimation().getImage(), getWidth()/2, 400, 48, 48, null);
+		
+		Font font = new Font ("Roboto", Font.BOLD, 15);
+		imageContext.setFont (font);
+		imageContext.setColor(Color.black);
 
+		int sum=0;
+		for (int i=0; i<5; i++){
+			sum+=score[i];
+		}
+
+		imageContext.drawString("Final score: " +String.valueOf(sum), 230, 60);
+		
 		Graphics2D g2 = (Graphics2D) getGraphics();
 		g2.drawImage(image, 0, 0, null);
 		

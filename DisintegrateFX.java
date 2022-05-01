@@ -77,7 +77,7 @@ public class DisintegrateFX implements ImageFX {
 			copy = ImageManager.copyImage(spriteImage);
 
 		g2.drawImage(copy, x, y, WIDTH, HEIGHT, null);
-		System.out.println("x, y" + Integer.toString(x) + ", " + Integer.toString(y));
+		// System.out.println("x, y" + Integer.toString(x) + ", " + Integer.toString(y));
 	}
 
 
