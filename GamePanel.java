@@ -728,7 +728,7 @@ public class GamePanel extends JPanel {
 		imageContext.drawString("Level: "+String.valueOf(LEVEL+1), 15, 20);
 		imageContext.drawString("Enemies Left: "+String.valueOf(eggsRem), 375, 20);
 		if (LEVEL > 0 && LEVEL < 6)
-			imageContext.drawString("Score: "+String.valueOf(score[LEVEL]), 230, 50);
+			imageContext.drawString("Score: "+String.valueOf(score[LEVEL]), 230, 60);
 
 		for(int i=0; i<5; i++)
 			platforms[i].draw(imageContext);
