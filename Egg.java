@@ -157,12 +157,14 @@ public class Egg {
 
     public void update(){
         currAnimation.update();
-        if (x > 0 &&  x < panel.getWidth()-currAnimation.getImage().getWidth(null) )
+        if (x > 0 &&  x <= panel.getWidth()-currAnimation.getImage().getWidth(null) )
             walk();
         else{
             dx = oppDx;
             oppDx = -dx;
         }
+        // System.out.println(panel.getWidth()-currAnimation.getImage().getWidth(null));
+
         y+=dy;
         
         if(y + 100 > panel.getHeight()){

@@ -10,12 +10,14 @@ public class GameThread implements Runnable {
 	private boolean isRunning;
 	private boolean isPaused;
 	private boolean outcome;
+	SoundManager soundManager;
 
 	public GameThread (GamePanel gamePanel) {
 		this.gamePanel = gamePanel;
 		isRunning = false;
 		isPaused = false;
 		outcome = false;
+		soundManager = SoundManager.getInstance();
 	}
 
 	
@@ -68,6 +70,8 @@ public class GameThread implements Runnable {
 				Thread.sleep (50);	
 			}
 			if(!isRunning){
+				soundManager.stopClip("background");
+				soundManager.playClip("game-over", false);
 				gamePanel.gameOverScreen(outcome);
 			}
 		}

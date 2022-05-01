@@ -128,6 +128,7 @@ public class GameWindow extends JFrame implements
 
 		if (command.equals(startB.getText())) {
 			gamePanel.startGame();
+			soundManager.playClip("background", true);
 		}
 
 		if (command.equals(pauseB.getText())) {
@@ -176,6 +177,7 @@ public class GameWindow extends JFrame implements
             int x = Emotion.x + 40;
             int y = Emotion.y + 13;
             gamePanel.addBullet(gamePanel.createBullet(x, y));
+			soundManager.playClip("shoot", false);
 	
         }
 

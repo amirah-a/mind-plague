@@ -10,24 +10,38 @@ public class SoundManager {				// a Singleton class
 
 	private SoundManager () {
 		clips = new HashMap<String, Clip>();
-
-		Clip clip = loadClip("sounds/attack.wav");	// played from start of the game
-		clips.put("player_attack", clip);
-
-        clip = loadClip("sounds/player_hit.wav");
-        clips.put("player_hit", clip);
-
-        clip = loadClip("sounds/enemy_hit1.wav");
-        clips.put("enemy_hit1", clip);
-
-        clip = loadClip("sounds/enemy_hit2.wav");
-        clips.put("enemy_hit2", clip);
-
-		clip = loadClip("sounds/player_dead.wav");
-        clips.put("player_dead", clip);
+		Clip clip;
 
 		clip = loadClip("sounds/background.wav");
 		clips.put("background", clip);
+		
+		clip = loadClip("sounds/collect-key.wav");
+        clips.put("key", clip);
+
+		clip = loadClip("sounds/eagle-attack.wav");
+		clips.put("eagle-attack", clip);
+
+		clip = loadClip("sounds/enemy-shoot.wav");
+		clips.put("enemy-attack", clip);
+
+		clip = loadClip("sounds/game-over.wav");
+		clips.put("game-over", clip);
+
+		clip = loadClip("sounds/level-complete.wav");
+		clips.put("success", clip);
+
+		clip = loadClip("sounds/player_dead.wav");
+        clips.put("hit", clip);
+
+		clip = loadClip("sounds/player-shoot.wav");
+		clips.put("shoot", clip);
+
+		
+        clip = loadClip("sounds/power-up.wav");
+        clips.put("power-up", clip);
+
+		clip = loadClip("sounds/player_dead.wav");
+        clips.put("player_dead", clip);
 	}
 
 

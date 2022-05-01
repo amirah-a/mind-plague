@@ -17,14 +17,8 @@ public class Pelican {
     private int originalX, originalY;
     private BufferedImage pelican;
     private Random random;
-
-    
-    private long pauseTimeElapsed;
+    private boolean isActive;
     private long attackTimeElapsed;
-
-    private boolean attackMode;
-    
-    private boolean locked;
 
     private Image[] healthBars;
     public static int health;
@@ -50,26 +44,36 @@ public class Pelican {
         loadImages();
         health = 5;
 
-        locked = true;
+        isActive = true;
     }
 
+    public boolean getIsActive(){
+        return isActive;
+    }
+
+    public void setIsActive(boolean status){
+        isActive = status;
+    }
     public void draw(Graphics2D g2){
-        g2.drawImage(pelican, x, y, width, height, null);
-        g2.drawImage(healthBars[health], x, y - healthBars[health].getHeight(null), null);
+        if (isActive){
+            g2.drawImage(pelican, x, y, width, height, null);
+            g2.drawImage(healthBars[health], x+60, y - healthBars[health].getHeight(null), null);
+        }
     }
         
     public void move(int direction){
-      
-        if (direction == 3) {		// move left
-            // if (x > 500-pelican.getWidth())
-                moveRight();
-        }	
-        else				// move right
-        if (direction == 4) {
-            if(x > 200)
-                moveLeft();
-        }
-        // System.out.println("pelican: " + x);
+      if (isActive){
+          if (direction == 3) {		// move left
+              // if (x > 500-pelican.getWidth())
+                  moveRight();
+          }	
+          else				// move right
+          if (direction == 4) {
+              if(x > 200)
+                  moveLeft();
+          }
+          // System.out.println("pelican: " + x);
+      }  
     }
 
     public void moveLeft(){
