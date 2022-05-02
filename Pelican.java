@@ -56,7 +56,7 @@ public class Pelican {
     public void draw(Graphics2D g2){
         if (isActive){
             g2.drawImage(pelican, x, y, width, height, null);
-            g2.drawImage(healthBars[health], x+60, y - healthBars[health].getHeight(null), null);
+            g2.drawImage(healthBars[health], x, y - healthBars[health].getHeight(null), null);
         }
     }
         

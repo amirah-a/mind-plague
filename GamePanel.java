@@ -320,7 +320,6 @@ public class GamePanel extends JPanel {
 		Thread thread;
 
 		if (gameThread == null || !gameThread.isRunning()) {
-			soundManager.playClip ("background", true);
 			clearLevel();
 			createGameEntities();
 			gameThread = new GameThread (this);
@@ -412,9 +411,10 @@ public class GamePanel extends JPanel {
 		}
 
 		if (pickedUpKey && currEmotion.collidesWithJail(jail)){
-			if (LEVEL > 0 && LEVEL < 6)
+			if (LEVEL > 0 && LEVEL < 5){
 				jail.moveUp();
 				emotions[LEVEL].setUnlocked(true);
+			}
 		}
 
 		if(eggsRem == 0 && emotions[LEVEL].isUnlocked()){
@@ -439,15 +439,12 @@ public class GamePanel extends JPanel {
 				if (currPelican.collidesWithBullet(tempB) && currPelican.getIsActive()){
 					removeBullet(tempB);
 					hitCount++;
-					System.out.println("Before" + hitCount);
-					
+
 					if (currPelican.getHealth() > 0){
 						if (currEmotion.getX() < currPelican.getX()+10 && hitCount == 10) {// cannot shoot boss from behind
 							currPelican.decreaseHealth();
 							hitCount = 0;
 						}
-
-						System.out.println("After"+hitCount);
 					}
 
 					if (currPelican.getHealth() <= 0 && eggsRem > 0){
@@ -455,7 +452,7 @@ public class GamePanel extends JPanel {
 						disintegrate = true;
 						currPelican.setXY(1000, 2000); // moves the pelican and all its related objects out of frame
 						currPelican.setIsActive(false); 	// stops the pelican and its related objects from being updated
-
+						pelicanBullets.removeAll(pelicanBullets);
 						if (LEVEL > 0 && LEVEL < 6)
 							score[LEVEL-1]+=50;
 						
@@ -568,10 +565,10 @@ public class GamePanel extends JPanel {
 							if (eggsRem <= 0)
 								chance = random.nextInt(ON_SCREEN_EGGS) % (ON_SCREEN_EGGS - 2 + 1) + 1;
 							
-							keyChance = random.nextInt(chance);
+							// keyChance = random.nextInt(chance);
 							lifeChance = random.nextInt(3);
 							
-							if(keyChance == 1 && !droppedKey){
+							if(chance%2 == 1 && !droppedKey){
 								key = new Key(this,tempE.getX(), tempE.getY());
 								droppedKey = true;
 							}
