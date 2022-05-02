@@ -1,5 +1,3 @@
-import javax.swing.JPanel;
-
 /**
    The thread that manages each game.
 */

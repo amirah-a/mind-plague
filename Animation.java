@@ -3,11 +3,6 @@ import java.util.ArrayList;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
 
-
-/**
-    The Animation class manages a series of images (frames) and
-    the amount of time to display each frame.
-*/
 public class Animation {
 
     private GamePanel panel;					// JPanel on which animation is being displayed

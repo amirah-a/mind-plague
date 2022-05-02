@@ -1,7 +1,5 @@
 import java.awt.Graphics2D;
-import javax.swing.JPanel;
 import java.awt.geom.Rectangle2D;
-import java.awt.Image;
 import java.awt.image.BufferedImage;
 
 
@@ -43,16 +41,13 @@ public class Jail {
     public void move(int direction){
       
         if (direction == 3) {		// move left
-            // if (x > 500-jail.getWidth())
-                moveRight();
+            moveRight();
         }	
         else				// move right
         if (direction == 4) {
             if(x > 320)
                 moveLeft();
         }
-
-        // System.out.println("Jail x: " + x);
     }
 
     public void moveLeft(){

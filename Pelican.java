@@ -1,9 +1,8 @@
 import java.awt.Graphics2D;
-import javax.swing.JPanel;
 import java.awt.Image;
+import java.awt.geom.Rectangle2D;
 import java.awt.image.BufferedImage;
 import java.util.Random;
-import java.awt.geom.Rectangle2D;
 
 public class Pelican {
     private GamePanel panel;
@@ -64,15 +63,13 @@ public class Pelican {
     public void move(int direction){
       if (isActive){
           if (direction == 3) {		// move left
-              // if (x > 500-pelican.getWidth())
-                  moveRight();
+            moveRight();
           }	
           else				// move right
           if (direction == 4) {
               if(x > 200)
                   moveLeft();
           }
-          // System.out.println("pelican: " + x);
       }  
     }
 

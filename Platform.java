@@ -1,8 +1,6 @@
 import java.awt.Graphics2D;
-import javax.swing.JPanel;
-import java.awt.Image;
-import java.awt.image.BufferedImage;
 import java.awt.geom.Rectangle2D;
+import java.awt.image.BufferedImage;
 
 
 public class Platform {
@@ -16,9 +14,7 @@ public class Platform {
     private int dy;
     private int originalX, originalY;
     private BufferedImage platform;
-    
-    private boolean locked;
- 
+     
     public Platform(GamePanel p, int xPos, int yPos, int w, int h, String fileName){
         panel = p;
         x = xPos;
@@ -34,8 +30,6 @@ public class Platform {
         originalY = yPos;
 
         platform = ImageManager.loadBufferedImage(fileName);
-
-        locked = true;
     }
 
     public int getY(){
@@ -53,13 +47,11 @@ public class Platform {
     public void move(int direction){
       
         if (direction == 3) {		// move left
-            // if (x < 550)
-                moveRight();
+            moveRight();
         }	
         else				// move right
         if (direction == 4) {
-            // if(x > -160)
-                moveLeft();
+            moveLeft();
         }
 
     }

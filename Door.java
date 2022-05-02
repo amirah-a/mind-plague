@@ -1,7 +1,5 @@
 import java.awt.Graphics2D;
 import java.awt.geom.Rectangle2D;
-import javax.swing.JPanel;
-import java.awt.Image;
 import java.awt.image.BufferedImage;
 
 
@@ -55,7 +53,6 @@ public class Door {
             if(x > 420)
                 moveLeft();
         }
-        // System.out.println("Door: " + x);
     }
 
     public Rectangle2D.Double getBoundingRectangle(){
