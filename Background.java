@@ -22,8 +22,6 @@ public class Background {
         this.bgImage = ImageManager.loadImage(imageFile);
         bgImageWidth = bgImage.getWidth(null)-bgDX;	// get width of the background
     
-        //System.out.println ("bgImageWidth = " + bgImageWidth);
-    
         if (bgImageWidth < panel.getWidth())
           System.out.println("Background width < panel width");
     
@@ -47,40 +45,12 @@ public class Background {
     
     
       public void moveLeft() {
-    
         bgX = bgX - bgDX;
-    
-        // bg1X = bg1X - bgDX;
-        // bg2X = bg2X - bgDX;
-    
-        // String mess = "Moving background left: bgX=" + bgX + " bg1X=" + bg1X + " bg2X=" + bg2X;
-        // System.out.println (mess);
-    
-        // if (bg1X < (bgImageWidth * -1)) {
-        //     System.out.println ("Background change: bgX = " + bgX); 
-        //     bg1X = 0;
-        //     bg2X = bgImageWidth;
-        // }
-    
       }
     
     
       public void moveRight() {
-    
         bgX = bgX + bgDX;
-                    
-        // bg1X = bg1X + bgDX;
-        // bg2X = bg2X + bgDX;
-    
-        //String mess = "Moving background right: bgX=" + bgX + " bg1X=" + bg1X + " bg2X=" + bg2X;
-        // System.out.println (mess);
-    
-        // if (bg1X > 0) {
-        //     System.out.println ("Background change: bgX = " + bgX); 
-        //     bg1X = bgImageWidth * -1;
-        //     bg2X = 0;
-        // }
-    
        }
      
     

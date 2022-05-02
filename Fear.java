@@ -5,7 +5,6 @@ public class Fear extends Emotion {
     public Fear(GamePanel p) {
         super(p);
         loadAnimations();
-        //currIdleImage = idleImages[0];
         currAnimation = animations.get("idle_right");
         unlocked = true; //this character is unlocked by default
     }

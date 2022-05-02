@@ -1,23 +1,26 @@
-import javax.swing.*;			// need this for GUI objects
-import javax.swing.border.Border;
-import javax.swing.border.EmptyBorder;
+// need this for Layout Managers
+import java.awt.Color;
+import java.awt.Container;
+import java.awt.Dimension;
+import java.awt.FlowLayout;
+import java.awt.GridLayout;
 
-import java.awt.*;			// need this for Layout Managers
-import java.awt.event.*;		// need this to respond to GUI events
+// need this to respond to GUI events
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import java.awt.event.KeyEvent;
+import java.awt.event.KeyListener;
+import java.awt.event.MouseEvent;
+import java.awt.event.MouseListener;
+
+// need this for GUI objects
+import javax.swing.JButton;
+import javax.swing.JFrame;
+import javax.swing.JLabel;
+import javax.swing.JPanel;
 	
 public class GameWindow extends JFrame implements
-						ActionListener,
-					   KeyListener,
-					   MouseListener
-{
-
-	// declare instance variables for user interface objects
-
-	// declare labels 
-
-	private JLabel statusBarL;
-	private JLabel keyL;
-	private JLabel mouseL;
+						ActionListener, KeyListener, MouseListener{
 
 	// declare buttons
 
@@ -25,7 +28,6 @@ public class GameWindow extends JFrame implements
 	private JButton pauseB;
 	private JButton endB;
 	private JButton restartB;
-	// private JButton focusB;
 	private JButton exitB;
 
 	private Container c;
@@ -39,46 +41,35 @@ public class GameWindow extends JFrame implements
 		setTitle ("Mind Plague");
 		setSize (500, 580);
 
-		// create labels
-
-		statusBarL = new JLabel ("Application Status: ");
-		keyL = new JLabel("Key Pressed: ");
-		mouseL = new JLabel("Location of Mouse Click: ");
-
 	    startB = new JButton ("Start Game");
 	    pauseB = new JButton ("Pause Game");
 	    endB = new JButton ("End Game");
 		restartB = new JButton ("Restart Game");
-	    //     focusB = new JButton ("Focus on Key");
 		exitB = new JButton ("Exit");
 
 
 		// add listener to each button (same as the current object)
-
 		startB.addActionListener(this);
 		pauseB.addActionListener(this);
 		endB.addActionListener(this);
 		restartB.addActionListener(this);
-		// focusB.addActionListener(this);
-		// exitB.addActionListener(this);
+		exitB.addActionListener(this);
 		
 		// create mainPanel
-
 		mainPanel = new JPanel();
 		FlowLayout flowLayout = new FlowLayout(FlowLayout.CENTER, 0, 0);
 		flowLayout.setVgap(2);
 		mainPanel.setLayout(flowLayout);
 
-		GridLayout gridLayout;
-
 		// create the gamePanel for game entities
-
+		
 		gamePanel = new GamePanel();
         gamePanel.setPreferredSize(new Dimension(500, 500));
 		gamePanel.setBorder(null);
 		gamePanel.setBackground(new Color(88,88,90));
+		
 		// create buttonPanel
-
+		GridLayout gridLayout;
 		JPanel buttonPanel = new JPanel();
 		gridLayout = new GridLayout(1, 4);
 		gridLayout.setHgap(8);
@@ -86,7 +77,6 @@ public class GameWindow extends JFrame implements
 		buttonPanel.setLayout(gridLayout);
 
 		// add buttons to buttonPanel
-
 		buttonPanel.add (startB);
 		buttonPanel.add (pauseB);
 		buttonPanel.add (endB);
@@ -99,7 +89,6 @@ public class GameWindow extends JFrame implements
 		mainPanel.setBackground(new Color(88,88,90));
 
 		// set up mainPanel to respond to keyboard and mouse
-
 		gamePanel.addMouseListener(this);
 		mainPanel.addKeyListener(this);
 
@@ -211,14 +200,12 @@ public class GameWindow extends JFrame implements
         int keyCode = e.getKeyCode();
         
         if(keyCode == KeyEvent.VK_LEFT){
-            //Player.isWalking = false;
-			gamePanel.getCurrEmotion().setDx(0); //movement
+            gamePanel.getCurrEmotion().setDx(0); //movement
 			gamePanel.getCurrEmotion().setAnimation(-3);
         }
 
         if(keyCode == KeyEvent.VK_RIGHT){
-            //Player.isWalking = false;
-			gamePanel.getCurrEmotion().setDx(0);  //no movement
+            gamePanel.getCurrEmotion().setDx(0);  //no movement
 			gamePanel.getCurrEmotion().setAnimation(-4);
         }
 
@@ -234,8 +221,7 @@ public class GameWindow extends JFrame implements
 	// implement methods in MouseListener interface
 
 	public void mouseClicked(MouseEvent e) {
-		int x = e.getX();
-		int y = e.getY();
+
 	}
 
 

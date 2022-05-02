@@ -5,7 +5,6 @@ public class Happy extends Emotion{
     public Happy(GamePanel p) {
         super(p);
         loadAnimations();
-        //currIdleImage = idleImages[0];
         currAnimation = animations.get("idle_right");
         unlocked = false; //this charcter has to be unlocked
     }

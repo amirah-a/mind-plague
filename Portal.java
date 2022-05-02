@@ -1,6 +1,4 @@
 import java.awt.Graphics2D;
-import javax.swing.JPanel;
-import java.awt.Image;
 import java.awt.image.BufferedImage;
 
 
@@ -16,8 +14,6 @@ public class Portal {
     private int originalX, originalY;
     private BufferedImage platform;
     
-    private boolean locked;
- 
     public Portal(GamePanel p, int xPos, int yPos, int w, int h, String fileName){
         panel = p;
         x = xPos;
@@ -33,8 +29,6 @@ public class Portal {
         originalY = yPos;
         
         platform = ImageManager.loadBufferedImage(fileName);
-
-        locked = true;
     }
 
     public void draw(Graphics2D g2){

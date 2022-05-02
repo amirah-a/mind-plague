@@ -1,6 +1,5 @@
-import java.awt.Image;
-import java.awt.Graphics;
 import java.awt.Graphics2D;
+import java.awt.Image;
 import java.awt.geom.Rectangle2D;
 import java.awt.image.BufferedImage;
 import java.util.HashMap;
@@ -163,15 +162,12 @@ public class Egg {
             dx = oppDx;
             oppDx = -dx;
         }
-        // System.out.println(panel.getWidth()-currAnimation.getImage().getWidth(null));
-
         y+=dy;
         
         if(y + 100 > panel.getHeight()){
             dy = 0;
             if(falling)
                 falling = false;
-            //gravity = 0.0;
         }    
         
 
@@ -191,8 +187,7 @@ public class Egg {
 
     public void draw(Graphics2D g2) {
         currAnimation.draw(g2, x, y);
-        g2.drawImage(healthBars[health], x, y - healthBars[health].getHeight(null), null);
-        //g2.drawRect(x-100, y-100, 250, 250);    
+        g2.drawImage(healthBars[health], x, y - healthBars[health].getHeight(null), null);    
     }
 
     public boolean attack(){
@@ -225,16 +220,12 @@ public class Egg {
     public void move(int direction){
       
         if (direction == 3) {		// move left
-            // if (x < 500-currAnimation.getImage().getWidth(null))
-                moveRight();
+           moveRight();
         }	
         else				// move right
         if (direction == 4) {
-            // if(x > 444)
-                moveLeft();
+            moveLeft();
         }
-
-        // System.out.println("Egg x: " + x);
     }
 
     public void moveLeft(){
@@ -323,10 +314,8 @@ public class Egg {
 
         //if objects are colliding and emotion is above the platform
         if(myRect.intersects(platRect) && y + height > p.getY()  && y + height < p.getY() + 15){
-            //System.out.println("on platform");
             return true;
         }
-        //System.out.println("here");
         return false;
     }
 

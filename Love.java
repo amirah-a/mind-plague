@@ -5,7 +5,6 @@ public class Love extends Emotion{
     public Love(GamePanel p) {
         super(p);
         loadAnimations();
-        //currIdleImage = idleImages[0];
         currAnimation = animations.get("idle_right");
         unlocked = false; //this character needs to be unlocked
     }

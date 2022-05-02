@@ -5,7 +5,6 @@ public class Rage extends Emotion{
     public Rage(GamePanel p) {
         super(p);
         loadAnimations();
-        //currIdleImage = idleImages[0];
         currAnimation = animations.get("idle_right");
         unlocked = false; //this character has to be unlocked
     }

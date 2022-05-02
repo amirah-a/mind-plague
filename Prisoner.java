@@ -7,7 +7,7 @@ public class Prisoner{
 
     private GamePanel panel;
     
-    private int x, y; // all emotions should have the same x y
+    private int x, y;
     private int width, height;
     
     private int dx, dy;
@@ -25,8 +25,6 @@ public class Prisoner{
 
         this.x = x;
         this.y = y;
-
-        // used to reset the emotion's position at the start of a new level
         originalX = x;
         originalY = y;
 
@@ -63,9 +61,7 @@ public class Prisoner{
     }
 
     public void draw(Graphics2D g2) {
-        animation.draw(g2, x, y);
-        // System.out.println("x = " + x + "y = " + y);
-         
+        animation.draw(g2, x, y);         
      }
 
     public Rectangle2D.Double getBoundingRectangle(){
@@ -83,15 +79,13 @@ public class Prisoner{
     public void move(int direction){
       
         if (direction == 3) {		// move left
-            // if (x > 500-jail.getWidth())
-                moveRight();
+            moveRight();
         }	
         else				// move right
         if (direction == 4) {
             if(x > 320)
                 moveLeft();
         }
-        // System.out.println("Jail x: " + x);
     }
 
     public void moveLeft(){

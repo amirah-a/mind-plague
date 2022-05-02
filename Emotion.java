@@ -21,8 +21,6 @@ public abstract class Emotion {
 
     protected Image currIdleImage;
     protected Image[] idleImages;
-
-    //protected Animation[] animations;
     protected Animation currAnimation;
 
     protected HashMap<String, Animation> animations;
@@ -34,8 +32,6 @@ public abstract class Emotion {
 
     public Emotion(GamePanel p){
         panel = p;
-        
-        //idleImages = new Image[2];
         animations = new HashMap<String, Animation>();
         width = 48;
         height = 48;
@@ -44,8 +40,6 @@ public abstract class Emotion {
         // used to reset the emotion's position at the start of a new level
         orginalX = x;
         orginalY = y;
-        //dx = 2;
-
         health = 5;
     }
 
@@ -149,18 +143,13 @@ public abstract class Emotion {
             setDx(0);
             x = panel.getWidth() -60;
         }
-            
-        //movement
         x+=dx;  
         y+=dy;
 
-        
-        
         if(y + 100 > panel.getHeight()){
             dy = 0;
             if(falling)
                 falling = false;
-            //gravity = 0.0;
         }    
         
 
@@ -222,10 +211,8 @@ public abstract class Emotion {
 
         //if objects are colliding and emotion is above the platform
         if(myRect.intersects(platRect) && y + height > p.getY()  && y + height < p.getY() + 15){
-            //System.out.println("on platform");
             return true;
         }
-        //System.out.println("here");
         return false;
     }
 
